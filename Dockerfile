@@ -18,7 +18,7 @@ MAINTAINER Jan Cajthaml <jan.cajthaml@gmail.com>
 
 ENV DEBIAN_FRONTEND=noninteractive \
     LANG=C.UTF-8 \
-    LAKE_VERSION=1.0.1
+    LAKE_VERSION=1.0.2
 
 RUN apt-get update -y && \
     apt-get upgrade -y && \
