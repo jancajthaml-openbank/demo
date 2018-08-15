@@ -2,6 +2,8 @@
 
 ## TODO FIX THESE
 
+### lake
+
 * name of process (lake) running in installed host may collide with other instalations, rename to lake
 
 ```
@@ -51,4 +53,19 @@ KiB Swap:   524284 total,   524280 free,        4 used.  2554932 avail Mem
 * no assertion of default `/etc/init/lake.conf` installation would fail
 
 * no assertion of metrics directory `/opt/lake/metrics` metrics would not be persisted
+
+---
+
+### vault
+
+* make as debian package
+
+### wall
+
+* make as debian package
+
+### search
+
+* make as debian package
+
 

@@ -34,6 +34,9 @@ RUN apt-get update -y && \
 
 RUN sed -i '/imklog/{s/^/#/}' /etc/rsyslog.conf
 
+COPY etc/sysctl.conf /etc/sysctl.conf
+COPY etc/security/limits.conf /etc/security/limits.conf
+
 RUN mkdir -p /etc/init
 
 RUN echo "root:Docker!" | chpasswd
