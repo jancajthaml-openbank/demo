@@ -1,7 +1,7 @@
 .ONESHELL:
 
 .PHONY: all
-all: build
+all: build run
 
 .PHONY: build
 build:
@@ -10,9 +10,8 @@ build:
 .PHONY: run
 run:
 	docker exec -it $$(\
-		docker run -d -ti \
+		docker run -dti \
 			-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
-			-v e2e_journal:/data \
 			-p 5562:5562 \
 			-p 5561:5561 \
 			-p 443:443 \
