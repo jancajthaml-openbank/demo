@@ -14,50 +14,98 @@
 
 FROM debian:stretch
 
-MAINTAINER Jan Cajthaml <jan.cajthaml@gmail.com>
-
 ENV DEBIAN_FRONTEND=noninteractive \
     LANG=C.UTF-8 \
-    LAKE_VERSION=1.0.2
+    LAKE_VERSION=1.0.3 \
+    VAULT_VERSION=1.0.3 \
+    WALL_VERSION=1.0.3
 
-RUN apt-get update -y && \
-    apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends \
+MAINTAINER Jan Cajthaml <jan.cajthaml@gmail.com>
+
+RUN apt-get -y update && \
+    apt-get -y upgrade && \
+    apt-get clean && \
+    apt-get -y install \
       apt-utils \
-      apt-transport-https \
-      rsyslog \
-      libsystemd0 \
-      systemd \
+      openssl \
+      lsb-release \
       curl \
-      ca-certificates \
-      libzmq5=4.2.1-4
-
-RUN sed -i '/imklog/{s/^/#/}' /etc/rsyslog.conf
-
-COPY etc/sysctl.conf /etc/sysctl.conf
-COPY etc/security/limits.conf /etc/security/limits.conf
-
-RUN mkdir -p /etc/init
+      git \
+      cron \
+      at \
+      logrotate \
+      rsyslog \
+      unattended-upgrades \
+      ssmtp \
+      lsof \
+      procps \
+      initscripts \
+      libsystemd0 \
+      libudev1 \
+      systemd \
+      haproxy \
+      sysvinit-utils \
+      udev \
+      util-linux && \
+  apt-get clean && \
+  sed -i '/imklog/{s/^/#/}' /etc/rsyslog.conf
 
 RUN echo "root:Docker!" | chpasswd
 
+RUN cd /lib/systemd/system/sysinit.target.wants/ && \
+    ls | grep -v systemd-tmpfiles-setup.service | xargs rm -f && \
+    rm -f /lib/systemd/system/sockets.target.wants/*udev* && \
+    systemctl mask -- \
+      tmp.mount \
+      etc-hostname.mount \
+      etc-hosts.mount \
+      etc-resolv.conf.mount \
+      -.mount \
+      swap.target \
+      getty.target \
+      getty-static.service \
+      dev-mqueue.mount \
+      cgproxy.service \
+      systemd-tmpfiles-setup-dev.service \
+      systemd-remount-fs.service \
+      systemd-ask-password-wall.path \
+      systemd-logind.service && \
+    systemctl set-default multi-user.target || :
+
+RUN sed -ri /etc/systemd/journald.conf -e 's!^#?Storage=.*!Storage=volatile!'
+
 # lake bootstrap
-
-RUN \
-    echo "LAKE_LOG_LEVEL=INFO" > /etc/init/lake.conf && \
-    echo "LAKE_PORT_PULL=5562" >> /etc/init/lake.conf && \
-    echo "LAKE_PORT_PUB=5561" >> /etc/init/lake.conf && \
-    echo "LAKE_METRICS_REFRESHRATE=1s" >> /etc/init/lake.conf && \
-    echo "LAKE_METRICS_OUTPUT=/opt/lake/metrics/metrics.json" >> /etc/init/lake.conf && \
-    \
-    mkdir -p /opt/lake/metrics
-
 RUN curl -L "https://github.com/jancajthaml-openbank/lake/releases/download/v${LAKE_VERSION}/lake_${LAKE_VERSION}_amd64.deb" \
     -# \
     -o "/var/cache/apt/archives/lake_${LAKE_VERSION}_amd64.deb" && \
     apt-get -y install --no-install-recommends \
     -f "/var/cache/apt/archives/lake_${LAKE_VERSION}_amd64.deb"
 
+# vault bootstrap
+RUN curl -L "https://github.com/jancajthaml-openbank/vault/releases/download/v${VAULT_VERSION}/vault_${VAULT_VERSION}_amd64.deb" \
+    -# \
+    -o "/var/cache/apt/archives/vault_${VAULT_VERSION}_amd64.deb" && \
+    apt-get -y install --no-install-recommends \
+    -f "/var/cache/apt/archives/vault_${VAULT_VERSION}_amd64.deb"
+
+RUN systemctl enable vault@demo
+
+# wall bootstrap
+RUN curl -L "https://github.com/jancajthaml-openbank/wall/releases/download/v${WALL_VERSION}/wall_${WALL_VERSION}_amd64.deb" \
+    -# \
+    -o "/var/cache/apt/archives/wall_${WALL_VERSION}_amd64.deb" && \
+    apt-get -y install --no-install-recommends \
+    -f "/var/cache/apt/archives/wall_${WALL_VERSION}_amd64.deb"
+
 # cnb-rates bootstrap
+# TBD
+
+
+COPY etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
 
 STOPSIGNAL SIGTERM
+
+VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
+
+ENTRYPOINT ["/lib/systemd/systemd"]
+
