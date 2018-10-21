@@ -17,10 +17,10 @@ FROM debian:stretch
 ENV DEBIAN_FRONTEND=noninteractive \
     LANG=C.UTF-8 \
     \
-    LAKE_VERSION=1.0.3 \
-    VAULT_VERSION=1.0.3 \
-    WALL_VERSION=1.0.4 \
-    SEARCH_VERSION=1.0.1
+    LAKE_VERSION=1.1.0 \
+    VAULT_VERSION=1.1.0 \
+    WALL_VERSION=1.1.0 \
+    SEARCH_VERSION=1.1.0
 
 RUN apt-get -y update && \
     apt-get clean && \
