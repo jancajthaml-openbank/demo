@@ -17,13 +17,13 @@ FROM debian:stretch
 ENV DEBIAN_FRONTEND=noninteractive \
     LANG=C.UTF-8 \
     \
-    LAKE_VERSION=1.1.0 \
-    VAULT_VERSION=1.1.0 \
-    WALL_VERSION=1.1.0 \
-    SEARCH_VERSION=1.1.0
+    LAKE_VERSION=1.1.2 \
+    VAULT_VERSION=1.1.2 \
+    WALL_VERSION=1.1.2 \
+    SEARCH_VERSION=1.1.2
 
-RUN apt-get -y update && \
-    apt-get clean && \
+RUN \
+    apt-get -y update && \
     apt-get -y install \
       apt-utils \
       openssl \
@@ -47,27 +47,14 @@ RUN apt-get -y update && \
       sysvinit-utils \
       udev \
       util-linux && \
-  apt-get clean && \
-  sed -i '/imklog/{s/^/#/}' /etc/rsyslog.conf
-
-RUN \
-  curl -sL https://deb.nodesource.com/setup_10.x | bash && \
-  apt-get install -y --no-install-recommends \
-    nodejs && \
-  apt-get clean && rm -rf /var/lib/apt/lists/*
-
-RUN \
-  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
+    \
+    curl -sL https://deb.nodesource.com/setup_10.x | bash && \
+    \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
     echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | \
       tee /etc/apt/sources.list.d/mongodb-org-4.0.list && \
-  apt-get update && \
-  apt-get install -y --no-install-recommends \
-    mongodb-org && \
-  apt-get clean && rm -rf /var/lib/apt/lists/*
-
-RUN echo "root:Docker!" | chpasswd
-
-RUN (\
+    \
+    (\
       ls /lib/systemd/system/sysinit.target.wants | \
       grep -v systemd-tmpfiles-setup.service | \
       xargs rm -f \
@@ -88,48 +75,38 @@ RUN (\
       systemd-remount-fs.service \
       systemd-ask-password-wall.path \
       systemd-logind.service && \
-    systemctl set-default multi-user.target ;:
+    systemctl set-default multi-user.target ;: && \
+    \
+    curl -L "https://github.com/jancajthaml-openbank/lake/releases/download/v${LAKE_VERSION}/lake_${LAKE_VERSION}_amd64.deb" -# \
+    -o "/tmp/lake_${LAKE_VERSION}_amd64.deb" && \
+    \
+    curl -L "https://github.com/jancajthaml-openbank/vault/releases/download/v${VAULT_VERSION}/vault_${VAULT_VERSION}_amd64.deb" -# \
+    -o "/tmp/vault_${VAULT_VERSION}_amd64.deb" && \
+    \
+    curl -L "https://github.com/jancajthaml-openbank/wall/releases/download/v${WALL_VERSION}/wall_${WALL_VERSION}_amd64.deb" -# \
+    -o "/tmp/wall_${WALL_VERSION}_amd64.deb" && \
+    \
+    curl -L "https://github.com/jancajthaml-openbank/search/releases/download/v${SEARCH_VERSION}/search_${SEARCH_VERSION}_all.deb" -# \
+    -o "/tmp/search_${SEARCH_VERSION}_all.deb" && \
+    \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN sed -ri /etc/systemd/journald.conf -e 's!^#?Storage=.*!Storage=volatile!'
-
-RUN apt-get -y update
-
-# lake bootstrap
-RUN curl -L "https://github.com/jancajthaml-openbank/lake/releases/download/v${LAKE_VERSION}/lake_${LAKE_VERSION}_amd64.deb" \
-    -# \
-    -o "/var/cache/apt/archives/lake_${LAKE_VERSION}_amd64.deb" && \
-    apt-get -y install --no-install-recommends \
-    -f "/var/cache/apt/archives/lake_${LAKE_VERSION}_amd64.deb"
-
-# vault bootstrap
-RUN curl -L "https://github.com/jancajthaml-openbank/vault/releases/download/v${VAULT_VERSION}/vault_${VAULT_VERSION}_amd64.deb" \
-    -# \
-    -o "/var/cache/apt/archives/vault_${VAULT_VERSION}_amd64.deb" && \
-    apt-get -y install --no-install-recommends \
-    -f "/var/cache/apt/archives/vault_${VAULT_VERSION}_amd64.deb"
-
-RUN systemctl enable vault@demo
-
-# wall bootstrap
-RUN curl -L "https://github.com/jancajthaml-openbank/wall/releases/download/v${WALL_VERSION}/wall_${WALL_VERSION}_amd64.deb" \
-    -# \
-    -o "/var/cache/apt/archives/wall_${WALL_VERSION}_amd64.deb" && \
-    apt-get -y install --no-install-recommends \
-    -f "/var/cache/apt/archives/wall_${WALL_VERSION}_amd64.deb"
-
-# search bootstrap
-RUN curl -L "https://github.com/jancajthaml-openbank/search/releases/download/v${SEARCH_VERSION}/search_${SEARCH_VERSION}_amd64.deb" \
-    -# \
-    -o "/var/cache/apt/archives/search_${SEARCH_VERSION}_amd64.deb" && \
-    apt-get -y install --no-install-recommends \
-    -f "/var/cache/apt/archives/search_${SEARCH_VERSION}_amd64.deb"
-
-RUN systemctl enable mongod
-
-# cnb-rates bootstrap
-# TBD
-
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN \
+    apt-get -y update && \
+    apt-get -y install -f /tmp/lake_${LAKE_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/vault_${VAULT_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/wall_${WALL_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/search_${SEARCH_VERSION}_all.deb && \
+    \
+    systemctl enable \
+      mongod \
+      vault@demo \
+    && \
+    \
+    sed -ri /etc/systemd/journald.conf -e 's!^#?Storage=.*!Storage=volatile!' && \
+    echo "root:Docker!" | chpasswd && \
+    sed -i '/imklog/{s/^/#/}' /etc/rsyslog.conf && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
 
