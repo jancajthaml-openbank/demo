@@ -15,12 +15,7 @@
 FROM debian:stretch
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    LANG=C.UTF-8 \
-    \
-    LAKE_VERSION=1.1.2 \
-    VAULT_VERSION=1.1.2 \
-    WALL_VERSION=1.1.2 \
-    SEARCH_VERSION=1.1.2
+    LANG=C.UTF-8
 
 RUN \
     apt-get -y update && \
@@ -75,21 +70,37 @@ RUN \
       systemd-remount-fs.service \
       systemd-ask-password-wall.path \
       systemd-logind.service && \
-    systemctl set-default multi-user.target ;: && \
-    \
-    curl -L "https://github.com/jancajthaml-openbank/lake/releases/download/v${LAKE_VERSION}/lake_${LAKE_VERSION}_amd64.deb" -# \
+    systemctl set-default multi-user.target ;:
+
+ENV \
+    LAKE_VERSION=1.1.3 \
+    VAULT_VERSION=1.1.3 \
+    WALL_VERSION=1.1.3 \
+    SEARCH_VERSION=1.1.4 \
+    FIO_BCO_VERSION=1.0.1
+
+RUN \
+    echo "downloading lake v${LAKE_VERSION}" && \
+    curl --fail -L "https://github.com/jancajthaml-openbank/lake/releases/download/v${LAKE_VERSION}/lake_${LAKE_VERSION}_amd64.deb" -# \
     -o "/tmp/lake_${LAKE_VERSION}_amd64.deb" && \
     \
-    curl -L "https://github.com/jancajthaml-openbank/vault/releases/download/v${VAULT_VERSION}/vault_${VAULT_VERSION}_amd64.deb" -# \
+    echo "downloading vault v${VAULT_VERSION}" && \
+    curl --fail -L "https://github.com/jancajthaml-openbank/vault/releases/download/v${VAULT_VERSION}/vault_${VAULT_VERSION}_amd64.deb" -# \
     -o "/tmp/vault_${VAULT_VERSION}_amd64.deb" && \
     \
-    curl -L "https://github.com/jancajthaml-openbank/wall/releases/download/v${WALL_VERSION}/wall_${WALL_VERSION}_amd64.deb" -# \
+    echo "downloading wall v${WALL_VERSION}" && \
+    curl --fail -L "https://github.com/jancajthaml-openbank/wall/releases/download/v${WALL_VERSION}/wall_${WALL_VERSION}_amd64.deb" -# \
     -o "/tmp/wall_${WALL_VERSION}_amd64.deb" && \
     \
-    curl -L "https://github.com/jancajthaml-openbank/search/releases/download/v${SEARCH_VERSION}/search_${SEARCH_VERSION}_all.deb" -# \
+    echo "downloading search v${SEARCH_VERSION}" && \
+    curl --fail -L "https://github.com/jancajthaml-openbank/search/releases/download/v${SEARCH_VERSION}/search_${SEARCH_VERSION}_all.deb" -# \
     -o "/tmp/search_${SEARCH_VERSION}_all.deb" && \
     \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    echo "downloading fio-bco v${FIO_BCO_VERSION}" && \
+    curl --fail -L "https://github.com/jancajthaml-openbank/fio-bco/releases/download/v${FIO_BCO_VERSION}/fio-bco_${FIO_BCO_VERSION}_amd64.deb" -# \
+    -o "/tmp/fio-bco_${FIO_BCO_VERSION}_amd64.deb" && \
+    \
+    find /tmp -name "*.deb" -exec file {} \;
 
 RUN \
     apt-get -y update && \
@@ -97,10 +108,12 @@ RUN \
     apt-get -y install -f /tmp/vault_${VAULT_VERSION}_amd64.deb && \
     apt-get -y install -f /tmp/wall_${WALL_VERSION}_amd64.deb && \
     apt-get -y install -f /tmp/search_${SEARCH_VERSION}_all.deb && \
+    apt-get -y install -f /tmp/fio-bco_${FIO_BCO_VERSION}_amd64.deb && \
     \
     systemctl enable \
       mongod \
       vault@demo \
+      fio-bco@demo \
     && \
     \
     sed -ri /etc/systemd/journald.conf -e 's!^#?Storage=.*!Storage=volatile!' && \

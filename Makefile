@@ -14,9 +14,11 @@ run:
 		docker run -dti \
 			--name=openbank_demo \
 			-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+			-v $$(pwd)/data:/data \
 			-p 5562:5562 \
 			-p 5561:5561 \
 			-p 443:443 \
+			-p 7443:7443 \
 			-p 8080:8080 \
 			--privileged=true \
 			--security-opt seccomp:unconfined \
