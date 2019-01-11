@@ -128,4 +128,3 @@ STOPSIGNAL SIGTERM
 VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
 
 ENTRYPOINT ["/lib/systemd/systemd"]
-

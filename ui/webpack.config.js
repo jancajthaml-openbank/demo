@@ -7,11 +7,9 @@ const TerserPlugin = require('terser-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const SafePostCssParser = require('postcss-safe-parser')
 const PnpWebpackPlugin = require('pnp-webpack-plugin')
-
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
-const { GenerateSW } = require('workbox-webpack-plugin')
 
 function getPlugins(production) {
   let plugins = [
@@ -66,18 +64,6 @@ function getPlugins(production) {
           parser: SafePostCssParser,
           map: false,
         },
-      }),
-      new GenerateSW({
-        swDest: 'cache.sw.js',
-        importWorkboxFrom: 'local',
-        exclude: [/index\.html$/, /\.map$/, /runtime~main/],
-        runtimeCaching: [{
-          urlPattern: /index\.html/,
-          handler: 'networkFirst',
-        }, {
-          urlPattern: /\.(json|js|css|mp4|webm|jpe?g|png|gif|svg)(\?v=\d+\.\d+\.\d+|eot|ttf|woff2?)(\?v=\d+\.\d+\.\d+)/,
-          handler: 'staleWhileRevalidate',
-        }]
       }),
     ])
   } else {
@@ -162,8 +148,102 @@ module.exports = function(env, argv) {
         use: {
           loader: 'babel-loader',
           options: {
-            babelrc: true,
-            extends: path.resolve(__dirname, '.babelrc.js'),
+            babelrc: false,
+            //extends: path.resolve(__dirname, '.babelrc.js'),
+            presets: [
+              [
+                '@babel/preset-env',
+                {
+                  targets: {
+                    browsers: [
+                      'last 2 versions',
+                    ],
+                  },
+                  modules: false,
+                  shippedProposals: true,
+                },
+              ],
+
+              '@babel/preset-react',
+            ],
+
+            plugins: [
+
+              // Stage 0
+              '@babel/plugin-proposal-function-bind',
+
+              // Stage 1
+              '@babel/plugin-proposal-export-default-from',
+              '@babel/plugin-proposal-logical-assignment-operators',
+              [
+                '@babel/plugin-proposal-optional-chaining',
+                {
+                  loose: false,
+                },
+              ],
+              [
+                '@babel/plugin-proposal-pipeline-operator',
+                {
+                  proposal: 'minimal',
+                },
+              ],
+              [
+                '@babel/plugin-proposal-nullish-coalescing-operator',
+                {
+                  loose: false,
+                },
+              ],
+              '@babel/plugin-proposal-do-expressions',
+
+              // Stage 2
+              [
+                '@babel/plugin-proposal-decorators',
+                {
+                  legacy: true,
+                },
+              ],
+              '@babel/plugin-proposal-function-sent',
+              '@babel/plugin-proposal-export-namespace-from',
+              '@babel/plugin-proposal-numeric-separator',
+              '@babel/plugin-proposal-throw-expressions',
+
+              // Stage 3
+              '@babel/plugin-syntax-dynamic-import',
+              '@babel/plugin-syntax-import-meta',
+              [
+                '@babel/plugin-proposal-class-properties',
+                {
+                  loose: false,
+                },
+              ],
+              '@babel/plugin-proposal-json-strings',
+
+              'react-hot-loader/babel',
+              'transform-undefined-to-void',
+
+            ],
+
+            env: {
+              production: {
+                plugins: [
+                  [
+                    'transform-react-remove-prop-types', {
+                      mode: 'wrap',
+                    },
+                  ],
+                ],
+              },
+              test: {
+                plugins: [
+                  'babel-plugin-transform-es2015-modules-commonjs',
+                ],
+              },
+            },
+
+            ignore: [
+              'build',
+            ],
+
             cacheDirectory: !production,
             sourceMaps: !production,
           },
