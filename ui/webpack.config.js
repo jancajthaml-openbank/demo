@@ -218,9 +218,15 @@ module.exports = function(env, argv) {
               ],
               '@babel/plugin-proposal-json-strings',
 
+              [
+                '@babel/plugin-transform-runtime',
+                {
+                  regenerator: true
+                },
+              ],
+
               'react-hot-loader/babel',
               'transform-undefined-to-void',
-
             ],
 
             env: {

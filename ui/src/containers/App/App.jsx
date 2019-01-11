@@ -4,7 +4,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        I am a react component running in {PRODUCTION? 'production' : 'development'}
+        I am a react component running in {PRODUCTION ? 'production' : 'development'}
       </div>
     )
   }
