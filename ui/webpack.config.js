@@ -64,7 +64,7 @@ function getPlugins(production) {
           parser: SafePostCssParser,
           map: false,
         },
-      }),
+      })
     ])
   } else {
     plugins.push(...[
@@ -77,7 +77,7 @@ function getPlugins(production) {
 }
 
 module.exports = function(env, argv) {
-  const production = !argv['$0'].endsWith('/webpack-dev-server')
+  const production = process.env.NODE_ENV === 'production'
 
   return {
     entry: path.resolve(__dirname, 'src', 'index.js'),
@@ -149,7 +149,6 @@ module.exports = function(env, argv) {
           loader: 'babel-loader',
           options: {
             babelrc: false,
-            //extends: path.resolve(__dirname, '.babelrc.js'),
             presets: [
               [
                 '@babel/preset-env',
@@ -412,6 +411,6 @@ module.exports = function(env, argv) {
         poll: 1000,
       },
     },
-    devtool: production ? 'cheap-module-eval-source-map' : 'inline-source-map',
+    devtool: production ? false : 'inline-source-map',
   }
 }
