@@ -14,7 +14,8 @@ run:
 		docker run -dti \
 			--name=openbank_demo \
 			-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
-			-v $$(pwd)/data:/data \
+			-v $$(pwd)/data/openbank:/data \
+			-v $$(pwd)/data/mongo:/var/lib/mongodb \
 			-v $$(pwd)/ui/build:/var/www \
 			-p 443:443 \
 			-p 7443:7443 \

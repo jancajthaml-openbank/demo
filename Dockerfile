@@ -78,7 +78,7 @@ ENV \
     VAULT_VERSION=1.1.3 \
     WALL_VERSION=1.1.3 \
     SEARCH_VERSION=1.1.4 \
-    FIO_BCO_VERSION=1.0.1
+    FIO_BCO_VERSION=1.0.2
 
 RUN \
     echo "downloading lake v${LAKE_VERSION}" && \
@@ -138,6 +138,10 @@ RUN mkdir -p /etc/nginx/ssl && \
 
 RUN mkdir /etc/systemd/system/nginx.service.d && \
     printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
+
+RUN sed -ri \
+      /etc/init/fio-bco.conf -e \
+      's!^FIO_BCO_WALL_GATEWAY=.*!FIO_BCO_WALL_GATEWAY=https://localhost:9400!'
 
 COPY etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default

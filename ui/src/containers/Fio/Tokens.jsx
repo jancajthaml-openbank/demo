@@ -11,6 +11,7 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = (state, props) => {
   return {
     tokens: state.getIn(['fio', 'tokens']).toJS(),
+    tokensLoading: state.getIn(['fio', 'tokensLoading']),
     ...props
   }
 }
