@@ -5,9 +5,7 @@ import { Provider as ReduxProvider } from 'react-redux'
 
 import { configureGlobalisation, configureStore } from './setup'
 
-import App from './containers/App'
-
-console.log(process.env.NODE_ENV)
+import Index from './screens/Index'
 
 const render = async function() {
   const { store, globalisation } = await Promise.all([
@@ -20,7 +18,7 @@ const render = async function() {
   ReactDOM.render(
     (
       <ReduxProvider store={store}>
-        <App />
+        <Index />
       </ReduxProvider>
     ),
     document.getElementById('mount')
@@ -28,7 +26,7 @@ const render = async function() {
 }
 
 if (!PRODUCTION && module.hot) {
-  module.hot.accept(['./containers/App'], () => {
+  module.hot.accept(['./screens/Index'], () => {
     ReactDOM.unmountComponentAtNode(document.getElementById('mount'))
     render()
   })

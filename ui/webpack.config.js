@@ -390,7 +390,7 @@ module.exports = function(env, argv) {
       clientLogLevel: 'none',
       publicPath: '/',
       host: '0.0.0.0',
-      port: 80,
+      port: 3000,
       hot: true,
       inline: true,
       watchContentBase: true,
@@ -410,7 +410,18 @@ module.exports = function(env, argv) {
         aggregateTimeout: 300,
         poll: 1000,
       },
+      proxy: {
+        '/api/*': {
+          target: 'https://localhost/api',
+          ws: true,
+          prependPath: false,
+          changeOrigin: true,
+          logLevel: 'info',
+          secure: false,
+          bypass: () => false,
+        },
+      }
     },
-    devtool: production ? false : 'inline-source-map',
+    devtool: production ? false : 'source-map',
   }
 }

@@ -17,6 +17,7 @@ run:
 			-v $$(pwd)/data:/data \
 			-v $$(pwd)/ui/build:/var/www \
 			-p 443:443 \
+			-p 7443:7443 \
 			-p 80:80 \
 			--privileged=true \
 			--security-opt seccomp:unconfined \
