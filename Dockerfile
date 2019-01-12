@@ -39,6 +39,7 @@ RUN \
       libudev1 \
       systemd \
       haproxy \
+      nginx \
       sysvinit-utils \
       udev \
       util-linux && \
@@ -121,7 +122,25 @@ RUN \
     sed -i '/imklog/{s/^/#/}' /etc/rsyslog.conf && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /etc/nginx/ssl && \
+    openssl req \
+      -x509 \
+      -nodes \
+      -newkey rsa:2048 \
+      -keyout "/etc/nginx/ssl/nginx.key" \
+      -out "/etc/nginx/ssl/nginx.crt" \
+      -days 365 \
+      -subj "/C=CZ/ST=Czechia/L=Prague/O=OpenBanking/OU=IT/CN=localhost/emailAddress=jan.cajthaml@gmail.com" && \
+    openssl dhparam \
+      -in "/etc/nginx/ssl/nginx.crt" \
+      -out "/etc/nginx/ssl/dhparam.pem" \
+      2048
+
+RUN mkdir /etc/systemd/system/nginx.service.d && \
+    printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
+
 COPY etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
+COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default
 
 STOPSIGNAL SIGTERM
 

@@ -15,12 +15,9 @@ run:
 			--name=openbank_demo \
 			-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 			-v $$(pwd)/data:/data \
-			-v $$(pwd)/ui/build:/www \
-			-p 5562:5562 \
-			-p 5561:5561 \
+			-v $$(pwd)/ui/build:/var/www \
 			-p 443:443 \
-			-p 7443:7443 \
-			-p 8080:8080 \
+			-p 80:80 \
 			--privileged=true \
 			--security-opt seccomp:unconfined \
 		openbank/demo:v1 \
