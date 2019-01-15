@@ -42,7 +42,10 @@ RUN \
       nginx \
       sysvinit-utils \
       udev \
-      util-linux && \
+      util-linux \
+      \
+      libzmq5=4.2.1-4 \
+      && \
     \
     curl -sL https://deb.nodesource.com/setup_10.x | bash && \
     \
@@ -77,7 +80,7 @@ ENV \
     LAKE_VERSION=1.1.3 \
     VAULT_VERSION=1.1.3 \
     WALL_VERSION=1.1.3 \
-    SEARCH_VERSION=1.1.4 \
+    SEARCH_VERSION=1.1.5 \
     FIO_BCO_VERSION=1.0.2
 
 RUN \
@@ -122,26 +125,19 @@ RUN \
     sed -i '/imklog/{s/^/#/}' /etc/rsyslog.conf && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /etc/nginx/ssl && \
-    openssl req \
-      -x509 \
-      -nodes \
-      -newkey rsa:2048 \
-      -keyout "/etc/nginx/ssl/nginx.key" \
-      -out "/etc/nginx/ssl/nginx.crt" \
-      -days 365 \
-      -subj "/C=CZ/ST=Czechia/L=Prague/O=OpenBanking/OU=IT/CN=localhost/emailAddress=jan.cajthaml@gmail.com" && \
-    openssl dhparam \
-      -in "/etc/nginx/ssl/nginx.crt" \
-      -out "/etc/nginx/ssl/dhparam.pem" \
-      2048
-
 RUN mkdir /etc/systemd/system/nginx.service.d && \
     printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
 
-RUN sed -ri \
-      /etc/init/fio-bco.conf -e \
-      's!^FIO_BCO_WALL_GATEWAY=.*!FIO_BCO_WALL_GATEWAY=https://localhost:9400!'
+RUN rm -rf \
+      /opt/wall/secrets \
+      /opt/fio-bco/secrets && \
+    \
+    sed -ri /etc/init/fio-bco.conf -e \
+      's!^FIO_BCO_WALL_GATEWAY=.*!FIO_BCO_WALL_GATEWAY=https://localhost:9400!' && \
+    sed -ri /etc/init/fio-bco.conf -e \
+      's!^FIO_BCO_SECRETS=.*!FIO_BCO_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/init/wall.conf -e \
+      's!^WALL_SECRETS=.*!WALL_SECRETS=/openbank/secrets!'
 
 COPY etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default
