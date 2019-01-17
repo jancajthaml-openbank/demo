@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+import './stylesheets'
+
 import { Provider as ReduxProvider } from 'react-redux'
 
 import { configureGlobalisation, configureStore } from './setup'

@@ -8,6 +8,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const SafePostCssParser = require('postcss-safe-parser')
 const PnpWebpackPlugin = require('pnp-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 
@@ -46,8 +47,8 @@ function getPlugins(production) {
         collapseWhitespace: true,
         removeRedundantAttributes: true,
         useShortDoctype: true,
-        removeEmptyAttributes: true,
-        removeStyleLinkTypeAttributes: true,
+        removeEmptyAttributes: false,
+        removeStyleLinkTypeAttributes: false,
         keepClosingSlash: true,
         minifyJS: production,
         minifyCSS: production,
@@ -55,6 +56,10 @@ function getPlugins(production) {
       },
       inject: 'body',
     }),
+    new MiniCssExtractPlugin({
+      filename: "static/media/css/[name].[hash:8].css",
+      chunkFilename: "static/media/css/[id].[hash:8].css"
+    })
   ]
 
   if (production) {
@@ -80,7 +85,9 @@ module.exports = function(env, argv) {
   const production = process.env.NODE_ENV === 'production'
 
   return {
-    entry: path.resolve(__dirname, 'src', 'index.js'),
+    entry: [
+      path.resolve(__dirname, 'src', 'index.js'),
+    ],
     mode: production ? 'production' : 'development',
     stats: production ? 'normal' : 'minimal',
     output: {
@@ -255,42 +262,30 @@ module.exports = function(env, argv) {
         },
       }, {
         test: /\.html$/,
-        loader: 'handlebars-loader'
+        use: [
+          {
+            loader: 'handlebars-loader',
+          }
+        ]
       }, {
         test: /\.(sass|scss)/,
-        exclude: /node_modules/,
         use: [{
-          loader: 'style-loader',
+          loader: production ? MiniCssExtractPlugin.loader : 'style-loader',
         }, {
           loader: 'css-loader',
         }, {
-          loader: 'postcss-loader',
+          loader: 'fast-sass-loader',
           options: {
-            map: false,
-            plugins: () => [
-              flexbugsFixes,
-              autoprefixer,
-            ],
-          },
-        }, {
-          loader: 'sass-loader',
+            includePaths: ['./node_modules']
+          }
         }],
       }, {
         test: /\.css$/,
         exclude: /node_modules/,
         use: [{
-          loader: 'style-loader',
-        }, {
+          loader: production ? MiniCssExtractPlugin.loader : 'style-loader',
+        },{
           loader: 'css-loader',
-        }, {
-          loader: 'postcss-loader',
-          options: {
-            map: false,
-            plugins: () => [
-              flexbugsFixes,
-              autoprefixer,
-            ],
-          },
         }],
       }, {
         test: /\.(eot|ttf|woff2?)(\?v=\d+\.\d+\.\d+)?$/,
