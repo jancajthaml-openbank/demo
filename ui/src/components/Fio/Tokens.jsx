@@ -2,6 +2,8 @@ import React from 'react'
 
 import PropTypes from 'prop-types'
 
+import { hot } from 'react-hot-loader/root'
+
 class Tokens extends React.Component {
 
   static propTypes = {
@@ -43,4 +45,4 @@ class Tokens extends React.Component {
   }
 }
 
-export default Tokens
+export default PRODUCTION ? Tokens : hot(Tokens)
