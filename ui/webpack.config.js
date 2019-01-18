@@ -407,7 +407,7 @@ module.exports = function(env, argv) {
       },
       proxy: {
         '/api/*': {
-          target: 'https://localhost/api',
+          target: 'http://ui-mock:4000/api',
           ws: true,
           prependPath: false,
           changeOrigin: true,

@@ -5,8 +5,8 @@ import { setConfig as hotLoadConfig } from 'react-hot-loader'
 
 if (!PRODUCTION && module.hot) {
   hotLoadConfig({
-    ignoreSFC: true, // RHL will be __completely__ disabled for SFC
-    pureRender: true, // RHL will not change render method
+    ignoreSFC: true,
+    pureRender: true,
   })
 }
 
@@ -35,12 +35,5 @@ const render = async function() {
     document.getElementById('mount')
   )
 }
-
-//if (!PRODUCTION && module.hot) {
-  //module.hot.accept(['./screens/Index'], () => {
-    //ReactDOM.unmountComponentAtNode(document.getElementById('mount'))
-    //render()
-  //})
-//}
 
 render()

@@ -1,11 +1,22 @@
 .ONESHELL:
 
 .PHONY: all
-all: build run
+all: bootstrap build run
 
 .PHONY: build
 build:
+	@docker-compose run --rm ui-build
 	docker build . -t openbank/demo:v1
+
+.PHONY: bootstrap
+bootstrap:
+	@docker-compose build node
+	@docker-compose run --rm ui-install-dependencies
+
+.PHONY: dev
+dev:
+	@docker-compose down
+	@docker-compose up ui-development
 
 .PHONY: run
 run:
