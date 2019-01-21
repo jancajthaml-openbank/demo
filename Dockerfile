@@ -77,11 +77,11 @@ RUN \
     systemctl set-default multi-user.target ;:
 
 ENV \
-    LAKE_VERSION=1.1.3 \
-    VAULT_VERSION=1.1.3 \
-    WALL_VERSION=1.1.3 \
-    SEARCH_VERSION=1.1.5 \
-    FIO_BCO_VERSION=1.0.2
+    LAKE_VERSION=1.1.4 \
+    VAULT_VERSION=1.1.4 \
+    WALL_VERSION=1.1.4 \
+    SEARCH_VERSION=1.1.6 \
+    FIO_BCO_VERSION=1.0.3
 
 RUN \
     echo "downloading lake v${LAKE_VERSION}" && \
