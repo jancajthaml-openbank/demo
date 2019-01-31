@@ -80,29 +80,34 @@ ENV \
     LAKE_VERSION=1.1.4 \
     VAULT_VERSION=1.1.4 \
     WALL_VERSION=1.1.4 \
-    SEARCH_VERSION=1.1.6 \
-    FIO_BCO_VERSION=1.0.3
+    FIO_BCO_VERSION=1.0.3 \
+    BONDSTER_BCO_VERSION=1.0.0 \
+    SEARCH_VERSION=1.1.6
 
 RUN \
-    echo "downloading lake v${LAKE_VERSION}" && \
+    echo "downloading lake@${LAKE_VERSION}" && \
     curl --fail -L "https://github.com/jancajthaml-openbank/lake/releases/download/v${LAKE_VERSION}/lake_${LAKE_VERSION}_amd64.deb" -# \
     -o "/tmp/lake_${LAKE_VERSION}_amd64.deb" && \
     \
-    echo "downloading vault v${VAULT_VERSION}" && \
+    echo "downloading vault@${VAULT_VERSION}" && \
     curl --fail -L "https://github.com/jancajthaml-openbank/vault/releases/download/v${VAULT_VERSION}/vault_${VAULT_VERSION}_amd64.deb" -# \
     -o "/tmp/vault_${VAULT_VERSION}_amd64.deb" && \
     \
-    echo "downloading wall v${WALL_VERSION}" && \
+    echo "downloading wall@${WALL_VERSION}" && \
     curl --fail -L "https://github.com/jancajthaml-openbank/wall/releases/download/v${WALL_VERSION}/wall_${WALL_VERSION}_amd64.deb" -# \
     -o "/tmp/wall_${WALL_VERSION}_amd64.deb" && \
     \
-    echo "downloading search v${SEARCH_VERSION}" && \
+    echo "downloading search@${SEARCH_VERSION}" && \
     curl --fail -L "https://github.com/jancajthaml-openbank/search/releases/download/v${SEARCH_VERSION}/search_${SEARCH_VERSION}_all.deb" -# \
     -o "/tmp/search_${SEARCH_VERSION}_all.deb" && \
     \
-    echo "downloading fio-bco v${FIO_BCO_VERSION}" && \
+    echo "downloading fio-bco@${FIO_BCO_VERSION}" && \
     curl --fail -L "https://github.com/jancajthaml-openbank/fio-bco/releases/download/v${FIO_BCO_VERSION}/fio-bco_${FIO_BCO_VERSION}_amd64.deb" -# \
     -o "/tmp/fio-bco_${FIO_BCO_VERSION}_amd64.deb" && \
+    \
+    echo "downloading bondster-bco@${BONDSTER_BCO_VERSION}" && \
+    curl --fail -L "https://github.com/jancajthaml-openbank/bondster-bco/releases/download/v${BONDSTER_BCO_VERSION}/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb" -# \
+    -o "/tmp/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb" && \
     \
     find /tmp -name "*.deb" -exec file {} \;
 
@@ -113,11 +118,13 @@ RUN \
     apt-get -y install -f /tmp/wall_${WALL_VERSION}_amd64.deb && \
     apt-get -y install -f /tmp/search_${SEARCH_VERSION}_all.deb && \
     apt-get -y install -f /tmp/fio-bco_${FIO_BCO_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb && \
     \
     systemctl enable \
       mongod \
       vault@demo \
       fio-bco@demo \
+      bondster-bco@demo \
     && \
     \
     sed -ri /etc/systemd/journald.conf -e 's!^#?Storage=.*!Storage=volatile!' && \
@@ -130,12 +137,21 @@ RUN mkdir /etc/systemd/system/nginx.service.d && \
 
 RUN rm -rf \
       /opt/wall/secrets \
-      /opt/fio-bco/secrets && \
+      /opt/fio-bco/secrets \
+      /opt/bondster-bco/secrets && \
     \
     sed -ri /etc/init/fio-bco.conf -e \
       's!^FIO_BCO_WALL_GATEWAY=.*!FIO_BCO_WALL_GATEWAY=https://localhost:9400!' && \
+    sed -ri /etc/init/bondster-bco.conf -e \
+      's!^BONDSTER_BCO_WALL_GATEWAY=.*!BONDSTER_BCO_WALL_GATEWAY=https://localhost:9400!' && \
     sed -ri /etc/init/fio-bco.conf -e \
       's!^FIO_BCO_SECRETS=.*!FIO_BCO_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/init/bondster-bco.conf -e \
+      's!^BONDSTER_BCO_SECRETS=.*!BONDSTER_BCO_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/init/fio-bco.conf -e \
+      's!^FIO_BCO_HTTP_PORT=.*!FIO_BCO_HTTP_PORT=4000!' && \
+    sed -ri /etc/init/bondster-bco.conf -e \
+      's!^BONDSTER_BCO_HTTP_PORT=.*!BONDSTER_BCO_HTTP_PORT=4001!' && \
     sed -ri /etc/init/wall.conf -e \
       's!^WALL_SECRETS=.*!WALL_SECRETS=/openbank/secrets!'
 

@@ -2,7 +2,8 @@ import React from 'react'
 
 import PropTypes from 'prop-types'
 
-import { Tokens } from '../containers/Fio'
+import { Tokens as FioTokens } from '../containers/Fio'
+import { Tokens as BondsterTokens } from '../containers/Bondster'
 
 class Index extends React.Component {
 
@@ -12,7 +13,8 @@ class Index extends React.Component {
         <pre>
           I am a react component running in {PRODUCTION ? 'production' : 'development'}
         </pre>
-        <Tokens />
+        <FioTokens />
+        <BondsterTokens />
       </div>
     )
   }
