@@ -153,7 +153,9 @@ COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default
 
 RUN systemctl enable \
       vault@demo \
-      bondster-bco@demo
+      vault@test \
+      bondster-bco@demo \
+      fio-bco@demo
 
 STOPSIGNAL SIGTERM
 

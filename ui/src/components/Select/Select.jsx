@@ -11,7 +11,7 @@ class Select extends React.Component {
     valueChanged: PropTypes.func.isRequired,
   }
 
-  defaultProps = {
+  static defaultProps = {
     valueChanged: (item) => {}
   }
 

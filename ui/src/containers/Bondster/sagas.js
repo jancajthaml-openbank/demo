@@ -32,7 +32,7 @@ export const loadTokens = function*({ payload }) {
     yield put(tokensApiRequestSuccess(data))
   } catch (err) {
     if (!PRODUCTION) {
-      console.error('Fio.sagas.loadTokens()', err)
+      console.error('Bondster.sagas.loadTokens()', err)
     }
     yield put(tokensApiRequestFailure())
   }

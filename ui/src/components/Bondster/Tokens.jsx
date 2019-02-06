@@ -29,15 +29,19 @@ class Tokens extends React.Component {
     return (
       <div>
         <h2>
-          FIO Tokens
+          Bondster Tokens
         </h2>
         {tokensLoading && 'Loading'}
         <ul>
-        {tokens.map((token) => (
-          <li key={token.value}>
-            {token.value}
-          </li>
-        ))}
+          {tokens.length > 0
+            ? (
+              tokens.map((token) => (
+              <li key={token}>
+                {token}
+              </li>
+            )))
+            : 'No data'
+          }
         </ul>
       </div>
     )

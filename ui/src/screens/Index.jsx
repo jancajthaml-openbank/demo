@@ -15,13 +15,12 @@ class Index extends React.Component {
           I am a react component running in {PRODUCTION ? 'production' : 'development'}
         </pre>
         <TenantCtx.Consumer>
-          {(tenant) =>
+          {(tenant) => (
             <React.Fragment>
-              {`tenant from context ${tenant}`}
               <FioTokens tenant={tenant} />
               <BondsterTokens tenant={tenant} />
             </React.Fragment>
-          }
+          )}
         </TenantCtx.Consumer>
       </div>
     )

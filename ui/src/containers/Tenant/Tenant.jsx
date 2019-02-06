@@ -27,8 +27,6 @@ const withTenant = (ComposedComponent) => {
     render() {
       const { tenant, tenants } = this.state
 
-      console.log(`with tenants ${tenants} and selected ${tenant}`)
-
       return(
         <TenantCtx.Provider value={tenant}>
           {tenants
@@ -39,10 +37,7 @@ const withTenant = (ComposedComponent) => {
             : null
           }
           {tenant
-            ? <React.Fragment>
-                <h3>{`Current tenant is ${tenant}`}</h3>
-                <ComposedComponent />
-              </React.Fragment>
+            ? <ComposedComponent />
             : null
           }
         </TenantCtx.Provider>

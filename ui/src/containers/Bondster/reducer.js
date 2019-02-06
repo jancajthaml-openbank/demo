@@ -22,13 +22,11 @@ export default (state = initialState, { type, payload }) => {
     case TOKENS_API_REQUEST_SUCCESS: {
       return state
         .set('tokensLoading', false)
-        .set('tokens', fromJS(payload.data))
+        .set('tokens', List(payload.data))
     }
 
     default: {
       return state
-        .set('tokensLoading', false)
-        .set('tokens', List())
     }
 
   }

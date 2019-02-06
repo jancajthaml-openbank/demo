@@ -33,11 +33,15 @@ class Tokens extends React.Component {
         </h2>
         {tokensLoading && 'Loading'}
         <ul>
-        {tokens.map((token) => (
-          <li key={token.value}>
-            {token.value}
-          </li>
-        ))}
+          {tokens.length > 0
+            ? (
+              tokens.map((token) => (
+              <li key={token}>
+                {token}
+              </li>
+            )))
+            : 'No data'
+          }
         </ul>
       </div>
     )
