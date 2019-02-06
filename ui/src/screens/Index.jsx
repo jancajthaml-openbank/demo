@@ -2,6 +2,7 @@ import React from 'react'
 
 import PropTypes from 'prop-types'
 
+import { withTenant, TenantCtx } from '../containers/Tenant'
 import { Tokens as FioTokens } from '../containers/Fio'
 import { Tokens as BondsterTokens } from '../containers/Bondster'
 
@@ -13,11 +14,18 @@ class Index extends React.Component {
         <pre>
           I am a react component running in {PRODUCTION ? 'production' : 'development'}
         </pre>
-        <FioTokens />
-        <BondsterTokens />
+        <TenantCtx.Consumer>
+          {(tenant) =>
+            <React.Fragment>
+              {`tenant from context ${tenant}`}
+              <FioTokens tenant={tenant} />
+              <BondsterTokens tenant={tenant} />
+            </React.Fragment>
+          }
+        </TenantCtx.Consumer>
       </div>
     )
   }
 }
 
-export default Index
+export default withTenant(Index)

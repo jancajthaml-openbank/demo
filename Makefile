@@ -1,12 +1,19 @@
 .ONESHELL:
 
 .PHONY: all
-all: bootstrap build run
+all: bootstrap ui build run
+
+.PHONY: ui
+ui:
+	@docker-compose run --rm ui-build
 
 .PHONY: build
 build:
-	@docker-compose run --rm ui-build
-	docker build . -t openbank/demo:v1
+	@docker build . -t openbank/demo:v1
+
+.PHONY: rebuild
+rebuild:
+	@docker build --no-cache . -t openbank/demo:v1
 
 .PHONY: bootstrap
 bootstrap:

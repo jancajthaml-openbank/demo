@@ -78,10 +78,10 @@ RUN \
 
 ENV \
     LAKE_VERSION=1.1.4 \
-    VAULT_VERSION=1.1.4 \
-    WALL_VERSION=1.1.4 \
-    FIO_BCO_VERSION=1.0.3 \
-    BONDSTER_BCO_VERSION=1.0.0 \
+    VAULT_VERSION=1.2.0 \
+    WALL_VERSION=1.2.0 \
+    FIO_BCO_VERSION=1.1.0 \
+    BONDSTER_BCO_VERSION=1.1.0 \
     SEARCH_VERSION=1.1.6
 
 RUN \
@@ -111,6 +111,9 @@ RUN \
     \
     find /tmp -name "*.deb" -exec file {} \;
 
+RUN mkdir /etc/systemd/system/nginx.service.d && \
+    printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
+
 RUN \
     apt-get -y update && \
     apt-get -y install -f /tmp/lake_${LAKE_VERSION}_amd64.deb && \
@@ -120,11 +123,7 @@ RUN \
     apt-get -y install -f /tmp/fio-bco_${FIO_BCO_VERSION}_amd64.deb && \
     apt-get -y install -f /tmp/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb && \
     \
-    systemctl enable \
-      mongod \
-      vault@demo \
-      fio-bco@demo \
-      bondster-bco@demo \
+    systemctl enable mongod \
     && \
     \
     sed -ri /etc/systemd/journald.conf -e 's!^#?Storage=.*!Storage=volatile!' && \
@@ -132,8 +131,7 @@ RUN \
     sed -i '/imklog/{s/^/#/}' /etc/rsyslog.conf && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir /etc/systemd/system/nginx.service.d && \
-    printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
+RUN cat /etc/init/bondster-bco.conf
 
 RUN rm -rf \
       /opt/wall/secrets \
@@ -141,22 +139,21 @@ RUN rm -rf \
       /opt/bondster-bco/secrets && \
     \
     sed -ri /etc/init/fio-bco.conf -e \
-      's!^FIO_BCO_WALL_GATEWAY=.*!FIO_BCO_WALL_GATEWAY=https://localhost:9400!' && \
-    sed -ri /etc/init/bondster-bco.conf -e \
-      's!^BONDSTER_BCO_WALL_GATEWAY=.*!BONDSTER_BCO_WALL_GATEWAY=https://localhost:9400!' && \
-    sed -ri /etc/init/fio-bco.conf -e \
       's!^FIO_BCO_SECRETS=.*!FIO_BCO_SECRETS=/openbank/secrets!' && \
     sed -ri /etc/init/bondster-bco.conf -e \
       's!^BONDSTER_BCO_SECRETS=.*!BONDSTER_BCO_SECRETS=/openbank/secrets!' && \
-    sed -ri /etc/init/fio-bco.conf -e \
-      's!^FIO_BCO_HTTP_PORT=.*!FIO_BCO_HTTP_PORT=4000!' && \
-    sed -ri /etc/init/bondster-bco.conf -e \
-      's!^BONDSTER_BCO_HTTP_PORT=.*!BONDSTER_BCO_HTTP_PORT=4001!' && \
     sed -ri /etc/init/wall.conf -e \
-      's!^WALL_SECRETS=.*!WALL_SECRETS=/openbank/secrets!'
+      's!^WALL_SECRETS=.*!WALL_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/init/bondster-bco.conf -e \
+      's!^BONDSTER_BCO_ENCRYPTION_KEY=.*!BONDSTER_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
+    :
 
 COPY etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default
+
+RUN systemctl enable \
+      vault@demo \
+      bondster-bco@demo
 
 STOPSIGNAL SIGTERM
 

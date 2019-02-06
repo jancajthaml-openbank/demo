@@ -8,21 +8,18 @@ class Tokens extends React.Component {
 
   static propTypes = {
     loadTokens: PropTypes.func.isRequired,
+    tenant: PropTypes.string.isRequired,
     tokens: PropTypes.array,
     tokensLoading: PropTypes.bool,
-    // FIXME with tenant
-    tenant: PropTypes.string,
   }
 
   componentDidMount() {
-    // FIXME tenant from props
-    this.props.loadTokens('demo')
+    this.props.loadTokens(this.props.tenant)
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.tenant !== this.props.tenant) {
-      // FIXME tenant from props
-      this.props.loadTokens('demo')
+      this.props.loadTokens(this.props.tenant)
     }
   }
 
