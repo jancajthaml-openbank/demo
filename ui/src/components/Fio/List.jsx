@@ -1,10 +1,11 @@
 import React from 'react'
 
+import { hot } from 'react-hot-loader'
+
+
 import PropTypes from 'prop-types'
 
-import { hot } from 'react-hot-loader/root'
-
-class Tokens extends React.Component {
+class List extends React.Component {
 
   static propTypes = {
     loadTokens: PropTypes.func.isRequired,
@@ -27,25 +28,19 @@ class Tokens extends React.Component {
     const { tokens, tokensLoading } = this.props
 
     return (
-      <div>
-        <h2>
-          Bondster Tokens
-        </h2>
-        {tokensLoading && 'Loading'}
-        <ul>
-          {tokens.length > 0
-            ? (
-              tokens.map((token) => (
-              <li key={token}>
-                {token}
-              </li>
-            )))
-            : 'No data'
-          }
-        </ul>
-      </div>
+      <ul>
+        {tokens.length > 0
+          ? (
+            tokens.map((token) => (
+            <li key={token}>
+              {token}
+            </li>
+          )))
+          : 'No data'
+        }
+      </ul>
     )
   }
 }
 
-export default PRODUCTION ? Tokens : hot(Tokens)
+export default List

@@ -3,8 +3,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { withTenant, TenantCtx } from '../containers/Tenant'
-import { Tokens as FioTokens } from '../containers/Fio'
-import { Tokens as BondsterTokens } from '../containers/Bondster'
+import {
+  List as FioTokens,
+  New as FioTokenNew,
+} from '../containers/Fio'
+import {
+  List as BondsterTokens,
+} from '../containers/Bondster'
+import { ErrorBoundary } from '../components/ErrorBoundary'
 
 class Index extends React.Component {
 
@@ -17,7 +23,10 @@ class Index extends React.Component {
         <TenantCtx.Consumer>
           {(tenant) => (
             <React.Fragment>
+              <h2>Fio</h2>
               <FioTokens tenant={tenant} />
+              <FioTokenNew />
+              <h2>Bondster</h2>
               <BondsterTokens tenant={tenant} />
             </React.Fragment>
           )}
@@ -27,4 +36,16 @@ class Index extends React.Component {
   }
 }
 
-export default withTenant(Index)
+let Exported = Index
+
+if (!PRODUCTION && module.hot) {
+  const { hot } = require('react-hot-loader/root')
+  const { setConfig } = require('react-hot-loader')
+  setConfig({
+    logLevel: 'debug',
+    errorReporter: ErrorBoundary,
+  })
+  Exported = hot(Index)
+}
+
+export default withTenant(Exported)

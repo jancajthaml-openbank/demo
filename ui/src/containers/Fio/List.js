@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 
-import { Tokens } from '../../components/Bondster'
+import { List } from '../../components/Fio'
 
 // https://reactjs.org/docs/code-splitting.html
 
@@ -11,12 +11,12 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 const mapStateToProps = (state, props) => ({
-  tokens: state.getIn(['bondster', 'tokens']).toJS(),
-  tokensLoading: state.getIn(['bondster', 'tokensLoading']),
+  tokens: state.getIn(['fio', 'tokens']).toJS(),
+  tokensLoading: state.getIn(['fio', 'tokensLoading']),
   ...props
 })
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Tokens)
+)(List)

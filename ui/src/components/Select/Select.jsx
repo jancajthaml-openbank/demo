@@ -2,8 +2,6 @@ import React from 'react'
 
 import PropTypes from 'prop-types'
 
-import { hot } from 'react-hot-loader/root'
-
 class Select extends React.Component {
 
   static propTypes = {
@@ -54,11 +52,11 @@ class Select extends React.Component {
     return (
       <select value={selected} onChange={this.onChange}>
         {options.map((item) =>
-          <option key={item} value={item}>{item}</option>
+          <option key={item} value={item}>{`x[${item}]`}</option>
         )}
       </select>
     )
   }
 }
 
-export default PRODUCTION ? Select : hot(Select)
+export default Select

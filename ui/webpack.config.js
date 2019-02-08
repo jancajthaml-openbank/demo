@@ -16,6 +16,9 @@ function getPlugins(production) {
   let plugins = [
     new webpack.DefinePlugin({
       PRODUCTION: `${production}`,
+      'process.env': {
+        'NODE_ENV': production ? `"production"` : `"development"`,
+      },
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment\/src\/lib\/locale/),
     new webpack.ProgressPlugin(),
@@ -73,6 +76,7 @@ function getPlugins(production) {
     ])
   } else {
     plugins.push(...[
+      new webpack.NamedModulesPlugin(),
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
     ])
@@ -81,12 +85,15 @@ function getPlugins(production) {
   return plugins
 }
 
-module.exports = function(env, argv) {
+module.exports = function(env = {}, args = {}) {
   const production = process.env.NODE_ENV === 'production'
 
   return {
     entry: [
       path.resolve(__dirname, 'src', 'index.js'),
+      'webpack-dev-server/client?http://0.0.0.0:3000',
+      'webpack/hot/dev-server',
+      'webpack/hot/only-dev-server',
     ],
     mode: production ? 'production' : 'development',
     stats: production ? 'normal' : 'minimal',
@@ -104,7 +111,7 @@ module.exports = function(env, argv) {
       ],
     },
     resolve: {
-      unsafeCache: true,
+      unsafeCache: false,
       modules: [
         path.resolve(__dirname, 'src'),
         path.resolve(__dirname, 'node_modules'),
@@ -120,9 +127,11 @@ module.exports = function(env, argv) {
         '.web.js',
         '.web.jsx',
       ],
+      alias: {
+        'react-dom': production ? 'react-dom' : '@hot-loader/react-dom',
+      },
       mainFields: [
         'browser',
-        'jsnext:main',
         'main',
       ],
       plugins: [
@@ -152,7 +161,7 @@ module.exports = function(env, argv) {
         test: /\.jsx?$/,
         include: path.resolve(__dirname, 'src'),
         exclude: /node_modules/,
-        use: {
+        use: [{
           loader: 'babel-loader',
           options: {
             babelrc: false,
@@ -259,7 +268,7 @@ module.exports = function(env, argv) {
             cacheDirectory: !production,
             sourceMaps: !production,
           },
-        },
+        }],
       }, {
         test: /\.html$/,
         use: [
@@ -381,7 +390,9 @@ module.exports = function(env, argv) {
       runtimeChunk: true
     },
     devServer: production ? undefined : {
+      stats: 'errors-only',
       compress: false,
+      disableHostCheck: true,
       clientLogLevel: 'none',
       publicPath: '/',
       host: '0.0.0.0',

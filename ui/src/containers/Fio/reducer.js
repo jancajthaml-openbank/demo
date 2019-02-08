@@ -25,6 +25,12 @@ export default (state = initialState, { type, payload }) => {
         .set('tokens', List(payload.data))
     }
 
+    case TOKENS_API_REQUEST_FAILURE: {
+      return state
+        .set('tokensLoading', false)
+        .set('tokens', List())
+    }
+
     default: {
       return state
     }
