@@ -89,12 +89,17 @@ module.exports = function(env = {}, args = {}) {
   const production = process.env.NODE_ENV === 'production'
 
   return {
-    entry: [
-      path.resolve(__dirname, 'src', 'index.js'),
-      'webpack-dev-server/client?http://0.0.0.0:3000',
-      'webpack/hot/dev-server',
-      'webpack/hot/only-dev-server',
-    ],
+    entry: (production
+      ? [
+        path.resolve(__dirname, 'src', 'index.js'),
+      ]
+      : [
+        path.resolve(__dirname, 'src', 'index.js'),
+        'webpack-dev-server/client?http://0.0.0.0:3000',
+        'webpack/hot/dev-server',
+        'webpack/hot/only-dev-server',
+      ]
+    ),
     mode: production ? 'production' : 'development',
     stats: production ? 'normal' : 'minimal',
     output: {
@@ -240,11 +245,15 @@ module.exports = function(env = {}, args = {}) {
                 },
               ],
 
-              'react-hot-loader/babel',
               'transform-undefined-to-void',
             ],
 
             env: {
+              development: {
+                plugins: [
+                  'react-hot-loader/babel'
+                ]
+              },
               production: {
                 plugins: [
                   [

@@ -16,13 +16,18 @@ class ErrorBoundary extends React.Component {
   }
 
   render() {
-    const { hasError } = this.state
+    const { hasError, error } = this.state
     const { children } = this.props
 
     if (!hasError) {
       return children
     }
 
+    console.log(error)
+
+    // FIXME button to remount instead of reload
+
+    // FIXME pretty display fatal error message
     return 'Fatal error'
   }
 }

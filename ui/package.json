@@ -2,8 +2,8 @@
   "name": "openbank-demo",
   "private": true,
   "scripts": {
-    "build": "webpack",
-    "start": "webpack-dev-server"
+    "build": "NODE_ENV=production webpack",
+    "start": "NODE_ENV=development webpack-dev-server"
   },
   "dependencies": {
     "d3": "5.9.0",

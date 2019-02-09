@@ -80,8 +80,8 @@ ENV \
     LAKE_VERSION=1.1.4 \
     VAULT_VERSION=1.2.0 \
     WALL_VERSION=1.2.0 \
-    FIO_BCO_VERSION=1.1.0 \
-    BONDSTER_BCO_VERSION=1.1.0 \
+    FIO_BCO_VERSION=1.1.1 \
+    BONDSTER_BCO_VERSION=1.1.1 \
     SEARCH_VERSION=1.1.6
 
 RUN \
@@ -131,8 +131,6 @@ RUN \
     sed -i '/imklog/{s/^/#/}' /etc/rsyslog.conf && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN cat /etc/init/bondster-bco.conf
-
 RUN rm -rf \
       /opt/wall/secrets \
       /opt/fio-bco/secrets \
@@ -146,6 +144,8 @@ RUN rm -rf \
       's!^WALL_SECRETS=.*!WALL_SECRETS=/openbank/secrets!' && \
     sed -ri /etc/init/bondster-bco.conf -e \
       's!^BONDSTER_BCO_ENCRYPTION_KEY=.*!BONDSTER_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
+    sed -ri /etc/init/fio-bco.conf -e \
+      's!^FIO_BCO_ENCRYPTION_KEY=.*!FIO_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
     :
 
 COPY etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
