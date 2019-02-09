@@ -20,8 +20,19 @@ class FioService {
     return res.json()
   }
 
-  async createToken(tenant, token) {
-    const res = await fetch(`/api/fio/token/${tenant}`)
+  async createToken(tenant, value) {
+    const res = await fetch(`/api/fio/token/${tenant}`, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        value,
+      }),
+    })
+
     if (res.status !== 200) {
       throw new Error('CREATE_TOKEN_FAILED')
     }

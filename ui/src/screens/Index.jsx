@@ -9,6 +9,7 @@ import {
 } from '../containers/Fio'
 import {
   List as BondsterTokens,
+  New as BondsterTokenNew,
 } from '../containers/Bondster'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 
@@ -25,9 +26,10 @@ class Index extends React.Component {
             <React.Fragment>
               <h2>Fio</h2>
               <FioTokens tenant={tenant} />
-              <FioTokenNew />
+              <FioTokenNew tenant={tenant} />
               <h2>Bondster</h2>
               <BondsterTokens tenant={tenant} />
+              <BondsterTokenNew tenant={tenant} />
             </React.Fragment>
           )}
         </TenantCtx.Consumer>

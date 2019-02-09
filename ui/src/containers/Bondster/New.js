@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 
-import { New } from '../../components/Fio'
+import { New } from '../../components/Bondster'
 
 import TokenService from './service'
 

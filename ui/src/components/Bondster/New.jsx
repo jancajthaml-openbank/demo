@@ -23,12 +23,12 @@ class New extends React.Component {
     const {
       tenant,
       createToken,
-      onNewToken,
+      onNewToken
     } = this.props
 
     try {
       actions.setSubmitting(true)
-      const { value } = await createToken(tenant, values.value)
+      const { value } = await createToken(tenant, values.username, values.password)
       if (onNewToken && value) {
         onNewToken(value)
       }
@@ -45,11 +45,15 @@ class New extends React.Component {
     return (
       <Formik
         initialValues={{
-          value: '',
+          username: '',
+          password: '',
         }}
         validationSchema={Yup.object().shape({
-          value: Yup.string()
-            .required('Value is required!'),
+          username: Yup.string()
+            .email('Invalid email address')
+            .required('Username is required!'),
+          password: Yup.string()
+            .required('Password is required!'),
         })}
         onSubmit={this.handleSubmit}
         render={({
@@ -60,14 +64,23 @@ class New extends React.Component {
           handleSubmit,
         }) => (
           <Form>
-            <label htmlFor="value">Token</label>
+            <label htmlFor="username">Username</label>
             <Field
-              name="value"
-              type="value"
-              value={values.value}
+              name="username"
+              type="email"
+              value={values.username}
             />
             <div>
-              <ErrorMessage name="value" />
+              <ErrorMessage name="username" />
+            </div>
+            <label htmlFor="password">Password</label>
+            <Field
+              name="password"
+              type="password"
+              value={values.password}
+            />
+            <div>
+              <ErrorMessage name="password" />
             </div>
             <button
               type="submit"
