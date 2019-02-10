@@ -66,6 +66,7 @@ class New extends React.Component {
           <Form>
             <label htmlFor="username">Username</label>
             <Field
+              autoComplete="off"
               name="username"
               type="email"
               value={values.username}
@@ -75,6 +76,7 @@ class New extends React.Component {
             </div>
             <label htmlFor="password">Password</label>
             <Field
+              autoComplete="off"
               name="password"
               type="password"
               value={values.password}

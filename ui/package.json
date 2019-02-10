@@ -88,6 +88,11 @@
     "webpack-cli": "3.2.3",
     "webpack-dev-middleware": "3.5.2",
     "webpack-dev-server": "3.1.14",
-    "whatwg-fetch": "3.0.0"
+    "whatwg-fetch": "3.0.0",
+    "fastify": "1.13.4",
+    "fastify-graphql": "4.0.1",
+    "graphql": "14.1.1",
+    "graphql-tools": "4.0.3",
+    "lokijs": "1.5.6"
   }
 }

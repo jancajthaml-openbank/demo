@@ -11,6 +11,10 @@ import {
   List as BondsterTokens,
   New as BondsterTokenNew,
 } from '../containers/Bondster'
+import {
+  AccountsList as Accounts,
+  TransactionsList as Transactions,
+} from '../containers/Core'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 
 class Index extends React.Component {
@@ -24,12 +28,22 @@ class Index extends React.Component {
         <TenantCtx.Consumer>
           {(tenant) => (
             <React.Fragment>
-              <h2>Fio</h2>
-              <FioTokens tenant={tenant} />
-              <FioTokenNew tenant={tenant} />
-              <h2>Bondster</h2>
-              <BondsterTokens tenant={tenant} />
-              <BondsterTokenNew tenant={tenant} />
+              <div>
+                <h2>Core</h2>
+                <h3>Accounts</h3>
+                <Accounts tenant={tenant} />
+                <h3>Transactions</h3>
+                <Transactions tenant={tenant} />
+              </div>
+              <div>
+                <h2>Tokens</h2>
+                <h3>Fio</h3>
+                <FioTokens tenant={tenant} />
+                <FioTokenNew tenant={tenant} />
+                <h3>Bondster</h3>
+                <BondsterTokens tenant={tenant} />
+                <BondsterTokenNew tenant={tenant} />
+              </div>
             </React.Fragment>
           )}
         </TenantCtx.Consumer>

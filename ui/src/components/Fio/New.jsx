@@ -62,6 +62,7 @@ class New extends React.Component {
           <Form>
             <label htmlFor="value">Token</label>
             <Field
+              autoComplete="off"
               name="value"
               type="value"
               value={values.value}

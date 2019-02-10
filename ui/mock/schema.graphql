@@ -1,0 +1,87 @@
+type Transaction {
+    tenant: String!
+    transaction: String
+    status: String
+    transfers: [Transfer]!
+}
+
+type Transfer {
+    tenant: String!
+    transaction: String!
+    transfer: String!
+    status: String
+    credit: Account
+    debit: Account
+    valueDate: Date
+    amount: Money
+    currency: String
+}
+
+type Account {
+    tenant: String!
+    name: String!
+    currency: String
+    isBalanceCheck: Boolean
+}
+
+scalar Date
+scalar Money
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+type Query {
+
+    Account(
+        tenant: String!,
+        name: String!
+    ): Account
+
+    Accounts(
+        tenant: String!,
+        currency: String,
+        isBalanceCheck: Boolean,
+        take: Int,
+        skip: Int,
+        sort_field: String,
+        sort_order: SortOrder
+    ): [Account]
+
+    Transaction(
+        tenant: String!,
+        transaction: String!
+    ): Transaction
+
+    Transactions(
+        tenant: String!,
+        credit: String,
+        debit: String,
+        status: String,
+        currency: String,
+        take: Int,
+        skip: Int,
+        sort_field: String,
+        sort_order: SortOrder
+    ): [Transaction]
+
+    Transfer(
+        tenant: String!,
+        transaction: String!,
+        transfer: String!
+    ): Transfer
+
+    Transfers(
+        tenant: String!,
+        credit: String,
+        debit: String,
+        status: String,
+        currency: String,
+        take: Int,
+        skip: Int,
+        sort_field: String,
+        sort_order: SortOrder
+    ): [Transfer]
+
+}

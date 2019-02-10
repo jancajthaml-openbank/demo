@@ -19,9 +19,7 @@ const withTenant = (ComposedComponent) => {
     }
 
     tenantChanged = (tenant) => {
-      this.setState({ tenant }, () => {
-        console.log(`tenant is now ${tenant}`)
-      })
+      this.setState({ tenant })
     }
 
     render() {
