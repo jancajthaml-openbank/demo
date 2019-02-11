@@ -31,9 +31,19 @@ class List extends React.Component {
           ? (
             transactions.map((transaction) => (
             <li key={transaction.transaction}>
-              <pre>
-                {JSON.stringify(transaction)}
-              </pre>
+              {`${transaction.transaction} (${transaction.status})`}
+              {transaction.transfers.length > 0
+                ? (
+                    <ul>
+                      {transaction.transfers.map((transfer) => (
+                        <li key={`${transaction.transaction}/${transfer.transfer}`}>
+                          {JSON.stringify(transfer)}
+                        </li>
+                      ))}
+                    </ul>
+                  )
+                : null
+              }
             </li>
           )))
           : 'No data'

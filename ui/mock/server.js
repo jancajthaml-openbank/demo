@@ -4,15 +4,10 @@ const fastify = require('fastify')
 const { graphiqlFastify, graphqlFastify } = require('fastify-graphql')
 const { makeExecutableSchema } = require('graphql-tools')
 const loki = require('lokijs')
-
+const { randomId } = require('./utils/random')
 const { Accounts, Transactions, Transfers } = require('./resolver')
 const { DateScalar, MoneyScalar } = require('./scalar')
 
-// -------------------------------------------------------------------------- //
-
-function randId() {
-  return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 20)
-}
 // -------------------------------------------------------------------------- //
 
 module.exports = function(application) {
@@ -26,6 +21,7 @@ module.exports = function(application) {
     unique: ['id'],
   })
   const transfers = db.addCollection('transfers', {
+    unique: ['id'],
   })
   const fio = db.addCollection('fio', {
     unique: ['id'],
@@ -60,6 +56,8 @@ module.exports = function(application) {
 
   transfers.insert({
     "id": "demo/TRS/T_1",
+    "tenant": "demo",
+    "status": "committed",
     "transfer": "T_1",
     "transaction": "TRS",
     "amount": "1.0",
@@ -70,6 +68,8 @@ module.exports = function(application) {
 
   transfers.insert({
     "id": "demo/TRS/T_2",
+    "tenant": "demo",
+    "status": "committed",
     "transfer": "T_2",
     "transaction": "TRS",
     "amount": "2.0",
@@ -78,7 +78,7 @@ module.exports = function(application) {
     "debit": "B"
   })
 
-  // -------------------------------------------------------------------------- //
+  // ------------------------------------------------------------------------ //
   // GraphQL methods
 
   app.register(graphqlFastify, {
@@ -105,10 +105,10 @@ module.exports = function(application) {
     },
   })
 
-  // -------------------------------------------------------------------------- //
+  // ------------------------------------------------------------------------ //
   // HTTP 1.0 methods
 
-  // -------------------------------------------------------------------------- //
+  // ------------------------------------------------------------------------ //
   // Vault
 
   app.get('/api/vault/tenant', async (req, res) => {
@@ -122,7 +122,7 @@ module.exports = function(application) {
     ]
   })
 
-  // -------------------------------------------------------------------------- //
+  // ------------------------------------------------------------------------ //
   // Bondster
 
   app.get('/api/bondster/token/:tenant', async (req, res) => {
@@ -183,7 +183,7 @@ module.exports = function(application) {
     }
   })
 
-  // -------------------------------------------------------------------------- //
+  // ------------------------------------------------------------------------ //
   // Fio
 
   app.get('/api/fio/token/:tenant', async (req, res) => {
@@ -198,7 +198,6 @@ module.exports = function(application) {
 
     res.type('application/json').code(200)
     return fio.find({ tenant }).map((item) => item.id)
-
   })
 
   app.post('/api/fio/token/:tenant', async (req, res) => {
@@ -248,7 +247,7 @@ module.exports = function(application) {
     }
   })
 
-  // -------------------------------------------------------------------------- //
+  // ------------------------------------------------------------------------ //
 
   return app
 }
