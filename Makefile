@@ -1,11 +1,29 @@
 .ONESHELL:
 
 .PHONY: all
-all: build run
+all: bootstrap ui build run
+
+.PHONY: ui
+ui:
+	@docker-compose run --rm ui-build
 
 .PHONY: build
 build:
-	docker build . -t openbank/demo:v1
+	@docker build . -t openbank/demo:v1
+
+.PHONY: rebuild
+rebuild:
+	@docker build --no-cache . -t openbank/demo:v1
+
+.PHONY: bootstrap
+bootstrap:
+	@docker-compose build node
+	@docker-compose run --rm ui-install-dependencies
+
+.PHONY: dev
+dev:
+	@docker-compose down --remove-orphans
+	@docker-compose up ui-development
 
 .PHONY: run
 run:
@@ -14,12 +32,13 @@ run:
 		docker run -dti \
 			--name=openbank_demo \
 			-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
-			-v $$(pwd)/data:/data \
-			-p 5562:5562 \
-			-p 5561:5561 \
+			-v $$(pwd)/data/openbank:/data \
+			-v $$(pwd)/data/mongo:/var/lib/mongodb \
+			-v $$(pwd)/ui/build:/var/www \
+			-v $$(pwd)/secrets:/openbank/secrets \
 			-p 443:443 \
 			-p 7443:7443 \
-			-p 8080:8080 \
+			-p 80:80 \
 			--privileged=true \
 			--security-opt seccomp:unconfined \
 		openbank/demo:v1 \

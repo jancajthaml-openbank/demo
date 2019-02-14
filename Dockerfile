@@ -39,9 +39,13 @@ RUN \
       libudev1 \
       systemd \
       haproxy \
+      nginx \
       sysvinit-utils \
       udev \
-      util-linux && \
+      util-linux \
+      \
+      libzmq5=4.2.1-4 \
+      && \
     \
     curl -sL https://deb.nodesource.com/setup_10.x | bash && \
     \
@@ -73,34 +77,42 @@ RUN \
     systemctl set-default multi-user.target ;:
 
 ENV \
-    LAKE_VERSION=1.1.3 \
-    VAULT_VERSION=1.1.3 \
-    WALL_VERSION=1.1.3 \
-    SEARCH_VERSION=1.1.4 \
-    FIO_BCO_VERSION=1.0.1
+    LAKE_VERSION=1.1.4 \
+    VAULT_VERSION=1.2.0 \
+    WALL_VERSION=1.2.0 \
+    FIO_BCO_VERSION=1.1.1 \
+    BONDSTER_BCO_VERSION=1.1.1 \
+    SEARCH_VERSION=1.1.6
 
 RUN \
-    echo "downloading lake v${LAKE_VERSION}" && \
+    echo "downloading lake@${LAKE_VERSION}" && \
     curl --fail -L "https://github.com/jancajthaml-openbank/lake/releases/download/v${LAKE_VERSION}/lake_${LAKE_VERSION}_amd64.deb" -# \
     -o "/tmp/lake_${LAKE_VERSION}_amd64.deb" && \
     \
-    echo "downloading vault v${VAULT_VERSION}" && \
+    echo "downloading vault@${VAULT_VERSION}" && \
     curl --fail -L "https://github.com/jancajthaml-openbank/vault/releases/download/v${VAULT_VERSION}/vault_${VAULT_VERSION}_amd64.deb" -# \
     -o "/tmp/vault_${VAULT_VERSION}_amd64.deb" && \
     \
-    echo "downloading wall v${WALL_VERSION}" && \
+    echo "downloading wall@${WALL_VERSION}" && \
     curl --fail -L "https://github.com/jancajthaml-openbank/wall/releases/download/v${WALL_VERSION}/wall_${WALL_VERSION}_amd64.deb" -# \
     -o "/tmp/wall_${WALL_VERSION}_amd64.deb" && \
     \
-    echo "downloading search v${SEARCH_VERSION}" && \
+    echo "downloading search@${SEARCH_VERSION}" && \
     curl --fail -L "https://github.com/jancajthaml-openbank/search/releases/download/v${SEARCH_VERSION}/search_${SEARCH_VERSION}_all.deb" -# \
     -o "/tmp/search_${SEARCH_VERSION}_all.deb" && \
     \
-    echo "downloading fio-bco v${FIO_BCO_VERSION}" && \
+    echo "downloading fio-bco@${FIO_BCO_VERSION}" && \
     curl --fail -L "https://github.com/jancajthaml-openbank/fio-bco/releases/download/v${FIO_BCO_VERSION}/fio-bco_${FIO_BCO_VERSION}_amd64.deb" -# \
     -o "/tmp/fio-bco_${FIO_BCO_VERSION}_amd64.deb" && \
     \
+    echo "downloading bondster-bco@${BONDSTER_BCO_VERSION}" && \
+    curl --fail -L "https://github.com/jancajthaml-openbank/bondster-bco/releases/download/v${BONDSTER_BCO_VERSION}/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb" -# \
+    -o "/tmp/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb" && \
+    \
     find /tmp -name "*.deb" -exec file {} \;
+
+RUN mkdir /etc/systemd/system/nginx.service.d && \
+    printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
 
 RUN \
     apt-get -y update && \
@@ -109,11 +121,9 @@ RUN \
     apt-get -y install -f /tmp/wall_${WALL_VERSION}_amd64.deb && \
     apt-get -y install -f /tmp/search_${SEARCH_VERSION}_all.deb && \
     apt-get -y install -f /tmp/fio-bco_${FIO_BCO_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb && \
     \
-    systemctl enable \
-      mongod \
-      vault@demo \
-      fio-bco@demo \
+    systemctl enable mongod \
     && \
     \
     sed -ri /etc/systemd/journald.conf -e 's!^#?Storage=.*!Storage=volatile!' && \
@@ -121,11 +131,34 @@ RUN \
     sed -i '/imklog/{s/^/#/}' /etc/rsyslog.conf && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN rm -rf \
+      /opt/wall/secrets \
+      /opt/fio-bco/secrets \
+      /opt/bondster-bco/secrets && \
+    \
+    sed -ri /etc/init/fio-bco.conf -e \
+      's!^FIO_BCO_SECRETS=.*!FIO_BCO_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/init/bondster-bco.conf -e \
+      's!^BONDSTER_BCO_SECRETS=.*!BONDSTER_BCO_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/init/wall.conf -e \
+      's!^WALL_SECRETS=.*!WALL_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/init/bondster-bco.conf -e \
+      's!^BONDSTER_BCO_ENCRYPTION_KEY=.*!BONDSTER_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
+    sed -ri /etc/init/fio-bco.conf -e \
+      's!^FIO_BCO_ENCRYPTION_KEY=.*!FIO_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
+    :
+
 COPY etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
+COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default
+
+RUN systemctl enable \
+      vault@demo \
+      vault@test \
+      bondster-bco@demo \
+      fio-bco@demo
 
 STOPSIGNAL SIGTERM
 
 VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
 
 ENTRYPOINT ["/lib/systemd/systemd"]
-

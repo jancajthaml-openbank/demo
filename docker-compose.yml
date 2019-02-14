@@ -1,0 +1,59 @@
+version: '2'
+
+# ---------------------------------------------------------------------------- #
+
+services:
+
+  # -------------------------------------------------------------------------- #
+
+  node:
+    image: node:10.9.0
+    volumes:
+      - ./ui:/opt/project
+      - dependency-cache:/opt/project/node_modules
+    working_dir: /opt/project
+    entrypoint: ["npm"]
+
+  # -------------------------------------------------------------------------- #
+
+  ui-test:
+    extends: node
+    command: ["test"]
+
+  # -------------------------------------------------------------------------- #
+
+  ui-install-dependencies:
+    extends: node
+    command: ["i"]
+
+  # -------------------------------------------------------------------------- #
+
+  ui-build:
+    extends: node
+    command: ["run", "build"]
+
+  # -------------------------------------------------------------------------- #
+
+  ui-mock:
+    extends: node
+    ports:
+      - "4000:4000"
+    entrypoint: node
+    command: ["/opt/project/mock/index.js"]
+
+  # -------------------------------------------------------------------------- #
+
+  ui-development:
+    tty: true
+    extends: node
+    ports:
+      - "3000:3000"
+    depends_on:
+      - ui-mock
+    command: ["start"]
+
+
+# ---------------------------------------------------------------------------- #
+
+volumes:
+  dependency-cache:
