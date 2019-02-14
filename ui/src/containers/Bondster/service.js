@@ -21,6 +21,10 @@ class FioService {
   }
 
   async createToken(tenant, username, password) {
+    const req = {
+      username,
+      password,
+    }
     const res = await fetch(`/api/bondster/token/${tenant}`, {
       method: 'POST',
       headers: {
@@ -28,10 +32,7 @@ class FioService {
         'content-type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify({
-        username,
-        password,
-      }),
+      body: JSON.stringify(req),
     })
 
     if (res.status !== 200) {

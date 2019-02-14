@@ -4,13 +4,11 @@ import { New } from '../../components/Fio'
 
 import TokenService from './service'
 
-// https://reactjs.org/docs/code-splitting.html
-
 import { createTokenApiRequestSuccess } from './actions'
 
-const mapDispatchToProps = (dispatch) => ({
-  onNewToken: (token) => dispatch(createTokenApiRequestSuccess(token))
-})
+const mapDispatchToProps = {
+  onNewToken: createTokenApiRequestSuccess,
+}
 
 const mapStateToProps = (state, props) => ({
   createToken: TokenService.createToken,

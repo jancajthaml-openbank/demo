@@ -10,8 +10,8 @@ class New extends React.Component {
 
   static propTypes = {
     tenant: PropTypes.string.isRequired,
-    createToken: PropTypes.func.isRequired,
-    onNewToken: PropTypes.func,
+    createAccount: PropTypes.func.isRequired,
+    onNewAccount: PropTypes.func,
   }
 
   constructor(props) {
@@ -22,15 +22,20 @@ class New extends React.Component {
   async handleSubmit(values, actions) {
     const {
       tenant,
-      createToken,
-      onNewToken,
+      createAccount,
+      onNewAccount,
     } = this.props
 
     try {
       actions.setSubmitting(true)
-      const { value } = await createToken(tenant, values.value)
-      if (onNewToken) {
-        onNewToken(value)
+      const { accountNumber } = await createAccount(
+        tenant,
+        values.accountNumber,
+        values.currency,
+        values.isBalanceCheck
+      )
+      if (onNewAccount) {
+        onNewAccount(accountNumber)
       }
     } catch(err) {
       console.log('err')
@@ -45,11 +50,17 @@ class New extends React.Component {
     return (
       <Formik
         initialValues={{
-          value: '',
+          accountNumber: '',
+          currency: '',
+          isBalanceCheck: true,
         }}
         validationSchema={Yup.object().shape({
-          value: Yup.string()
-            .required('Value is required!'),
+          accountNumber: Yup.string()
+            .required('Account Number is required!'),
+          currency: Yup.string()
+            .required('Currency is required!')
+            .uppercase('Currency must be uppercase!')
+            .length(3, 'Currency must be 3 characters!'),
         })}
         onSubmit={this.handleSubmit}
         render={({
@@ -60,15 +71,25 @@ class New extends React.Component {
           handleSubmit,
         }) => (
           <Form>
-            <label htmlFor="value">Token</label>
+            <label htmlFor="accountNumber">Account Number</label>
             <Field
               autoComplete="off"
-              name="value"
-              type="value"
-              value={values.value}
+              name="accountNumber"
+              type="text"
+              value={values.accountNumber}
             />
             <div>
-              <ErrorMessage name="value" />
+              <ErrorMessage name="username" />
+            </div>
+            <label htmlFor="currency">Currency</label>
+            <Field
+              autoComplete="off"
+              name="currency"
+              type="text"
+              value={values.currency}
+            />
+            <div>
+              <ErrorMessage name="currency" />
             </div>
             <button
               type="submit"

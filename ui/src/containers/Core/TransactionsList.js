@@ -2,13 +2,11 @@ import { connect } from 'react-redux'
 
 import { List } from '../../components/Transactions'
 
-// https://reactjs.org/docs/code-splitting.html
-
 import { transactionsApiRequestInit } from './actions'
 
-const mapDispatchToProps = (dispatch) => ({
-  loadTransactions: (tenant) => dispatch(transactionsApiRequestInit(tenant))
-})
+const mapDispatchToProps = {
+  loadTransactions: transactionsApiRequestInit,
+}
 
 const mapStateToProps = (state, props) => ({
   transactions: state.getIn(['core', 'transactions']).toJS(),

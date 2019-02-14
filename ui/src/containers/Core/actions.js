@@ -3,10 +3,19 @@ import {
   ACCOUNTS_API_REQUEST_SUCCESS,
   ACCOUNTS_API_REQUEST_FAILURE,
 
+  CREATE_ACCOUNT_API_REQUEST_SUCCESS,
+
   TRANSACTIONS_API_REQUEST_INIT,
   TRANSACTIONS_API_REQUEST_SUCCESS,
   TRANSACTIONS_API_REQUEST_FAILURE,
 } from './constants'
+
+export const createAccountApiRequestSuccess = (accountNumber) => ({
+  type: CREATE_ACCOUNT_API_REQUEST_SUCCESS,
+  payload: {
+    accountNumber,
+  }
+})
 
 export const accountsApiRequestInit = (tenant) => ({
   type: ACCOUNTS_API_REQUEST_INIT,

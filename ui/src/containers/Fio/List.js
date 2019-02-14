@@ -2,13 +2,11 @@ import { connect } from 'react-redux'
 
 import { List } from '../../components/Fio'
 
-// https://reactjs.org/docs/code-splitting.html
-
 import { tokensApiRequestInit } from './actions'
 
-const mapDispatchToProps = (dispatch) => ({
-  loadTokens: (tenant) => dispatch(tokensApiRequestInit(tenant))
-})
+const mapDispatchToProps = {
+  loadTokens: tokensApiRequestInit,
+}
 
 const mapStateToProps = (state, props) => ({
   tokens: state.getIn(['fio', 'tokens']).toJS(),

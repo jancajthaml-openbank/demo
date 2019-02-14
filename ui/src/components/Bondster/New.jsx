@@ -29,7 +29,7 @@ class New extends React.Component {
     try {
       actions.setSubmitting(true)
       const { value } = await createToken(tenant, values.username, values.password)
-      if (onNewToken && value) {
+      if (onNewToken) {
         onNewToken(value)
       }
     } catch(err) {

@@ -8,10 +8,13 @@ import {
 } from './actions'
 
 import {
-  APP_UNMOUNT,
   ACCOUNTS_API_REQUEST_INIT,
   TRANSACTIONS_API_REQUEST_INIT,
 } from './constants'
+
+import {
+  APP_UNMOUNT
+} from '../../setup/constants'
 
 import CoreService from './service'
 

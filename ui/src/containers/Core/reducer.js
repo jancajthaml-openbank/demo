@@ -5,6 +5,8 @@ import {
   ACCOUNTS_API_REQUEST_SUCCESS,
   ACCOUNTS_API_REQUEST_FAILURE,
 
+  CREATE_ACCOUNT_API_REQUEST_SUCCESS,
+
   TRANSACTIONS_API_REQUEST_INIT,
   TRANSACTIONS_API_REQUEST_SUCCESS,
   TRANSACTIONS_API_REQUEST_FAILURE,
@@ -19,6 +21,13 @@ export const initialState = fromJS({
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+
+    case CREATE_ACCOUNT_API_REQUEST_SUCCESS: {
+      const { accountNumber } = payload
+
+      return state
+        .set('accounts', state.get('accounts').push({ name: accountNumber }))
+    }
 
     case ACCOUNTS_API_REQUEST_INIT: {
       return state

@@ -21,6 +21,9 @@ class FioService {
   }
 
   async createToken(tenant, value) {
+    const req = {
+      value,
+    }
     const res = await fetch(`/api/fio/token/${tenant}`, {
       method: 'POST',
       headers: {
@@ -28,9 +31,7 @@ class FioService {
         'content-type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify({
-        value,
-      }),
+      body: JSON.stringify(req),
     })
 
     if (res.status !== 200) {

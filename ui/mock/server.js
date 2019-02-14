@@ -122,6 +122,46 @@ module.exports = function(application) {
     ]
   })
 
+  app.post('/api/vault/account/:tenant', async (req, res) => {
+    console.log('POST /api/vault/account/:tenant')
+
+    const { tenant } = req.params
+
+    if (!tenant) {
+      res.type('application/json').code(404)
+      return {}
+    }
+
+    if (!req.body) {
+      res.type('application/json').code(400)
+      return {}
+    }
+
+    try {
+      const { accountNumber, currency, isBalanceCheck } = req.body
+
+      if (!accountNumber || !currency || !isBalanceCheck) {
+        res.type('application/json').code(400)
+        return {}
+      }
+
+      accounts.insert({
+        id: `${tenant}/${accountNumber}`,
+        tenant,
+        name: accountNumber,
+        currency,
+        isBalanceCheck,
+      })
+
+      res.type('application/json').code(200)
+      return {}
+    } catch (err) {
+      console.log(err)
+      res.type('application/json').code(409)
+      return {}
+    }
+  })
+
   // ------------------------------------------------------------------------ //
   // Bondster
 

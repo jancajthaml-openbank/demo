@@ -6,9 +6,12 @@ import {
 } from './actions'
 
 import {
-  APP_UNMOUNT,
   TOKENS_API_REQUEST_INIT,
 } from './constants'
+
+import {
+  APP_UNMOUNT
+} from '../../setup/constants'
 
 import TokenService from './service'
 

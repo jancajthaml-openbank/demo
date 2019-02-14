@@ -12,8 +12,9 @@ import {
   New as BondsterTokenNew,
 } from '../containers/Bondster'
 import {
-  AccountsList as Accounts,
-  TransactionsList as Transactions,
+  AccountsList,
+  NewAccount,
+  TransactionsList,
 } from '../containers/Core'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 
@@ -31,9 +32,10 @@ class Index extends React.Component {
               <div>
                 <h2>Core</h2>
                 <h3>Accounts</h3>
-                <Accounts tenant={tenant} />
+                <NewAccount tenant={tenant} />
+                <AccountsList tenant={tenant} />
                 <h3>Transactions</h3>
-                <Transactions tenant={tenant} />
+                <TransactionsList tenant={tenant} />
               </div>
               <div>
                 <h2>Tokens</h2>
