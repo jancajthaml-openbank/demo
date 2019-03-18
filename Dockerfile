@@ -44,7 +44,7 @@ RUN \
       udev \
       util-linux \
       \
-      libzmq5=4.2.1-4 \
+      libzmq5>=4.2.1~ \
       && \
     \
     curl -sL https://deb.nodesource.com/setup_10.x | bash && \
@@ -74,15 +74,15 @@ RUN \
       systemd-remount-fs.service \
       systemd-ask-password-wall.path \
       systemd-logind.service && \
-    systemctl set-default multi-user.target ;:
+    systemctl set-default multi-user.target ;
 
 ENV \
-    LAKE_VERSION=1.1.4 \
-    VAULT_VERSION=1.2.0 \
-    WALL_VERSION=1.2.0 \
-    FIO_BCO_VERSION=1.1.1 \
-    BONDSTER_BCO_VERSION=1.1.1 \
-    SEARCH_VERSION=1.1.6
+    LAKE_VERSION=1.1.5 \
+    VAULT_VERSION=1.2.1 \
+    WALL_VERSION=1.2.1 \
+    FIO_BCO_VERSION=1.1.2 \
+    BONDSTER_BCO_VERSION=1.1.2 \
+    SEARCH_VERSION=1.1.7
 
 RUN \
     echo "downloading lake@${LAKE_VERSION}" && \
@@ -152,10 +152,11 @@ COPY etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default
 
 RUN systemctl enable \
-      vault@demo \
-      vault@test \
-      bondster-bco@demo \
-      fio-bco@demo
+      vault-unit@demo \
+      vault-unit@test \
+      bondster-bco-import@demo \
+      fio-bco-import@demo \
+    ;
 
 STOPSIGNAL SIGTERM
 
