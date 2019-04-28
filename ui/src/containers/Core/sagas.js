@@ -37,6 +37,7 @@ export const loadAccounts = function*({ payload }) {
     const data = yield call(CoreService.getAccounts, payload.tenant)
     yield put(accountsApiRequestSuccess(data))
   } catch (err) {
+    // FIXME if 502 retry
     if (!PRODUCTION) {
       console.error('Core.sagas.loadAccounts()', err)
     }
@@ -63,6 +64,7 @@ export const loadTransactions = function*({ payload }) {
     const data = yield call(CoreService.getTransactions, payload.tenant)
     yield put(transactionsApiRequestSuccess(data))
   } catch (err) {
+    // FIXME if 502 retry
     if (!PRODUCTION) {
       console.error('Core.sagas.loadTransactions()', err)
     }

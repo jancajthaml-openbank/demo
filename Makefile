@@ -37,7 +37,6 @@ run:
 			-v $$(pwd)/ui/build:/var/www \
 			-v $$(pwd)/secrets:/openbank/secrets \
 			-p 443:443 \
-			-p 7443:7443 \
 			-p 80:80 \
 			--privileged=true \
 			--security-opt seccomp:unconfined \

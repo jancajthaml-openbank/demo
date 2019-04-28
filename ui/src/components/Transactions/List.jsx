@@ -24,19 +24,18 @@ class List extends React.Component {
   render() {
     const { transactions, transactionsLoading } = this.props
 
-
     return (
       <ul>
         {transactions.length > 0
           ? (
             transactions.map((transaction) => (
-            <li key={transaction.transaction}>
-              {`${transaction.transaction} (${transaction.status})`}
+            <li key={transaction.id}>
+              {`${transaction.id} (${transaction.status})`}
               {transaction.transfers.length > 0
                 ? (
                     <ul>
                       {transaction.transfers.map((transfer) => (
-                        <li key={`${transaction.transaction}/${transfer.transfer}`}>
+                        <li key={`${transaction.id}/${transfer.id}`}>
                           {JSON.stringify(transfer)}
                         </li>
                       ))}
