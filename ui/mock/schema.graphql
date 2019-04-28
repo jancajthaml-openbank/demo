@@ -1,14 +1,15 @@
+
 type Transaction {
     tenant: String!
-    transaction: String
+    id: String
     status: String
     transfers: [Transfer]!
 }
 
 type Transfer {
     tenant: String!
-    transaction: String!
-    transfer: String!
+    transaction: String
+    id: String
     status: String
     credit: Account
     debit: Account
@@ -74,9 +75,9 @@ type Query {
 
     Transfers(
         tenant: String!,
-        credit: String,
-        debit: String,
-        status: String,
+        credit: String,  # FIXME account
+        debit: String,   # FIXME account
+        status: String,  # FIXME enum
         currency: String,
         take: Int,
         skip: Int,

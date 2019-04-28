@@ -38,7 +38,6 @@ RUN \
       libsystemd0 \
       libudev1 \
       systemd \
-      haproxy \
       nginx \
       sysvinit-utils \
       udev \
@@ -77,12 +76,16 @@ RUN \
     systemctl set-default multi-user.target ;
 
 ENV \
-    LAKE_VERSION=1.1.5 \
-    VAULT_VERSION=1.2.1 \
-    WALL_VERSION=1.2.1 \
-    FIO_BCO_VERSION=1.1.2 \
-    BONDSTER_BCO_VERSION=1.1.2 \
-    SEARCH_VERSION=1.1.7
+    LAKE_VERSION=1.1.7 \
+    VAULT_VERSION=1.2.4 \
+    LEDGER_VERSION=1.0.2 \
+    \
+    FIO_BCO_VERSION=1.2.2 \
+    BONDSTER_BCO_VERSION=1.2.3 \
+    \
+    CNB_RATES_VERSION=1.0.0 \
+    \
+    SEARCH_VERSION=1.2.5
 
 RUN \
     echo "downloading lake@${LAKE_VERSION}" && \
@@ -93,9 +96,9 @@ RUN \
     curl --fail -L "https://github.com/jancajthaml-openbank/vault/releases/download/v${VAULT_VERSION}/vault_${VAULT_VERSION}_amd64.deb" -# \
     -o "/tmp/vault_${VAULT_VERSION}_amd64.deb" && \
     \
-    echo "downloading wall@${WALL_VERSION}" && \
-    curl --fail -L "https://github.com/jancajthaml-openbank/wall/releases/download/v${WALL_VERSION}/wall_${WALL_VERSION}_amd64.deb" -# \
-    -o "/tmp/wall_${WALL_VERSION}_amd64.deb" && \
+    echo "downloading ledger@${LEDGER_VERSION}" && \
+    curl --fail -L "https://github.com/jancajthaml-openbank/ledger/releases/download/v${LEDGER_VERSION}/ledger_${LEDGER_VERSION}_amd64.deb" -# \
+    -o "/tmp/ledger_${LEDGER_VERSION}_amd64.deb" && \
     \
     echo "downloading search@${SEARCH_VERSION}" && \
     curl --fail -L "https://github.com/jancajthaml-openbank/search/releases/download/v${SEARCH_VERSION}/search_${SEARCH_VERSION}_all.deb" -# \
@@ -109,6 +112,11 @@ RUN \
     curl --fail -L "https://github.com/jancajthaml-openbank/bondster-bco/releases/download/v${BONDSTER_BCO_VERSION}/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb" -# \
     -o "/tmp/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb" && \
     \
+    echo "downloading cnb-rates@${CNB_RATES_VERSION}" && \
+    curl --fail -L "https://github.com/jancajthaml-openbank/cnb-rates/releases/download/v${CNB_RATES_VERSION}/cnb-rates_${CNB_RATES_VERSION}_amd64.deb" -# \
+    -o "/tmp/cnb-rates_${CNB_RATES_VERSION}_amd64.deb" && \
+    \
+    ls -la /tmp && \
     find /tmp -name "*.deb" -exec file {} \;
 
 RUN mkdir /etc/systemd/system/nginx.service.d && \
@@ -118,10 +126,11 @@ RUN \
     apt-get -y update && \
     apt-get -y install -f /tmp/lake_${LAKE_VERSION}_amd64.deb && \
     apt-get -y install -f /tmp/vault_${VAULT_VERSION}_amd64.deb && \
-    apt-get -y install -f /tmp/wall_${WALL_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/ledger_${LEDGER_VERSION}_amd64.deb && \
     apt-get -y install -f /tmp/search_${SEARCH_VERSION}_all.deb && \
     apt-get -y install -f /tmp/fio-bco_${FIO_BCO_VERSION}_amd64.deb && \
     apt-get -y install -f /tmp/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/cnb-rates_${CNB_RATES_VERSION}_amd64.deb && \
     \
     systemctl enable mongod \
     && \
@@ -132,28 +141,39 @@ RUN \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN rm -rf \
-      /opt/wall/secrets \
+      /opt/vault/secrets \
+      /opt/ledger/secrets \
       /opt/fio-bco/secrets \
-      /opt/bondster-bco/secrets && \
+      /opt/bondster-bco/secrets \
+      /opt/cnb-rates/secrets && \
     \
     sed -ri /etc/init/fio-bco.conf -e \
       's!^FIO_BCO_SECRETS=.*!FIO_BCO_SECRETS=/openbank/secrets!' && \
     sed -ri /etc/init/bondster-bco.conf -e \
       's!^BONDSTER_BCO_SECRETS=.*!BONDSTER_BCO_SECRETS=/openbank/secrets!' && \
-    sed -ri /etc/init/wall.conf -e \
-      's!^WALL_SECRETS=.*!WALL_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/init/vault.conf -e \
+      's!^VAULT_SECRETS=.*!VAULT_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/init/vault.conf -e \
+      's!^VAULT_LOG_LEVEL=.*!VAULT_LOG_LEVEL=DEBUG!' && \
+    sed -ri /etc/init/ledger.conf -e \
+      's!^LEDGER_SECRETS=.*!LEDGER_SECRETS=/openbank/secrets!' &&\
+    sed -ri /etc/init/ledger.conf -e \
+      's!^LEDGER_LOG_LEVEL=.*!LEDGER_LOG_LEVEL=DEBUG!' && \
+    sed -ri /etc/init/cnb-rates.conf -e \
+      's!^CNB_RATES_SECRETS=.*!CNB_RATES_SECRETS=/openbank/secrets!' && \
     sed -ri /etc/init/bondster-bco.conf -e \
       's!^BONDSTER_BCO_ENCRYPTION_KEY=.*!BONDSTER_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
     sed -ri /etc/init/fio-bco.conf -e \
       's!^FIO_BCO_ENCRYPTION_KEY=.*!FIO_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
     :
 
-COPY etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default
 
 RUN systemctl enable \
       vault-unit@demo \
+      ledger-unit@demo \
       vault-unit@test \
+      ledger-unit@test \
       bondster-bco-import@demo \
       fio-bco-import@demo \
     ;

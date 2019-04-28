@@ -7,8 +7,6 @@ async function TransactionsResolve(scope, params, context) {
     return []
   }
 
-  console.log('result', result)
-
   const partition = result
     .reduce((result, item) => ({
       ...result,
@@ -20,7 +18,7 @@ async function TransactionsResolve(scope, params, context) {
     {})
 
   return Object.keys(partition).map((transaction) => ({
-    transaction,
+    id: transaction,
     status: partition[transaction][0]["status"],
     transfers: partition[transaction]
   }))
