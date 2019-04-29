@@ -2,11 +2,13 @@
 class CoreService {
   async getAccounts(tenant) {
     const req = {
-      query: `{
-        Accounts(tenant: "${tenant}") {
-          name
+      query: `
+        query {
+          Accounts(tenant: "${tenant}") {
+            name
+          }
         }
-      }`
+      `
     }
     const res = await fetch('/api/search/graphql', {
       method: 'POST',
@@ -26,7 +28,6 @@ class CoreService {
 
     return result.data.Accounts
   }
-
 
   async createAccount(tenant, accountNumber, currency, isBalanceCheck) {
     const req = {
@@ -54,25 +55,39 @@ class CoreService {
 
   async getTransactions(tenant) {
     const req = {
-      query: `{
-        Transactions(tenant: "${tenant}") {
-          transaction
-          status
-          transfers {
-            transfer
-            credit {
-              name
-              isBalanceCheck
-            }
-            debit {
-              name
-              isBalanceCheck
-            }
-            amount
-            currency
+      query: `
+        fragment accountFields on Account {
+          name
+          isBalanceCheck
+        }
+
+        fragment transferFields on Transfer {
+          id
+          amount
+          currency
+          valueDate
+          credit {
+            ...accountFields
+          }
+          debit {
+            ...accountFields
           }
         }
-      }`
+
+        fragment transactionFields on Transaction {
+          id
+          status
+          transfers {
+            ...transferFields
+          }
+        }
+
+        query {
+          Transactions(tenant: "${tenant}") {
+            ...transactionFields
+          }
+        }
+      `
     }
 
     const res = await fetch('/api/search/graphql', {

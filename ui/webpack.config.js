@@ -22,10 +22,10 @@ function getPlugins(production) {
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment\/src\/lib\/locale/),
     new webpack.ProgressPlugin(),
-    new CleanWebpackPlugin(['build'], {
-      root: __dirname,
-      verbose: false,
-      dry: false,
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['**/*'],
+      dangerouslyAllowCleanPatternsOutsideProject: false,
+      cleanStaleWebpackAssets: true,
     }),
     new webpack.ProvidePlugin({
       'fetch': 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch',
