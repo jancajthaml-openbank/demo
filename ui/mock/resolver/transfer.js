@@ -1,50 +1,57 @@
-async function TransfersResolve(_, params, context) {
-  const {
-    tenant,
-    credit,
-    debit,
-    status,
-    currency,
-    take,
-    skip,
-    sort_field,
-    sort_order,
-  } = params
 
-  if (!tenant) {
+/* -------------------------------------------------------------------------- */
+
+async function TransfersResolve(_, params, context) {
+  if (!params.tenant) {
     return []
   }
 
   const query = {
-    tenant,
+    tenant: params.tenant,
   }
 
-  if (status) {
-    query.status = status
+  if (params.status !== undefined) {
+    query.status = params.status
   }
 
-  if (currency) {
-    query.currency = currency
+  if (params.currency !== undefined) {
+    query.currency = params.currency
+  }
+
+  if (params.amount !== undefined) {
+    query.amount = params.amount
+  } else if (params.minAmount !== undefined) {
+    query.amount = { '$gte': params.maxAmount }
+  } else if (params.maxAmount !== undefined) {
+    query.amount = { '$lte': params.maxAmount }
+  }
+
+  if (params.valueDate !== undefined) {
+    query.valueDate = params.amount
+  } else if (params.fromValueDate !== undefined) {
+    query.valueDate = { '$gte': params.fromValueDate }
+  } else if (params.toValueDate !== undefined) {
+    query.valueDate = { '$lte': params.toValueDate }
   }
 
   let orderBy = (a, b) => 0
 
-  if (sort_field) {
-    switch (sort_order) {
+  if (params.sortField) {
+    switch (params.sortOrder) {
       case "ASC": {
         orderBy = (a, b) => {
-          if (a[sort_field] === b[sort_field]) return 0
-          if (a[sort_field] > b[sort_field]) return 1
-          if (a[sort_field] < b[sort_field]) return -1
+          if (a[params.sortField] === b[params.sortField]) return 0
+          if (a[params.sortField] > b[params.sortField]) return 1
+          if (a[params.sortField] < b[params.sortField]) return -1
           return 0
         }
         break
       }
       case "DESC": {
         orderBy = (a, b) => {
-          if (a[sort_field] === b[sort_field]) return 0
-          if (a[sort_field] < b[sort_field]) return 1
-          if (a[sort_field] > b[sort_field]) return -1
+          if (a[params.sortField] === b[params.sortField]) return 0
+          if (a[params.sortField] < b[params.sortField]) return 1
+          if (a[params.sortField] > b[params.sortField]) return -1
           return 0
         }
         break
@@ -52,47 +59,58 @@ async function TransfersResolve(_, params, context) {
     }
   }
 
-  const actualSkip = skip || 0
-  const actualTake = take ? (take + actualSkip) : undefined
+  const actualSkip = params.skip || 0
+  const actualTake = params.take ? (params.take + actualSkip) : undefined
 
   return context.db.transfers
     .find(query)
     .sort(orderBy)
     .slice(actualSkip, actualTake)
     .map((transfer) => ({
-      ...transfer,
+      id: transfer.transfer,
+      transaction: transfer.transaction,
+      status: transfer.status,
       credit: context.db.accounts.findOne({
-        id: `${tenant}/${transfer.credit}`
+        id: transfer.credit
       }),
       debit: context.db.accounts.findOne({
-        id: `${tenant}/${transfer.debit}`
-    })}))
+        id: transfer.debit
+      }),
+      valueDate: transfer.valueDate,
+      amount: transfer.amount,
+      currency: transfer.currency,
+    }))
 }
 
 async function TransferResolve(_, params, context) {
-  const { transaction, transfer, tenant } = params
-
-  if (!transaction || !transfer || !tenant) {
+  if (!params.tenant || !params.transaction || !params.transfer) {
     return null
   }
 
   const query = {
-    _id: `${tenant}/${transaction}/${transfer}`
+    _id: `${params.tenant}/${params.transaction}/${params.transfer}`
   }
 
   const transfer = context.db.transfers
     .findOne(query)
 
   return {
-    ...transfer,
+    id: transfer.transfer,
+    transaction: transfer.transaction,
+    status: transfer.status,
     credit: context.db.accounts.findOne({
-      id: `${tenant}/${transfer.credit}`
+      id: transfer.credit
     }),
     debit: context.db.accounts.findOne({
-      id: `${tenant}/${transfer.debit}`
+      id: transfer.debit
     }),
+    valueDate: transfer.valueDate,
+    amount: transfer.amount,
+    currency: transfer.currency,
   }
 }
+
+/* -------------------------------------------------------------------------- */
 
 module.exports = Object.freeze({
   Transfers: TransfersResolve,

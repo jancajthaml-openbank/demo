@@ -3,8 +3,6 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware, { END } from 'redux-saga'
 import { all, fork } from 'redux-saga/effects'
 
-import { fromJS } from 'immutable'
-
 import createReducer from './reducers'
 import sagas from './sagas'
 
@@ -20,7 +18,7 @@ export default async function(state = {}) {
 
   const store = createStore(
     createReducer(),
-    fromJS(state),
+    state,
     composeEnhancers(...[applyMiddleware(...enhancers)]),
   )
 

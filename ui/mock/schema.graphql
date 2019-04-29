@@ -46,8 +46,8 @@ type Query {
         isBalanceCheck: Boolean,
         take: Int,
         skip: Int,
-        sort_field: String,
-        sort_order: SortOrder
+        sortField: String,
+        sortOrder: SortOrder
     ): [Account]
 
     Transaction(
@@ -61,10 +61,16 @@ type Query {
         debit: String,
         status: String,
         currency: String,
+        amount: Money,
+        minAmount: Money,
+        maxAmount: Money,
+        valueDate: Date,
+        toValueDate: Date,
+        fromValueDate: Date,
         take: Int,
         skip: Int,
-        sort_field: String,
-        sort_order: SortOrder
+        sortField: String,
+        sortOrder: SortOrder
     ): [Transaction]
 
     Transfer(
@@ -75,14 +81,21 @@ type Query {
 
     Transfers(
         tenant: String!,
+        transaction: String,
         credit: String,  # FIXME account
         debit: String,   # FIXME account
         status: String,  # FIXME enum
         currency: String,
+        amount: Money,
+        minAmount: Money,
+        maxAmount: Money,
+        valueDate: Date,
+        toValueDate: Date,
+        fromValueDate: Date,
         take: Int,
         skip: Int,
-        sort_field: String,
-        sort_order: SortOrder
+        sortField: String,
+        sortOrder: SortOrder
     ): [Transfer]
 
 }

@@ -1,4 +1,4 @@
-import { fromJS, List } from 'immutable'
+//import { fromJS, List } from 'immutable'
 
 import {
   TOKENS_API_REQUEST_INIT,
@@ -7,34 +7,43 @@ import {
   CREATE_TOKEN_API_REQUEST_SUCCESS,
 } from './constants'
 
-export const initialState = fromJS({
+export const initialState = {
   tokens: [],
   tokensLoading: false,
-})
+}
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
 
     case CREATE_TOKEN_API_REQUEST_SUCCESS: {
-      return state
-        .set('tokens', state.get('tokens').merge(List([payload.data])))
+      return {
+        tokens: [
+          ...state.tokens,
+          payload.data
+        ],
+        tokensLoading: state.tokensLoading
+      }
     }
 
     case TOKENS_API_REQUEST_INIT: {
-      return state
-        .set('tokensLoading', true)
+      return {
+        tokens: state.tokens,
+        tokensLoading: true,
+      }
     }
 
     case TOKENS_API_REQUEST_SUCCESS: {
-      return state
-        .set('tokensLoading', false)
-        .set('tokens', List(payload.data))
+      return {
+        tokens: payload.data,
+        tokensLoading: false,
+      }
     }
 
     case TOKENS_API_REQUEST_FAILURE: {
-      return state
-        .set('tokensLoading', false)
-        .set('tokens', List())
+      return {
+        tokens: [],
+        tokensLoading: false,
+      }
     }
 
     default: {

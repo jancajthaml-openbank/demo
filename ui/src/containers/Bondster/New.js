@@ -8,12 +8,10 @@ import { createTokenApiRequestSuccess } from './actions'
 
 const mapDispatchToProps = {
   onNewToken: createTokenApiRequestSuccess,
+  createToken: TokenService.createToken,
 }
 
-const mapStateToProps = (state, props) => ({
-  createToken: TokenService.createToken,
-  ...props
-})
+const mapStateToProps = (state, props) => props
 
 export default connect(
   mapStateToProps,

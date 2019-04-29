@@ -19,10 +19,10 @@ export const tokensApiRequestSuccess = (data) => ({
   }
 })
 
-export const tokensApiRequestFailure = (err) => ({
+export const tokensApiRequestFailure = (error) => ({
   type: TOKENS_API_REQUEST_FAILURE,
   payload: {
-    err
+    error
   }
 })
 
