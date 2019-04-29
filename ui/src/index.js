@@ -1,14 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import './stylesheets'
-
 import { Provider as ReduxProvider } from 'react-redux'
 
+import './stylesheets'
 import { configureGlobalisation, configureStore } from './setup'
-
-import Index from './screens/Index'
 import { ErrorBoundary } from './components/ErrorBoundary'
+import Index from './screens/Index'
 
 const App = (store, globalisation) => (
   <ErrorBoundary>
@@ -21,14 +19,14 @@ const App = (store, globalisation) => (
 )
 
 const start = async function() {
-  const { store, globalisation } = await Promise.all([
+  const [ store, globalisation ] = await Promise.all([
+    configureStore(),
+    configureGlobalisation(),
+  ])
 
-    configureStore().then((store) => ({ store })),
-    configureGlobalisation().then((globalisation) => ({ globalisation })),
+  const mountNode = document.getElementById("mount")
 
-  ]).then((r) => Promise.resolve(r.reduce((b, a) => Object.assign({}, a, b))))
-
-  ReactDOM.render(App(store, globalisation), document.getElementById('mount'))
+  ReactDOM.render(App(store, globalisation), mountNode)
 }
 
 document.addEventListener("DOMContentLoaded", () => {

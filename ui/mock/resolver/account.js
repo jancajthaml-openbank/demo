@@ -1,31 +1,25 @@
-async function AccountsResolve(_, params, context) {
-  const {
-    tenant,
-    currency,
-    take,
-    skip,
-    sort_field,
-    sort_order,
-  } = params
 
+/* -------------------------------------------------------------------------- */
+
+async function AccountsResolve(_, params, context) {
   let orderBy = (a, b) => 0
 
-  if (sort_field) {
-    switch (sort_order) {
+  if (params.sortField) {
+    switch (params.sortOrder) {
       case "ASC": {
         orderBy = (a, b) => {
-          if (a[sort_field] === b[sort_field]) return 0
-          if (a[sort_field] > b[sort_field]) return 1
-          if (a[sort_field] < b[sort_field]) return -1
+          if (a[params.sortField] === b[params.sortField]) return 0
+          if (a[params.sortField] > b[params.sortField]) return 1
+          if (a[params.sortField] < b[params.sortField]) return -1
           return 0
         }
         break
       }
       case "DESC": {
         orderBy = (a, b) => {
-          if (a[sort_field] === b[sort_field]) return 0
-          if (a[sort_field] < b[sort_field]) return 1
-          if (a[sort_field] > b[sort_field]) return -1
+          if (a[params.sortField] === b[params.sortField]) return 0
+          if (a[params.sortField] < b[params.sortField]) return 1
+          if (a[params.sortField] > b[params.sortField]) return -1
           return 0
         }
         break
@@ -37,12 +31,16 @@ async function AccountsResolve(_, params, context) {
     tenant: params.tenant,
   }
 
-  if (currency) {
-    query.currency = currency
+  if (params.currency !== undefined) {
+    query.currency = params.currency
   }
 
-  const actualSkip = skip || 0
-  const actualTake = take ? (take + actualSkip) : undefined
+  if (params.isBalanceCheck !== undefined) {
+    query.isBalanceCheck = params.isBalanceCheck
+  }
+
+  const actualSkip = params.skip || 0
+  const actualTake = params.take ? (params.take + actualSkip) : undefined
 
   return context.db.accounts
     .find(query)
@@ -51,19 +49,19 @@ async function AccountsResolve(_, params, context) {
 }
 
 async function AccountResolve(_, params, context) {
-  const { tenant, name } = params
-
-  if (!tenant || !name) {
+  if (!params.tenant || !params.name) {
     return null
   }
 
   const query = {
-    id: `${tenant}/${name}`
+    id: `${params.tenant}/${params.name}`
   }
 
   return context.db.accounts
     .findOne(query)
 }
+
+/* -------------------------------------------------------------------------- */
 
 module.exports = Object.freeze({
   Accounts: AccountsResolve,

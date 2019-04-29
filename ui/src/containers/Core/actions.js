@@ -31,10 +31,10 @@ export const accountsApiRequestSuccess = (data) => ({
   }
 })
 
-export const accountsApiRequestFailure = (err) => ({
+export const accountsApiRequestFailure = (error) => ({
   type: ACCOUNTS_API_REQUEST_FAILURE,
   payload: {
-    err
+    error
   }
 })
 
@@ -52,9 +52,9 @@ export const transactionsApiRequestSuccess = (data) => ({
   }
 })
 
-export const transactionsApiRequestFailure = (err) => ({
+export const transactionsApiRequestFailure = (error) => ({
   type: TRANSACTIONS_API_REQUEST_FAILURE,
   payload: {
-    err
+    error
   }
 })

@@ -1,5 +1,7 @@
 const { Transfers } = require('./transfer')
 
+/* -------------------------------------------------------------------------- */
+
 async function TransactionsResolve(scope, params, context) {
   const result = await Transfers(scope, params, context)
 
@@ -33,6 +35,8 @@ async function TransactionResolve(scope, params, context) {
 
   return result[0]
 }
+
+/* -------------------------------------------------------------------------- */
 
 module.exports = Object.freeze({
   Transactions: TransactionsResolve,

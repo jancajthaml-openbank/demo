@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import memoize from 'memoize-state'
 
 import { List } from '../../components/Transactions'
 
@@ -9,12 +10,12 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state, props) => ({
-  transactions: state.getIn(['core', 'transactions']).toJS(),
-  transactionsLoading: state.getIn(['core', 'transactionsLoading']),
-  ...props
+  transactions: state.core.transactions,
+  transactionsLoading: state.core.transactionsLoading,
+  tenant: props.tenant,
 })
 
 export default connect(
-  mapStateToProps,
+  memoize(mapStateToProps),
   mapDispatchToProps,
 )(List)

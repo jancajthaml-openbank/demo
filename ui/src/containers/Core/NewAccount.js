@@ -8,12 +8,10 @@ import { createAccountApiRequestSuccess } from './actions'
 
 const mapDispatchToProps = {
   onNewAccount: createAccountApiRequestSuccess,
+  createAccount: CoreService.createAccount,
 }
 
-const mapStateToProps = (state, props) => ({
-  createAccount: CoreService.createAccount,
-  ...props
-})
+const mapStateToProps = (state, props) => props
 
 export default connect(
   mapStateToProps,

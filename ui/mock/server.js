@@ -14,9 +14,6 @@ module.exports = function(application) {
   const app = application || fastify()
   const db = new loki('db.json')
 
-  const tenants = db.addCollection('tenants', {
-    unique: ['tenant'],
-  })
   const accounts = db.addCollection('accounts', {
     unique: ['id'],
   })
@@ -28,6 +25,14 @@ module.exports = function(application) {
   })
   const bondster = db.addCollection('bondster', {
     unique: ['id'],
+  })
+
+  accounts.insert({
+    "id": "test/A",
+    "tenant": "test",
+    "name": "A",
+    "currency": "CZK",
+    "isBalanceCheck": false,
   })
 
   accounts.insert({
@@ -62,8 +67,9 @@ module.exports = function(application) {
     "transaction": "TRS",
     "amount": "1.0",
     "currency": "EUR",
-    "credit": "B",
-    "debit": "A"
+    "credit": "demo/B",
+    "debit": "demo/A",
+    "valueDate": new Date(),
   })
 
   transfers.insert({
@@ -74,8 +80,9 @@ module.exports = function(application) {
     "transaction": "TRS",
     "amount": "2.0",
     "currency": "EUR",
-    "credit": "C",
-    "debit": "B"
+    "credit": "demo/C",
+    "debit": "demo/B",
+    "valueDate": new Date(),
   })
 
   // ------------------------------------------------------------------------ //
@@ -116,10 +123,13 @@ module.exports = function(application) {
 
     res.type('application/json').code(200)
 
-    return [
-      'demo',
-      'test',
-    ]
+    const tenants = {}
+    accounts
+      .find()
+      .forEach((item) => {
+        tenants[item.tenant] = true
+      })
+    return Object.keys(tenants)
   })
 
   app.post('/api/vault/account/:tenant', async (req, res) => {
@@ -153,6 +163,7 @@ module.exports = function(application) {
         isBalanceCheck,
       })
 
+      tenants
       res.type('application/json').code(200)
       return {}
     } catch (err) {
@@ -248,10 +259,6 @@ module.exports = function(application) {
     if (!tenant) {
       res.type('application/json').code(404)
       return {}
-    }
-
-    if (!FIO[tenant]) {
-      FIO[tenant] = {}
     }
 
     if (!req.body) {

@@ -26,6 +26,10 @@ class CoreService {
 
     const result = await res.json()
 
+    if (result.errors) {
+      throw new Error(JSON.stringify(result.errors))
+    }
+
     return result.data.Accounts
   }
 
@@ -105,6 +109,10 @@ class CoreService {
     }
 
     const result = await res.json()
+
+    if (result.errors) {
+      throw new Error(JSON.stringify(result.errors))
+    }
 
     return result.data.Transactions
   }
