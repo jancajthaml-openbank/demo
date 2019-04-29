@@ -10,6 +10,8 @@ class CoreService {
         }
       `
     }
+    console.time("getAccounts-fetch")
+
     const res = await fetch('/api/search/graphql', {
       method: 'POST',
       headers: {
@@ -20,6 +22,10 @@ class CoreService {
       body: JSON.stringify(req),
     })
 
+    console.timeEnd("getAccounts-fetch")
+
+    console.time("getAccounts-parse")
+
     if (res.status !== 200) {
       throw new Error('FETCH_ACCOUNTS_FAILED')
     }
@@ -29,6 +35,8 @@ class CoreService {
     if (result.errors) {
       throw new Error(JSON.stringify(result.errors))
     }
+
+    console.timeEnd("getAccounts-parse")
 
     return result.data.Accounts
   }

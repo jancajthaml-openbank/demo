@@ -27,6 +27,30 @@ module.exports = function(application) {
     unique: ['id'],
   })
 
+  const randomAccount = () => {
+    const tenant = 'random'
+
+    const ktnr = (Math.round(Math.random() * 8999999) + 1000000)
+    const pruef = 98 - (((ktnr * 1000000) + 43) % 97)
+    const name = `${(pruef > 9 ? 'DE' : 'DE0')}${pruef}70050000000${ktnr}`
+
+    return {
+      id: `${tenant}/${name}`,
+      tenant,
+      name,
+      currency: "EUR",
+      isBalanceCheck: false,
+    }
+  }
+
+  [...Array(20000)].map(randomAccount).forEach((item) => {
+    try {
+      accounts.insert(item)
+    } catch(err) {
+
+    }
+  })
+
   accounts.insert({
     "id": "test/A",
     "tenant": "test",
