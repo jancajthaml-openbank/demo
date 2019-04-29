@@ -77,11 +77,11 @@ RUN \
 
 ENV \
     LAKE_VERSION=1.1.7 \
-    VAULT_VERSION=1.2.4 \
+    VAULT_VERSION=1.2.5 \
     LEDGER_VERSION=1.0.2 \
     \
-    FIO_BCO_VERSION=1.2.2 \
-    BONDSTER_BCO_VERSION=1.2.3 \
+    FIO_BCO_VERSION=1.2.3 \
+    BONDSTER_BCO_VERSION=1.2.4 \
     \
     CNB_RATES_VERSION=1.0.0 \
     \
@@ -149,8 +149,12 @@ RUN rm -rf \
     \
     sed -ri /etc/init/fio-bco.conf -e \
       's!^FIO_BCO_SECRETS=.*!FIO_BCO_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/init/fio-bco.conf -e \
+      's!^FIO_BCO_LOG_LEVEL=.*!FIO_BCO_LOG_LEVEL=DEBUG!' && \
     sed -ri /etc/init/bondster-bco.conf -e \
       's!^BONDSTER_BCO_SECRETS=.*!BONDSTER_BCO_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/init/bondster-bco.conf -e \
+      's!^BONDSTER_BCO_LOG_LEVEL=.*!BONDSTER_BCO_LOG_LEVEL=DEBUG!' && \
     sed -ri /etc/init/vault.conf -e \
       's!^VAULT_SECRETS=.*!VAULT_SECRETS=/openbank/secrets!' && \
     sed -ri /etc/init/vault.conf -e \
