@@ -70,6 +70,7 @@ class CoreService {
       query: `
         fragment accountFields on Account {
           name
+          tenant
           isBalanceCheck
         }
 

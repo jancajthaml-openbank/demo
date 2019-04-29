@@ -1,8 +1,7 @@
 import React from 'react'
 
-import VirtualList from 'react-virtualized/List'
-import AutoSizer from 'react-virtualized/AutoSizer'
-
+import ReactTable from 'react-table'
+import moment from 'moment'
 import PropTypes from 'prop-types'
 
 class List extends React.Component {
@@ -24,61 +23,65 @@ class List extends React.Component {
     }
   }
 
-  renderRow({ index, key, style }) {
-    const item = this.props.transactions[index]
-
-    return (
-      <div key={key} style={style}>
-      <div>
-        <div>{`${item.id} (${item.status})`}</div>
-
-        <div>
-        {item.transfers.map((transfer) => (
-          <div key={`${key}/${item.id}/${transfer.id}`}>
-            {JSON.stringify(transfer)}
-          </div>
-        ))}
-        </div>
-        </div>
-
-      </div>
-    )
-  }
-
   render() {
     const { transactions, transactionsLoading } = this.props
 
-    if (transactionsLoading) {
-      return (
-        <div>
-          Loading
-        </div>
-      )
-    }
-    if (transactions.length === 0) {
-      return (
-        <div>
-          No Data
-        </div>
-      )
-    }
+    const transactionColumns = [{
+      Header: 'ID',
+      accessor: 'id',
+    }, {
+      Header: 'Status',
+      accessor: 'status',
+      maxWidth: 90,
+    }]
+
+    const transferColumns = [{
+      Header: 'ID',
+      accessor: 'id',
+    }, {
+      Header: 'Amount',
+      accessor: 'amount',
+    }, {
+      Header: 'Currency',
+      accessor: 'currency',
+      maxWidth: 80,
+    }, {
+      Header: 'Value Date',
+      id: 'valueDate',
+      accessor: (row) => moment(row.credit.valueDate).utc().format('DD.MM.YYYY HH:mm'),
+      maxWidth: 130,
+    }, {
+      Header: 'Credit',
+      id: 'credit',
+      accessor: (row) => `${row.credit.tenant}/${row.credit.name}`,
+    }, {
+      Header: 'Debit',
+      id: 'debit',
+      accessor: (row) => `${row.debit.tenant}/${row.debit.name}`,
+    }]
 
     return (
-      <div style={{ display: 'flex', height: 200 }}>
-        <div style={{ flex: '1 1 auto' }}>
-          <AutoSizer>
-            {({ height, width }) => (
-              <VirtualList
-                width={width}
-                height={height}
-                rowHeight={20}
-                rowRenderer={this.renderRow.bind(this)}
-                rowCount={transactions.length}
+      <ReactTable
+        filterable
+        minRows={5}
+        defaultPageSize={5}
+        loading={transactionsLoading}
+        data={transactions}
+        columns={transactionColumns}
+        SubComponent={(row) => {
+          console.log(row)
+          return (
+            <div style={{ padding: "20px" }}>
+              <ReactTable
+                data={row.original.transfers}
+                columns={transferColumns}
+                showPagination={false}
+                minRows={row.original.transfers.length}
               />
-            )}
-          </AutoSizer>
-        </div>
-      </div>
+            </div>
+          )
+        }}
+      />
     )
   }
 }
