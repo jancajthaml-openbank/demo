@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import memoize from 'memoize-state'
 
 import { New } from '../../components/Fio'
 
@@ -8,12 +9,14 @@ import { createTokenApiRequestSuccess } from './actions'
 
 const mapDispatchToProps = {
   onNewToken: createTokenApiRequestSuccess,
-  createToken: TokenService.createToken,
 }
 
-const mapStateToProps = (state, props) => props
+const mapStateToProps = (state, props) => ({
+  tenant: props.tenant,
+  createToken: TokenService.createToken,
+})
 
 export default connect(
-  mapStateToProps,
+  memoize(mapStateToProps),
   mapDispatchToProps,
 )(New)

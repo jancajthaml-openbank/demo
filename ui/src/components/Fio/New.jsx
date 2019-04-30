@@ -28,12 +28,12 @@ class New extends React.Component {
 
     try {
       actions.setSubmitting(true)
-      const { value } = await createToken(tenant, values.value)
+      const value = await createToken(tenant, values.value)
       if (onNewToken) {
         onNewToken(value)
       }
     } catch(err) {
-      console.log('err')
+      console.log('err', err)
     } finally {
       actions.setSubmitting(false)
       actions.resetForm()

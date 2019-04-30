@@ -19,7 +19,7 @@ export default (state = initialState, { type, payload }) => {
       return {
         tokens: [
           ...state.tokens,
-          payload.data
+          payload.data,
         ],
         tokensLoading: state.tokensLoading
       }

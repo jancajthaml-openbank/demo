@@ -127,7 +127,7 @@ export default (state = initialState, { type, payload }) => {
         transactionsLoading: true,
       }
 
-      console.timeEnd("ACCOUNTS_API_REQUEST_SUCCESS")
+      console.timeEnd("TRANSACTIONS_API_REQUEST_FAILURE")
 
       return nextState
     }

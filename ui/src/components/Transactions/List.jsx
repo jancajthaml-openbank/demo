@@ -3,6 +3,7 @@ import React from 'react'
 import ReactTable from 'react-table'
 import moment from 'moment'
 import PropTypes from 'prop-types'
+import bigDecimal from 'js-big-decimal'
 
 class List extends React.Component {
 
@@ -40,11 +41,8 @@ class List extends React.Component {
       accessor: 'id',
     }, {
       Header: 'Amount',
-      accessor: 'amount',
-    }, {
-      Header: 'Currency',
-      accessor: 'currency',
-      maxWidth: 80,
+      id: 'amount',
+      accessor: (row) => `${new bigDecimal(row.amount).round(2, bigDecimal.RoundingModes.HALF_EVEN).getValue()} ${row.currency}`,
     }, {
       Header: 'Value Date',
       id: 'valueDate',
@@ -69,13 +67,13 @@ class List extends React.Component {
         data={transactions}
         columns={transactionColumns}
         SubComponent={(row) => {
-          console.log(row)
           return (
-            <div style={{ padding: "20px" }}>
+            <div style={{ padding: '0 0 0 35px' }}>
               <ReactTable
                 data={row.original.transfers}
                 columns={transferColumns}
                 showPagination={false}
+                defaultPageSize={row.original.transfers.length}
                 minRows={row.original.transfers.length}
               />
             </div>
