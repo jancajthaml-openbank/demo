@@ -1,5 +1,7 @@
 import React from 'react'
 
+import ReactTable from 'react-table'
+
 import PropTypes from 'prop-types'
 
 class List extends React.Component {
@@ -24,18 +26,20 @@ class List extends React.Component {
   render() {
     const { accounts, accountsLoading } = this.props
 
+    const columns = [{
+      Header: 'Name',
+      accessor: 'name'
+    }]
+
     return (
-      <ul>
-        {accounts.length > 0
-          ? (
-            accounts.map((account) => (
-            <li key={account.name}>
-              {account.name}
-            </li>
-          )))
-          : 'No data'
-        }
-      </ul>
+      <ReactTable
+        filterable
+        minRows={5}
+        defaultPageSize={5}
+        loading={accountsLoading}
+        data={accounts}
+        columns={columns}
+      />
     )
   }
 }

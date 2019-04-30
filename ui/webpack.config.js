@@ -134,6 +134,8 @@ module.exports = function(env = {}, args = {}) {
       ],
       alias: {
         'react-dom': production ? 'react-dom' : '@hot-loader/react-dom',
+        'react-virtualized/AutoSizer': 'react-virtualized/dist/es/AutoSizer',
+        'react-virtualized/List': 'react-virtualized/dist/es/List',
       },
       mainFields: [
         'browser',

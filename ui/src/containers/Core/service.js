@@ -10,6 +10,8 @@ class CoreService {
         }
       `
     }
+    console.time("getAccounts-fetch")
+
     const res = await fetch('/api/search/graphql', {
       method: 'POST',
       headers: {
@@ -20,11 +22,17 @@ class CoreService {
       body: JSON.stringify(req),
     })
 
+    console.timeEnd("getAccounts-fetch")
+
     if (res.status !== 200) {
       throw new Error('FETCH_ACCOUNTS_FAILED')
     }
 
+    console.time("getAccounts-parse")
+
     const result = await res.json()
+
+    console.timeEnd("getAccounts-parse")
 
     if (result.errors) {
       throw new Error(JSON.stringify(result.errors))
@@ -62,6 +70,7 @@ class CoreService {
       query: `
         fragment accountFields on Account {
           name
+          tenant
           isBalanceCheck
         }
 
@@ -94,6 +103,8 @@ class CoreService {
       `
     }
 
+    console.time("getTransactions-fetch")
+
     const res = await fetch('/api/search/graphql', {
       method: 'POST',
       headers: {
@@ -104,11 +115,17 @@ class CoreService {
       body: JSON.stringify(req),
     })
 
+    console.timeEnd("getTransactions-fetch")
+
     if (res.status !== 200) {
       throw new Error('FETCH_TRANSACTIONS_FAILED')
     }
 
+    console.time("getTransactions-parse")
+
     const result = await res.json()
+
+    console.timeEnd("getTransactions-parse")
 
     if (result.errors) {
       throw new Error(JSON.stringify(result.errors))

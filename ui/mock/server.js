@@ -7,6 +7,7 @@ const loki = require('lokijs')
 const { randomId } = require('./utils/random')
 const { Accounts, Transactions, Transfers } = require('./resolver')
 const { DateScalar, MoneyScalar } = require('./scalar')
+const { generateRandomAccounts, generateRandomTransactions } = require('./resources/data')
 
 // -------------------------------------------------------------------------- //
 
@@ -27,62 +28,15 @@ module.exports = function(application) {
     unique: ['id'],
   })
 
+  const randomAccounts = generateRandomAccounts('random', accounts, 2000)
+  const randomTransfers = generateRandomTransactions('random', transfers, randomAccounts, 2000)
+
   accounts.insert({
     "id": "test/A",
     "tenant": "test",
     "name": "A",
     "currency": "CZK",
     "isBalanceCheck": false,
-  })
-
-  accounts.insert({
-    "id": "demo/A",
-    "tenant": "demo",
-    "name": "A",
-    "currency": "EUR",
-    "isBalanceCheck": false,
-  })
-
-  accounts.insert({
-    "id": "demo/B",
-    "tenant": "demo",
-    "name": "B",
-    "currency": "EUR",
-    "isBalanceCheck": false,
-  })
-
-  accounts.insert({
-    "id": "demo/C",
-    "tenant": "demo",
-    "name": "C",
-    "currency": "EUR",
-    "isBalanceCheck": false,
-  })
-
-  transfers.insert({
-    "id": "demo/TRS/T_1",
-    "tenant": "demo",
-    "status": "committed",
-    "transfer": "T_1",
-    "transaction": "TRS",
-    "amount": "1.0",
-    "currency": "EUR",
-    "credit": "demo/B",
-    "debit": "demo/A",
-    "valueDate": new Date(),
-  })
-
-  transfers.insert({
-    "id": "demo/TRS/T_2",
-    "tenant": "demo",
-    "status": "committed",
-    "transfer": "T_2",
-    "transaction": "TRS",
-    "amount": "2.0",
-    "currency": "EUR",
-    "credit": "demo/C",
-    "debit": "demo/B",
-    "valueDate": new Date(),
   })
 
   // ------------------------------------------------------------------------ //
@@ -187,7 +141,10 @@ module.exports = function(application) {
     }
 
     res.type('application/json').code(200)
-    return bondster.find({ tenant }).map((item) => item.id)
+    return bondster.find({ tenant }).map((item) => ({
+      value: item.id,
+      createdAt: item.createdAt.toISOString(),
+    }))
   })
 
   app.post('/api/bondster/token/:tenant', async (req, res) => {
@@ -213,20 +170,26 @@ module.exports = function(application) {
         return {}
       }
 
-      let id = randId()
+      let id = randomId()
       while (bondster.find({ tenant, id }).length > 0) {
         id = uuid()
       }
+
+      const createdAt = new Date()
 
       bondster.insert({
         id,
         tenant,
         username,
         password,
+        createdAt,
       })
 
       res.type('application/json').code(200)
-      return { value: id }
+      return {
+        value: id,
+        createdAt: createdAt.toISOString(),
+      }
     } catch (err) {
       console.log(err)
       res.type('application/json').code(400)
@@ -248,7 +211,10 @@ module.exports = function(application) {
     }
 
     res.type('application/json').code(200)
-    return fio.find({ tenant }).map((item) => item.id)
+    return fio.find({ tenant }).map((item) => ({
+      value: item.id,
+      createdAt: item.createdAt.toISOString(),
+    }))
   })
 
   app.post('/api/fio/token/:tenant', async (req, res) => {
@@ -274,19 +240,24 @@ module.exports = function(application) {
         return {}
       }
 
-      let id = randId()
+      let id = randomId()
       while (fio.find({ tenant, id }).length > 0) {
         id = uuid()
       }
 
+      const createdAt = new Date()
       fio.insert({
         id,
         tenant,
         value,
+        createdAt,
       })
 
       res.type('application/json').code(200)
-      return { value: id }
+      return {
+        value: id,
+        createdAt: createdAt.toISOString(),
+      }
     } catch (err) {
       console.log(err)
       res.type('application/json').code(400)
