@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-
 import { Provider as ReduxProvider } from 'react-redux'
-
 import './stylesheets'
 import { configureGlobalisation, configureStore } from './setup'
 import { ErrorBoundary } from './components/ErrorBoundary'
@@ -19,14 +17,26 @@ const App = (store, globalisation) => (
 )
 
 const start = async function() {
+  const serverState = document.getElementById("__STATE__")
+  let initialState = {}
+  if (serverState) {
+    try {
+      initialState = JSON.parse(serverState.innerText)
+    } catch (err) {
+      // pass
+    } finally {
+      serverState.remove()
+    }
+  }
+
   const [ store, globalisation ] = await Promise.all([
-    configureStore(),
+    configureStore(initialState),
     configureGlobalisation(),
   ])
 
   const mountNode = document.getElementById("mount")
 
-  ReactDOM.render(App(store, globalisation), mountNode)
+  ReactDOM.hydrate(App(store, globalisation), mountNode)
 }
 
 document.addEventListener("DOMContentLoaded", () => {

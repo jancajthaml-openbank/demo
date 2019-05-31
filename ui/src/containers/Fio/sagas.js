@@ -34,7 +34,7 @@ export const loadTokens = function*({ payload }) {
     const data = yield call(TokenService.getTokens, payload.tenant)
     yield put(tokensApiRequestSuccess(data))
   } catch (err) {
-    if (!PRODUCTION) {
+    if (process.env.NODE_ENV !== 'production') {
       console.error('Fio.sagas.loadTokens()', err)
     }
     yield put(tokensApiRequestFailure())
