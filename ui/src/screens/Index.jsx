@@ -18,14 +18,11 @@ import {
 } from '../containers/Core'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 
-class Index extends React.Component {
+export class Index extends React.Component {
 
   render() {
     return (
-      <div>
-        <pre>
-          I am a react component running in {PRODUCTION ? 'production' : 'development'}
-        </pre>
+      <React.Fragment>
         <TenantCtx.Consumer>
           {(tenant) => (
             <React.Fragment>
@@ -34,8 +31,9 @@ class Index extends React.Component {
                 <h3>Accounts</h3>
                 <NewAccount tenant={tenant} />
                 <AccountsList tenant={tenant} />
+                {/*
                 <h3>Transactions</h3>
-                <TransactionsList tenant={tenant} />
+                <TransactionsList tenant={tenant} />*/}
               </div>
               <div>
                 <h2>Tokens</h2>
@@ -49,14 +47,14 @@ class Index extends React.Component {
             </React.Fragment>
           )}
         </TenantCtx.Consumer>
-      </div>
+      </React.Fragment>
     )
   }
 }
 
 let Exported = Index
 
-if (!PRODUCTION && module.hot) {
+if (process.env.NODE_ENV !== 'production' && module.hot) {
   const { hot } = require('react-hot-loader/root')
   const { setConfig } = require('react-hot-loader')
   setConfig({

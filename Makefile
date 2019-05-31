@@ -1,24 +1,16 @@
 .ONESHELL:
 
 .PHONY: all
-all: bootstrap ui build run
-
-.PHONY: ui
-ui:
-	@docker-compose run --rm ui-build
-
-.PHONY: build
-build:
-	@docker build . -t openbank/demo:v1
-
-.PHONY: rebuild
-rebuild:
-	@docker build --no-cache . -t openbank/demo:v1
+all: bootstrap build run
 
 .PHONY: bootstrap
 bootstrap:
 	@docker-compose build node
 	@docker-compose run --rm ui-install-dependencies
+
+.PHONY: build
+build:
+	@docker-compose run --rm ui-build
 
 .PHONY: dev
 dev:
@@ -27,19 +19,5 @@ dev:
 
 .PHONY: run
 run:
-	@(docker rm -f $$(docker ps -a --filter="name=openbank_demo" -q) &> /dev/null || :)
-	@(docker exec -it $$(\
-		docker run -dti \
-			--name=openbank_demo \
-			-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
-			-v $$(pwd)/data/openbank:/data \
-			-v $$(pwd)/data/mongo:/var/lib/mongodb \
-			-v $$(pwd)/ui/build:/var/www \
-			-v $$(pwd)/secrets:/openbank/secrets \
-			-p 443:443 \
-			-p 80:80 \
-			--privileged=true \
-			--security-opt seccomp:unconfined \
-		openbank/demo:v1 \
-	) bash || :)
-	@(docker rm -f $$(docker ps -a --filter="name=openbank_demo" -q) &> /dev/null || :)
+	@docker-compose down --remove-orphans
+	@docker-compose up ui-production

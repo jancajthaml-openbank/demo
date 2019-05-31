@@ -4,11 +4,12 @@ import moment from 'moment'
 
 moment.locale('en-gb')
 
-if (!PRODUCTION) {
-  console.log('[setup] moment')
-}
-
 export default async function() {
+
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('[setup] moment')
+  }
+
   // FIXME require async
 
 }

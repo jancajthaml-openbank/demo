@@ -9,13 +9,14 @@ const SafePostCssParser = require('postcss-safe-parser')
 const PnpWebpackPlugin = require('pnp-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
+const babelRc = require('./.babelrc')
 
 function getPlugins(production) {
   let plugins = [
     new webpack.DefinePlugin({
-      PRODUCTION: `${production}`,
       'process.env': {
         'NODE_ENV': production ? `"production"` : `"development"`,
       },
@@ -62,7 +63,8 @@ function getPlugins(production) {
     new MiniCssExtractPlugin({
       filename: "static/media/css/[name].[hash:8].css",
       chunkFilename: "static/media/css/[id].[hash:8].css"
-    })
+    }),
+    new HTMLInlineCSSWebpackPlugin(),
   ]
 
   if (production) {
@@ -91,10 +93,10 @@ module.exports = function(env = {}, args = {}) {
   return {
     entry: (production
       ? [
-        path.resolve(__dirname, 'src', 'index.js'),
+        path.resolve(__dirname, 'src', 'client.js'),
       ]
       : [
-        path.resolve(__dirname, 'src', 'index.js'),
+        path.resolve(__dirname, 'src', 'client.js'),
         'webpack-dev-server/client?http://0.0.0.0:3000',
         'webpack/hot/dev-server',
         'webpack/hot/only-dev-server',
@@ -185,71 +187,9 @@ module.exports = function(env = {}, args = {}) {
                   shippedProposals: true,
                 },
               ],
-
               '@babel/preset-react',
             ],
-
-            plugins: [
-
-              // Stage 0
-              '@babel/plugin-proposal-function-bind',
-
-              // Stage 1
-              '@babel/plugin-proposal-export-default-from',
-              '@babel/plugin-proposal-logical-assignment-operators',
-              [
-                '@babel/plugin-proposal-optional-chaining',
-                {
-                  loose: false,
-                },
-              ],
-              [
-                '@babel/plugin-proposal-pipeline-operator',
-                {
-                  proposal: 'minimal',
-                },
-              ],
-              [
-                '@babel/plugin-proposal-nullish-coalescing-operator',
-                {
-                  loose: false,
-                },
-              ],
-              '@babel/plugin-proposal-do-expressions',
-
-              // Stage 2
-              [
-                '@babel/plugin-proposal-decorators',
-                {
-                  legacy: true,
-                },
-              ],
-              '@babel/plugin-proposal-function-sent',
-              '@babel/plugin-proposal-export-namespace-from',
-              '@babel/plugin-proposal-numeric-separator',
-              '@babel/plugin-proposal-throw-expressions',
-
-              // Stage 3
-              '@babel/plugin-syntax-dynamic-import',
-              '@babel/plugin-syntax-import-meta',
-              [
-                '@babel/plugin-proposal-class-properties',
-                {
-                  loose: false,
-                },
-              ],
-              '@babel/plugin-proposal-json-strings',
-
-              [
-                '@babel/plugin-transform-runtime',
-                {
-                  regenerator: true
-                },
-              ],
-
-              'transform-undefined-to-void',
-            ],
-
+            plugins: babelRc.plugins,
             env: {
               development: {
                 plugins: [
@@ -429,7 +369,7 @@ module.exports = function(env = {}, args = {}) {
       },
       proxy: {
         '/api/*': {
-          target: 'http://ui-mock:4000/api',
+          target: 'http://server-mock:4000/api',
           ws: true,
           prependPath: false,
           changeOrigin: true,

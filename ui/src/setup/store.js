@@ -11,7 +11,7 @@ const sagaMiddleware = createSagaMiddleware()
 export default async function(state = {}) {
   const enhancers = [sagaMiddleware]
 
-  const composeEnhancers = !PRODUCTION && typeof window === 'object' &&
+  const composeEnhancers = process.env.NODE_ENV !== 'production' && typeof window === 'object' &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
       ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ shouldHotReload: false })
       : compose
@@ -22,7 +22,7 @@ export default async function(state = {}) {
     composeEnhancers(...[applyMiddleware(...enhancers)]),
   )
 
-  if (!PRODUCTION && module.hot) {
+  if (process.env.NODE_ENV !== 'production' && module.hot) {
     module.hot.accept(['./reducers'], () => {
       store.replaceReducer(createReducer(store.injectedReducers))
     })

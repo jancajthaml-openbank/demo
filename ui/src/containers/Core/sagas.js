@@ -38,7 +38,7 @@ export const loadAccounts = function*({ payload }) {
     yield put(accountsApiRequestSuccess(data))
   } catch (err) {
     // FIXME if 502 retry
-    if (!PRODUCTION) {
+    if (process.env.NODE_ENV !== 'production') {
       console.error('Core.sagas.loadAccounts()', err)
     }
     yield put(accountsApiRequestFailure())
@@ -65,7 +65,7 @@ export const loadTransactions = function*({ payload }) {
     yield put(transactionsApiRequestSuccess(data))
   } catch (err) {
     // FIXME if 502 retry
-    if (!PRODUCTION) {
+    if (process.env.NODE_ENV !== 'production') {
       console.error('Core.sagas.loadTransactions()', err)
     }
     yield put(transactionsApiRequestFailure())

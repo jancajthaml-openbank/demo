@@ -34,7 +34,7 @@ services:
 
   # -------------------------------------------------------------------------- #
 
-  ui-mock:
+  server-mock:
     extends: node
     ports:
       - "4000:4000"
@@ -49,8 +49,36 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - ui-mock
-    command: ["start"]
+      - server-mock
+    command: ["run", "devserver"]
+
+  # -------------------------------------------------------------------------- #
+
+  ui-production:
+    tty: true
+    extends: node
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server-production
+    command: ["run", "prodserver"]
+
+  # -------------------------------------------------------------------------- #
+
+  server-production:
+    image: openbank/demo
+    build: .
+    ports:
+      - "8080:8080"
+      - "4400:4400"
+      - "4401:4401"
+      - "4001:4001"
+      - "4002:4002"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - ./data/openbank:/data
+      - ./data/mongo:/var/lib/mongodb
+      - ./secrets:/openbank/secrets
 
 # ---------------------------------------------------------------------------- #
 

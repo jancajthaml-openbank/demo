@@ -38,7 +38,6 @@ RUN \
       libsystemd0 \
       libudev1 \
       systemd \
-      nginx \
       sysvinit-utils \
       udev \
       util-linux \
@@ -119,9 +118,6 @@ RUN \
     ls -la /tmp && \
     find /tmp -name "*.deb" -exec file {} \;
 
-RUN mkdir /etc/systemd/system/nginx.service.d && \
-    printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
-
 RUN \
     apt-get -y update && \
     apt-get -y install -f /tmp/lake_${LAKE_VERSION}_amd64.deb && \
@@ -170,8 +166,6 @@ RUN rm -rf \
     sed -ri /etc/init/fio-bco.conf -e \
       's!^FIO_BCO_ENCRYPTION_KEY=.*!FIO_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
     :
-
-COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default
 
 RUN systemctl enable \
       vault-unit@demo \
