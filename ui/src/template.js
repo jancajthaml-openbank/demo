@@ -1,14 +1,18 @@
 const fs = require('fs')
 const path = require('path')
-const { parse } = require('node-html-parser')
 
 let template
 
 async function loadTemplate() {
   await new Promise((resolve, reject) => {
     try {
-      fs.readFile(path.resolve(__dirname, '../build/index.html'), (err, data) => {
-        template = data
+      fs.readFile(path.resolve(__dirname, '../build/index.html'), 'utf8', (err, data) => {
+        const [ up, scripts ] = data.split('</body>')[0].split('<div id="mount"/>')
+
+        template = {
+          lead: up,
+          scripts: scripts,
+        }
         resolve()
       })
     } catch (err) {
@@ -21,11 +25,16 @@ module.exports = async function(initialState = {}, content = "") {
     await loadTemplate()
   }
 
-  const resp = parse(template)
-  resp.querySelector('#mount').appendChild(content)
+  let resp = template.lead
+
+  resp += `<div id="mount"/>${content}</div>`
+
   if (Object.keys(initialState).length > 0) {
-    resp.querySelector('body').appendChild(`<div id="__STATE__" style="display: none;">${JSON.stringify(initialState)}</div>`)
+    resp += `<div id="__STATE__" style="display: none;">${JSON.stringify(initialState)}</div>`
   }
 
-  return resp.toString()
+  resp += template.scripts
+  resp += '</body></html>'
+
+  return resp
 }
