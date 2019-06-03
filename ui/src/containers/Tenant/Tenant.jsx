@@ -4,57 +4,46 @@ import { connect } from 'react-redux'
 
 import memoize from 'memoize-state'
 
-import { Select } from '../../components/Select'
-
-import { tenantsApiRequestInit, changeTenant } from './actions'
-
 export const TenantCtx = React.createContext(null)
 
 const mapDispatchToProps = {
-  loadTenants: tenantsApiRequestInit,
-  changeTenant: changeTenant,
 }
 
 const mapStateToProps = (state, props) => ({
-  tenants: state.tenant.tenants,
   tenant: state.tenant.tenant,
-  loading: state.tenant.loading,
 })
 
-const withTenant = (ComposedComponent) => {
+export const withTenant = (ComposedComponent) => {
   class Wrapped extends React.Component {
 
-    componentDidMount() {
-      const { tenant, tenants, loadTenants } = this.props
-      if (!tenants) {
-        loadTenants()
-      }
+    render() {
+      return (
+        <TenantCtx.Consumer>
+          {(tenant) => tenant
+            ? <ComposedComponent tenant={tenant} />
+            : null
+          }
+        </TenantCtx.Consumer>
+      )
     }
+  }
 
-    tenantChanged = (tenant) => {
-      this.props.changeTenant(tenant)
+  return Wrapped
+}
+
+export const providingTenant = (ComposedComponent) => {
+  class Wrapped extends React.Component {
+
+    shouldComponentUpdate(nextProps, nextState) {
+      return this.props.tenant !== nextProps.tenant
     }
 
     render() {
-      const { tenant, tenants, loading } = this.props
+      const { tenant } = this.props
 
-      return(
+      return (
         <TenantCtx.Provider value={tenant}>
-          {loading
-            ? 'loading'
-            : null
-          }
-          {tenants
-            ? <Select
-                options={tenants}
-                valueChanged={this.tenantChanged}
-              />
-            : null
-          }
-          {tenant
-            ? <ComposedComponent />
-            : null
-          }
+          <ComposedComponent />
         </TenantCtx.Provider>
       )
     }
@@ -65,5 +54,3 @@ const withTenant = (ComposedComponent) => {
     mapDispatchToProps,
   )(Wrapped)
 }
-
-export default withTenant

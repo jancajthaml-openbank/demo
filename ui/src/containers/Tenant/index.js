@@ -1,2 +1,1 @@
-export { default as withTenant } from './Tenant'
-export { TenantCtx } from './Tenant'
+export { withTenant, providingTenant, TenantCtx } from './Tenant'

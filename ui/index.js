@@ -4,6 +4,7 @@ const express = require('express')
 const [ https, http ] = [ require('https'), require('http') ]
 
 const app = express()
+//app.use('/favicon.ico*', express.static(path.resolve(__dirname, 'build/static')))
 app.use('/static', express.static(path.resolve(__dirname, 'build/static')))
 app.use(express.json())
 app.disable('x-powered-by')
@@ -103,26 +104,6 @@ async function FetchJSON(method, uri, body = {}) {
 
 /* -------------------------------------------------------------------------- */
 
-app.get('/', async (req, res) => {
-  let initialState = {}
-  const [ code, tenants ] = await FetchJSON('GET', 'https://server-production:4400/tenant')
-  if (code === 200) {
-    initialState = {
-      ...initialState,
-      tenant: {
-        tenants,
-        tenant: tenants[0],
-        loading: false,
-      }
-    }
-  }
-
-  const [ content, preloadedState ] = await ssr(initialState)
-  const response = await template(preloadedState, content)
-  res.setHeader('Cache-Control', 'assets, max-age=604800')
-  res.send(response)
-})
-
 const proxyPass = async (target, req, res) => {
   try {
     const uri = `${target}/${req.url.split('/').slice(3).join('/')}`
@@ -153,6 +134,33 @@ app.all('/api/fio/*', (req, res) =>
 app.all('/api/search/*', (req, res) =>
   proxyPass('http://server-production:8080', req, res)
 )
+
+app.get('/*', async (req, res) => {
+  if (req.url.startsWith('/favicon')) {
+    return res.status(404).json({})
+  } else if (req.url.startsWith('/api')) {
+    return res.status(404).json({})
+  }
+
+  let initialState = {}
+  const [ code, tenants ] = await FetchJSON('GET', 'https://server-production:4400/tenant')
+  if (code === 200) {
+    initialState = {
+      ...initialState,
+      tenant: {
+        tenants,
+        tenant: tenants[0],
+        loading: false,
+      }
+    }
+  }
+
+  const [ content, preloadedState ] = await ssr(req, initialState)
+  const response = await template(preloadedState, content)
+  res.setHeader('Cache-Control', 'assets, max-age=604800')
+  res.send(response)
+})
+
 
 /* -------------------------------------------------------------------------- */
 
