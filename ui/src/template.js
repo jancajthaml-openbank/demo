@@ -8,7 +8,6 @@ async function loadTemplate() {
     try {
       fs.readFile(path.resolve(__dirname, '../build/index.html'), 'utf8', (err, data) => {
         const [ up, scripts ] = data.split('</body>')[0].split('<div id="mount"/>')
-
         const [ preStyle, body ] = up.split('</style>')
         const [ html, stylesheet ] = preStyle.split('<style type="text/css">')
 
@@ -37,11 +36,9 @@ module.exports = async function(initialState = {}, styles="", content = "") {
   resp += '</style>'
   resp += template.body
   resp += `<div id="mount"/>${content}</div>`
-
   if (Object.keys(initialState).length > 0) {
     resp += `<div id="__STATE__" style="display: none;">${JSON.stringify(initialState)}</div>`
   }
-
   resp += template.scripts
   resp += '</body></html>'
 
