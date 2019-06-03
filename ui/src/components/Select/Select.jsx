@@ -57,12 +57,17 @@ class Select extends React.Component {
 
     if (disabled || !selected) {
       return (
-        <select disabled/>
+        <select disabled>
+          <option>–––</option>
+        </select>
       )
     }
 
     return (
-      <select value={selected} onChange={this.onChange} disabled={disabled}>
+      <select
+        value={selected}
+        onChange={this.onChange}
+      >
         {options.map((item) =>
           <option key={item} value={item}>{item}</option>
         )}

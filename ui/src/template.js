@@ -9,9 +9,14 @@ async function loadTemplate() {
       fs.readFile(path.resolve(__dirname, '../build/index.html'), 'utf8', (err, data) => {
         const [ up, scripts ] = data.split('</body>')[0].split('<div id="mount"/>')
 
+        const [ preStyle, body ] = up.split('</style>')
+        const [ html, stylesheet ] = preStyle.split('<style type="text/css">')
+
         template = {
-          lead: up,
-          scripts: scripts,
+          html,
+          stylesheet,
+          body,
+          scripts,
         }
         resolve()
       })
@@ -21,13 +26,16 @@ async function loadTemplate() {
   })
 }
 
-module.exports = async function(initialState = {}, content = "") {
+module.exports = async function(initialState = {}, styles="", content = "") {
   if (!template) {
     await loadTemplate()
   }
 
-  let resp = template.lead
-
+  let resp = template.html
+  resp += '<style type="text/css">'
+  resp += `${template.stylesheet}${styles}`
+  resp += '</style>'
+  resp += template.body
   resp += `<div id="mount"/>${content}</div>`
 
   if (Object.keys(initialState).length > 0) {

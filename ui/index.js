@@ -155,8 +155,8 @@ app.get('/*', async (req, res) => {
     }
   }
 
-  const [ content, preloadedState ] = await ssr(req, initialState)
-  const response = await template(preloadedState, content)
+  const [ content, styles, preloadedState ] = await ssr(req, initialState)
+  const response = await template(preloadedState, styles, content)
   res.setHeader('Cache-Control', 'assets, max-age=604800')
   res.send(response)
 })

@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import memoize from 'memoize-state'
 
-import { Select } from '../../components/Select'
 import { tenantsApiRequestInit, changeTenant } from '../Tenant/actions'
 
+import { HeaderWrapper, TenantSelect, HeaderNav } from './styles'
 import SafeLink from './SafeLink'
 
 class Header extends React.Component {
@@ -24,36 +24,33 @@ class Header extends React.Component {
   render() {
     const { tenants } = this.props
     return (
-      <div
-        style={{
-          border: '1px solid red',
-          padding: '10px',
-        }}
-      >
-        <Select
+      <HeaderWrapper>
+        <HeaderNav>
+          <ul>
+            <li>
+              <SafeLink to="/">home</SafeLink>
+            </li>
+            <li>
+              <SafeLink to="/account">account</SafeLink>
+            </li>
+            <li>
+              <SafeLink to="/transaction">transaction</SafeLink>
+            </li>
+            <li>
+              <SafeLink to="/fio">fio</SafeLink>
+            </li>
+            <li>
+              <SafeLink to="/bondster">bondster</SafeLink>
+            </li>
+          </ul>
+        </HeaderNav>
+        <TenantSelect
           disabled={!tenants}
           options={tenants}
           valueChanged={this.tenantChanged}
         />
-        <ul>
-          <li>
-            <SafeLink to="/">Home</SafeLink>
-          </li>
-          <li>
-            <SafeLink to="/account">Account</SafeLink>
-          </li>
-          <li>
-            <SafeLink to="/transaction">Transaction</SafeLink>
-          </li>
-          <li>
-            <SafeLink to="/fio">Fio</SafeLink>
-          </li>
-          <li>
-            <SafeLink to="/bondster">Bondster</SafeLink>
-          </li>
-        </ul>
-        </div>
-      )
+      </HeaderWrapper>
+    )
   }
 }
 

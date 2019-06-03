@@ -14,8 +14,7 @@ class Layout extends React.Component {
         <Header />
         <div
           style={{
-            border: '1px solid blue',
-            padding: '10px',
+            padding: '2rem',
           }}
         >
           <Switch>

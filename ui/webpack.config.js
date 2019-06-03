@@ -174,48 +174,10 @@ module.exports = function(env = {}, args = {}) {
           loader: 'babel-loader',
           options: {
             babelrc: false,
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  targets: {
-                    browsers: [
-                      'last 2 versions',
-                    ],
-                  },
-                  modules: false,
-                  shippedProposals: true,
-                },
-              ],
-              '@babel/preset-react',
-            ],
-            plugins: babelRc.plugins,
-            env: {
-              development: {
-                plugins: [
-                  'react-hot-loader/babel'
-                ]
-              },
-              production: {
-                plugins: [
-                  [
-                    'transform-react-remove-prop-types', {
-                      mode: 'wrap',
-                    },
-                  ],
-                ],
-              },
-              test: {
-                plugins: [
-                  'babel-plugin-transform-es2015-modules-commonjs',
-                ],
-              },
-            },
-
+            ...babelRc,
             ignore: [
               'build',
             ],
-
             cacheDirectory: !production,
             sourceMaps: !production,
           },
