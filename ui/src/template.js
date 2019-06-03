@@ -20,6 +20,7 @@ async function loadTemplate() {
     }
   })
 }
+
 module.exports = async function(initialState = {}, content = "") {
   if (!template) {
     await loadTemplate()

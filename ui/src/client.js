@@ -1,16 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider as ReduxProvider } from 'react-redux'
+import { BrowserRouter as Router } from "react-router-dom"
+
 import './stylesheets'
 import { configureGlobalisation, configureStore } from './setup'
 import { ErrorBoundary } from './components/ErrorBoundary'
-import Index from './screens/Index'
+import { Layout } from './containers/Layout'
 
 const App = (store, globalisation) => (
   <ErrorBoundary>
     <React.StrictMode>
       <ReduxProvider store={store}>
-        <Index />
+        <Router>
+          <Layout />
+        </Router>
       </ReduxProvider>
     </React.StrictMode>
   </ErrorBoundary>

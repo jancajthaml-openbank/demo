@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 class Select extends React.Component {
 
   static propTypes = {
-    options: PropTypes.arrayOf(PropTypes.string).isRequired,
+    options: PropTypes.arrayOf(PropTypes.string),
     valueChanged: PropTypes.func.isRequired,
   }
 
@@ -19,6 +19,10 @@ class Select extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.disabled) {
+      return null
+    }
+
     if (
       nextProps.options.length != prevState.options.length ||
       !nextProps.options.every((this_i,i) => this_i == prevState.options[i] )
@@ -33,7 +37,9 @@ class Select extends React.Component {
   }
 
   componentDidMount() {
-    this.props.valueChanged(this.state.selected)
+    if (this.state.selected) {
+      this.props.valueChanged(this.state.selected)
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -47,10 +53,16 @@ class Select extends React.Component {
   }
 
   render() {
-    const { options, selected } = this.state
+    const { options, selected, disabled } = this.state
+
+    if (disabled || !selected) {
+      return (
+        <select disabled/>
+      )
+    }
 
     return (
-      <select value={selected} onChange={this.onChange}>
+      <select value={selected} onChange={this.onChange} disabled={disabled}>
         {options.map((item) =>
           <option key={item} value={item}>{item}</option>
         )}
