@@ -2,6 +2,8 @@ import React from 'react'
 
 import PropTypes from 'prop-types'
 
+// https://react-select.com/home
+
 class Select extends React.Component {
 
   static propTypes = {

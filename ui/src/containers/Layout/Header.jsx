@@ -5,7 +5,7 @@ import memoize from 'memoize-state'
 
 import { tenantsApiRequestInit, changeTenant } from '../Tenant/actions'
 
-import { HeaderWrapper, TenantSelect, HeaderNav } from './styles'
+import { HeaderWrapper, HeaderLogo, TenantSelect, HeaderNavigation } from './styles'
 import SafeLink from './SafeLink'
 
 class Header extends React.Component {
@@ -25,7 +25,7 @@ class Header extends React.Component {
     const { tenants } = this.props
     return (
       <HeaderWrapper>
-        <HeaderNav>
+        <HeaderNavigation>
           <ul>
             <li>
               <SafeLink to="/">home</SafeLink>
@@ -43,7 +43,10 @@ class Header extends React.Component {
               <SafeLink to="/bondster">bondster</SafeLink>
             </li>
           </ul>
-        </HeaderNav>
+        </HeaderNavigation>
+        <HeaderLogo>
+        logo
+        </HeaderLogo>
         <TenantSelect
           disabled={!tenants}
           options={tenants}

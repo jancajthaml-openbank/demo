@@ -1,27 +1,48 @@
 @import "./variables.scss";
 
 body {
-  color: $black;
-  background: $white;
   margin: 0;
-  font-family: sans-serif;
+  font-family: Cerebri Sans,sans-serif;
+  font-size: .9375rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #12263f;
+  text-align: left;
+  background-color: #f9fbfd;
+  box-sizing: border-box;
 }
 
-h2 {
-  color: $callout1;
-  margin: 0 0 .2em 0;
-  font-weight: 100;
-  font-size: 2.5rem;
-  letter-spacing: .02em;
-  line-height: 1em;
+header {
+  padding: .5rem 2rem 1.5rem 2rem;
+  border-bottom: 1px solid #e3ebf6;
 }
 
-blockquote {
-  border-left: 1px solid $callout2;
-  padding-left: 1em;
-  margin-left: 1.5em;
-  font-style: italic;
-  color: $callout2;
+main {
+  padding: 2rem;
+}
+
+h1 {
+  letter-spacing: -.02em;
+  font-size: 1.625rem;
+  font-weight: 500;
+  line-height: 1.1;
+  margin-top: 0;
+  display: block;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+h6 {
+  letter-spacing: .08em;
+  color: #95aac9;
+  text-transform: uppercase;
+  font-size: .625rem;
+  font-weight: 500;
+  line-height: 1.1;
+  margin-top: 0;
+  margin-bottom: .5625rem;
 }
 
 @import "../../node_modules/react-table/react-table";

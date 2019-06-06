@@ -10,10 +10,10 @@ export class Home extends React.Component {
 
     return (
       <React.Fragment>
-        <h2>Home</h2>
-        <blockquote>
-          Current tenant is <b>{tenant}</b>.
-        </blockquote>
+        <header>
+          <h1>Home</h1>
+          <h6>Current tenant is {tenant}.</h6>
+        </header>
       </React.Fragment>
     )
   }

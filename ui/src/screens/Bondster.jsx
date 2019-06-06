@@ -5,6 +5,8 @@ import {
   List as BondsterTokens,
   New as BondsterTokenNew,
 } from '../containers/Bondster'
+
+import { Card } from '../components/Card'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 
 export class Bondster extends React.Component {
@@ -14,10 +16,19 @@ export class Bondster extends React.Component {
 
     return (
       <React.Fragment>
-        <h2>Bondster</h2>
-        <h3>Tokens</h3>
-        <BondsterTokens tenant={tenant} />
-        <BondsterTokenNew tenant={tenant} />
+        <header>
+          <h1>Bondster</h1>
+        </header>
+        <main>
+          <Card>
+            <h6>New Token</h6>
+            <BondsterTokenNew tenant={tenant} />
+          </Card>
+          <Card>
+            <h6>Tokens</h6>
+            <BondsterTokens tenant={tenant} />
+          </Card>
+        </main>
       </React.Fragment>
     )
   }

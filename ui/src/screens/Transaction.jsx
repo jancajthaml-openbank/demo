@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import {
   TransactionsList,
 } from '../containers/Core'
-
+import { Card } from '../components/Card'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 
 export class Transaction extends React.Component {
@@ -14,8 +14,15 @@ export class Transaction extends React.Component {
 
     return (
       <React.Fragment>
-        <h2>Transactions</h2>
-        <TransactionsList tenant={tenant} />
+        <header>
+          <h1>Transactions</h1>
+        </header>
+        <main>
+          <Card>
+            <h6>Transactions</h6>
+            <TransactionsList tenant={tenant} />
+          </Card>
+        </main>
       </React.Fragment>
     )
   }

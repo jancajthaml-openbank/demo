@@ -29,7 +29,7 @@ module.exports = function(application) {
   })
 
   const randomAccounts = generateRandomAccounts('random', accounts, 2000)
-  const randomTransfers = generateRandomTransactions('random', transfers, randomAccounts, 2000)
+  const randomTransfers = generateRandomTransactions('random', transfers, randomAccounts, 100)
 
   accounts.insert({
     "id": "test/A",

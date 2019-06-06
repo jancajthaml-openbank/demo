@@ -12,81 +12,96 @@ import {
   $callout3,
 } from '../../stylesheets/variables'
 
-export const HeaderNav = styled.nav.attrs({
+export const HeaderNavigation = styled.div.attrs({
 })`
 
-  flex: 1 1 100%;
-  height: 100%;
+  display: flex;
+  flex-basis: auto;
+  flex-grow: inherit;
+  flex-wrap: nowrap;
+  margin-left: -1rem;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  align-items: center;
+  order: -1;
 
-  ul {
+  > ul {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    margin-top: 0;
+    padding-inline-start: 40px;
     display: flex;
-    margin: 0;
-    padding: 0;
-    align-items: center;
-    height: 100%;
-    text-transform: capitalize;
+    flex-direction: row;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
 
     li {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 14px;
+      display: list-item;
+      text-transform: capitalize;
+      font-size: 15px;
 
       span {
-        color: ${$white};
+        display: block;
+        white-space: nowrap;
+        text-decoration: none;
+        color: #12263f;
+        padding: .625rem .5rem;
         cursor: default;
-        padding: 1em;
-        background: rgba(0,0,0,.2)
       }
 
       a {
-        color: ${$callout3};
-        padding: 1em;
+        display: block;
+        white-space: nowrap;
         text-decoration: none;
+        padding: .625rem .5rem;
+        color: #6e84a3;
 
         &:hover {
-          color: ${$white};
+          color: #12263f;
         }
       }
     }
+
   }
 `;
 
-export const HeaderWrapper = styled.div.attrs({
+export const HeaderWrapper = styled.nav.attrs({
 })`
-  padding: 0;
+
+
+  background-color: #fff;
+  border-color: #e3ebf6;
+  border-width: 0 0 1px;
+  border-style: solid;
+
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  background: ${$callout1};
+  justify-content: space-between;
 
-  > select {
-    background: ${$callout1};
-    padding: 3px;
-    border: 1px solid ${$white};
-    margin: 0 1em;
-    width: 100px;
-    color: ${$white};
-    font-size: 14px;
-    outline: none;
-    cursor: pointer;
+  position: relative;
+  padding: .75rem 1rem;
+  box-sizing: border-box;
 
-    &::-ms-expand {
-      display: none;
-    }
+`;
 
-    &[disabled] {
-      color: ${$callout3};
-      border-color: ${$callout3};
-      cursor: not-allowed;
-    }
 
-    option {
-      color: ${$white};
-      display: flex;
-      white-space: pre;
-      min-height: 20px;
-      padding: 0px 2px 1px;
-    }
-  }
+export const HeaderLogo = styled.a.attrs({
+})`
+
+    display: inline-block;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-right: 1rem;
+    font-size: 1.0625rem;
+    line-height: inherit;
+    white-space: nowrap;
+    border: 1px solid red;
+    max-width: 100%;
+    max-height: 1.5rem;
+
 `;

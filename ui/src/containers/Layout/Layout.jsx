@@ -12,11 +12,7 @@ class Layout extends React.Component {
     return (
       <div>
         <Header />
-        <div
-          style={{
-            padding: '2rem',
-          }}
-        >
+        <div>
           <Switch>
             {routes.map((route) => (
               <Route

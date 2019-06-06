@@ -5,6 +5,7 @@ import {
   List as FioTokens,
   New as FioTokenNew,
 } from '../containers/Fio'
+import { Card } from '../components/Card'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 
 export class Fio extends React.Component {
@@ -14,10 +15,19 @@ export class Fio extends React.Component {
 
     return (
       <React.Fragment>
-        <h2>Fio</h2>
-        <h3>Tokens</h3>
-        <FioTokens tenant={tenant} />
-        <FioTokenNew tenant={tenant} />
+        <header>
+          <h1>Fio</h1>
+        </header>
+        <main>
+          <Card>
+            <h6>New Token</h6>
+            <FioTokenNew tenant={tenant} />
+          </Card>
+          <Card>
+            <h6>Tokens</h6>
+            <FioTokens tenant={tenant} />
+          </Card>
+        </main>
       </React.Fragment>
     )
   }

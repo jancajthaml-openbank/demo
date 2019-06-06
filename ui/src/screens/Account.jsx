@@ -5,6 +5,7 @@ import {
   AccountsList,
   NewAccount,
 } from '../containers/Core'
+import { Card } from '../components/Card'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 
 export class Account extends React.Component {
@@ -14,9 +15,19 @@ export class Account extends React.Component {
 
     return (
       <React.Fragment>
-        <h2>Accounts</h2>
-        <NewAccount tenant={tenant} />
-        <AccountsList tenant={tenant} />
+        <header>
+          <h1>Accounts</h1>
+        </header>
+        <main>
+          <Card>
+            <h6>New Account</h6>
+            <NewAccount tenant={tenant} />
+          </Card>
+          <Card>
+            <h6>Accounts</h6>
+            <AccountsList tenant={tenant} />
+          </Card>
+        </main>
       </React.Fragment>
     )
   }
