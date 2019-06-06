@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const CardStyled = styled.div.attrs({
+export const Card = styled.div.attrs({
 })`
   display: block;
   margin-bottom: 1.5rem;
