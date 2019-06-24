@@ -4,7 +4,6 @@ const express = require('express')
 const [ https, http ] = [ require('https'), require('http') ]
 
 const app = express()
-//app.use('/favicon.ico*', express.static(path.resolve(__dirname, 'build/static')))
 app.use('/static', express.static(path.resolve(__dirname, 'build/static')))
 app.use(express.json())
 app.disable('x-powered-by')
