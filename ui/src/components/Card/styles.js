@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
-export const Card = styled.div.attrs({
-})`
+export const Card = styled.div.attrs(() => ({
+}))`
   display: block;
   margin-bottom: 1.5rem;
   border-color: #edf2f9;

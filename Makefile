@@ -20,4 +20,4 @@ dev:
 .PHONY: run
 run:
 	@docker-compose down --remove-orphans
-	@docker-compose up ui-production
+	@docker-compose up --build --abort-on-container-exit ui-production

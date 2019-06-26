@@ -1,4 +1,4 @@
-version: '2'
+version: '3.7'
 
 # ---------------------------------------------------------------------------- #
 
@@ -6,9 +6,9 @@ services:
 
   # -------------------------------------------------------------------------- #
 
-  node:
+  node: &node
     image: node:10.9.0
-    volumes:
+    volumes: &node_volumes
       - ./ui:/opt/project
       - dependency-cache:/opt/project/node_modules
     working_dir: /opt/project
@@ -17,25 +17,25 @@ services:
   # -------------------------------------------------------------------------- #
 
   ui-test:
-    extends: node
+    <<: *node
     command: ["test"]
 
   # -------------------------------------------------------------------------- #
 
   ui-install-dependencies:
-    extends: node
+    <<: *node
     command: ["i"]
 
   # -------------------------------------------------------------------------- #
 
   ui-build:
-    extends: node
+    <<: *node
     command: ["run", "build"]
 
   # -------------------------------------------------------------------------- #
 
   server-mock:
-    extends: node
+    <<: *node
     ports:
       - "4000:4000"
     entrypoint: node
@@ -45,7 +45,7 @@ services:
 
   ui-development:
     tty: true
-    extends: node
+    <<: *node
     ports:
       - "3000:3000"
     depends_on:
@@ -56,7 +56,7 @@ services:
 
   ui-production:
     tty: true
-    extends: node
+    <<: *node
     ports:
       - "3000:3000"
     depends_on:
@@ -67,7 +67,17 @@ services:
 
   server-production:
     image: openbank/demo
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        LAKE_VERSION: 1.1.9
+        VAULT_VERSION: 1.2.9
+        LEDGER_VERSION: 1.0.4
+        FIO_BCO_VERSION: 1.2.6
+        BONDSTER_BCO_VERSION: 1.2.7
+        CNB_RATES_VERSION: 1.0.1
+        SEARCH_VERSION: 1.2.6
     ports:
       - "8080:8080"
       - "4400:4400"

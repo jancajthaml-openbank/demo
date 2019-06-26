@@ -74,17 +74,12 @@ RUN \
       systemd-logind.service && \
     systemctl set-default multi-user.target ;
 
-ENV \
-    LAKE_VERSION=1.1.7 \
-    VAULT_VERSION=1.2.5 \
-    LEDGER_VERSION=1.0.2 \
-    \
-    FIO_BCO_VERSION=1.2.4 \
-    BONDSTER_BCO_VERSION=1.2.5 \
-    \
-    CNB_RATES_VERSION=1.0.0 \
-    \
-    SEARCH_VERSION=1.2.5
+ARG LAKE_VERSION
+ARG VAULT_VERSION
+ARG LEDGER_VERSION
+ARG FIO_BCO_VERSION
+ARG BONDSTER_BCO_VERSION
+ARG SEARCH_VERSION
 
 RUN \
     echo "downloading lake@${LAKE_VERSION}" && \
@@ -100,7 +95,7 @@ RUN \
     -o "/tmp/ledger_${LEDGER_VERSION}_amd64.deb" && \
     \
     echo "downloading search@${SEARCH_VERSION}" && \
-    curl --fail -L "https://github.com/jancajthaml-openbank/search/releases/download/v${SEARCH_VERSION}/search_${SEARCH_VERSION}_all.deb" -# \
+    curl --fail -L "https://github.com/jancajthaml-openbank/search/releases/download/v${SEARCH_VERSION}/search_${SEARCH_VERSION}_amd64.deb" -# \
     -o "/tmp/search_${SEARCH_VERSION}_all.deb" && \
     \
     echo "downloading fio-bco@${FIO_BCO_VERSION}" && \
@@ -110,10 +105,6 @@ RUN \
     echo "downloading bondster-bco@${BONDSTER_BCO_VERSION}" && \
     curl --fail -L "https://github.com/jancajthaml-openbank/bondster-bco/releases/download/v${BONDSTER_BCO_VERSION}/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb" -# \
     -o "/tmp/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb" && \
-    \
-    echo "downloading cnb-rates@${CNB_RATES_VERSION}" && \
-    curl --fail -L "https://github.com/jancajthaml-openbank/cnb-rates/releases/download/v${CNB_RATES_VERSION}/cnb-rates_${CNB_RATES_VERSION}_amd64.deb" -# \
-    -o "/tmp/cnb-rates_${CNB_RATES_VERSION}_amd64.deb" && \
     \
     ls -la /tmp && \
     find /tmp -name "*.deb" -exec file {} \;
@@ -126,7 +117,6 @@ RUN \
     apt-get -y install -f /tmp/search_${SEARCH_VERSION}_all.deb && \
     apt-get -y install -f /tmp/fio-bco_${FIO_BCO_VERSION}_amd64.deb && \
     apt-get -y install -f /tmp/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb && \
-    apt-get -y install -f /tmp/cnb-rates_${CNB_RATES_VERSION}_amd64.deb && \
     \
     systemctl enable mongod \
     && \
@@ -140,8 +130,7 @@ RUN rm -rf \
       /opt/vault/secrets \
       /opt/ledger/secrets \
       /opt/fio-bco/secrets \
-      /opt/bondster-bco/secrets \
-      /opt/cnb-rates/secrets && \
+      /opt/bondster-bco/secrets && \
     \
     sed -ri /etc/init/fio-bco.conf -e \
       's!^FIO_BCO_SECRETS=.*!FIO_BCO_SECRETS=/openbank/secrets!' && \
@@ -159,8 +148,6 @@ RUN rm -rf \
       's!^LEDGER_SECRETS=.*!LEDGER_SECRETS=/openbank/secrets!' &&\
     sed -ri /etc/init/ledger.conf -e \
       's!^LEDGER_LOG_LEVEL=.*!LEDGER_LOG_LEVEL=DEBUG!' && \
-    sed -ri /etc/init/cnb-rates.conf -e \
-      's!^CNB_RATES_SECRETS=.*!CNB_RATES_SECRETS=/openbank/secrets!' && \
     sed -ri /etc/init/bondster-bco.conf -e \
       's!^BONDSTER_BCO_ENCRYPTION_KEY=.*!BONDSTER_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
     sed -ri /etc/init/fio-bco.conf -e \

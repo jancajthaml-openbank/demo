@@ -12,9 +12,8 @@ import {
   $callout3,
 } from '../../stylesheets/variables'
 
-export const HeaderNavigation = styled.div.attrs({
-})`
-
+export const HeaderNavigation = styled.div.attrs(() => ({
+}))`
   display: flex;
   flex-basis: auto;
   flex-grow: inherit;
@@ -69,10 +68,8 @@ export const HeaderNavigation = styled.div.attrs({
   }
 `;
 
-export const HeaderWrapper = styled.nav.attrs({
-})`
-
-
+export const HeaderWrapper = styled.nav.attrs(() => ({
+}))`
   background-color: #fff;
   border-color: #e3ebf6;
   border-width: 0 0 1px;
@@ -86,22 +83,18 @@ export const HeaderWrapper = styled.nav.attrs({
   position: relative;
   padding: .75rem 1rem;
   box-sizing: border-box;
-
 `;
 
-
-export const HeaderLogo = styled.a.attrs({
-})`
-
-    display: inline-block;
-    padding-top: 0;
-    padding-bottom: 0;
-    margin-right: 1rem;
-    font-size: 1.0625rem;
-    line-height: inherit;
-    white-space: nowrap;
-    border: 1px solid red;
-    max-width: 100%;
-    max-height: 1.5rem;
-
+export const HeaderLogo = styled.a.attrs(() => ({
+}))`
+  display: inline-block;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-right: 1rem;
+  font-size: 1.0625rem;
+  line-height: inherit;
+  white-space: nowrap;
+  border: 1px solid red;
+  max-width: 100%;
+  max-height: 1.5rem;
 `;
