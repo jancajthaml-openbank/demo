@@ -40,7 +40,11 @@ const start = async function() {
 
   const mountNode = document.getElementById("mount")
 
-  ReactDOM.hydrate(App(store, globalisation), mountNode)
+  const render = (process.env.NODE_ENV !== 'production' && module.hot)
+    ? ReactDOM.render
+    : ReactDOM.hydrate
+
+  render(App(store, globalisation), mountNode)
 }
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -100,6 +100,7 @@ module.exports = function(env = {}, args = {}) {
         'webpack-dev-server/client?http://0.0.0.0:3000',
         'webpack/hot/dev-server',
         'webpack/hot/only-dev-server',
+        'react-hot-loader/patch',
       ]
     ),
     mode: production ? 'production' : 'development',
@@ -234,8 +235,8 @@ module.exports = function(env = {}, args = {}) {
     },
     performance: production ? {
       hints: false,
-      maxEntrypointSize: 1048576, // 1 MB
-      maxAssetSize: 1048576,      // 1 MB
+      maxEntrypointSize: 1048576,
+      maxAssetSize: 1048576,
     } : false,
     plugins: getPlugins(production),
     optimization: {
@@ -301,7 +302,7 @@ module.exports = function(env = {}, args = {}) {
     },
     devServer: production ? undefined : {
       stats: 'errors-only',
-      compress: false,
+      compress: true,
       disableHostCheck: true,
       clientLogLevel: 'none',
       publicPath: '/',
@@ -316,7 +317,6 @@ module.exports = function(env = {}, args = {}) {
       contentBase: path.resolve(__dirname, 'build'),
       historyApiFallback: {
         index: '/',
-        disableDotRule: true,
       },
       overlay: {
         errors: true,
@@ -332,6 +332,11 @@ module.exports = function(env = {}, args = {}) {
           ws: false,
           prependPath: false,
           changeOrigin: true,
+          /*
+          pathRewrite: {
+            '^/api': '/api',
+          },
+          */
           logLevel: 'debug',
           secure: false,
           bypass: () => false,
