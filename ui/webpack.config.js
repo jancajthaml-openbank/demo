@@ -114,7 +114,6 @@ module.exports = function(env = {}, args = {}) {
     module: {
       strictExportPresence: true,
       noParse: [
-        /sinon|bindings/,
       ],
     },
     resolve: {
@@ -136,8 +135,6 @@ module.exports = function(env = {}, args = {}) {
       ],
       alias: {
         'react-dom': production ? 'react-dom' : '@hot-loader/react-dom',
-        'react-virtualized/AutoSizer': 'react-virtualized/dist/es/AutoSizer',
-        'react-virtualized/List': 'react-virtualized/dist/es/List',
       },
       mainFields: [
         'browser',
@@ -332,10 +329,10 @@ module.exports = function(env = {}, args = {}) {
       proxy: {
         '/api/*': {
           target: 'http://server-mock:4000/api',
-          ws: true,
+          ws: false,
           prependPath: false,
           changeOrigin: true,
-          logLevel: 'info',
+          logLevel: 'debug',
           secure: false,
           bypass: () => false,
         },

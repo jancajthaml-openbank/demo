@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
-const fastify = require('fastify')
-const { graphiqlFastify, graphqlFastify } = require('fastify-graphql')
+const express = require('express')
+const graphqlHTTP = require('express-graphql')
 const { makeExecutableSchema } = require('graphql-tools')
 const loki = require('lokijs')
 const { randomId } = require('./utils/random')
@@ -12,7 +12,7 @@ const { generateRandomAccounts, generateRandomTransactions } = require('./resour
 // -------------------------------------------------------------------------- //
 
 module.exports = function(application) {
-  const app = application || fastify()
+  const app = application || express()
   const db = new loki('db.json')
 
   const accounts = db.addCollection('accounts', {
@@ -28,43 +28,33 @@ module.exports = function(application) {
     unique: ['id'],
   })
 
-  const randomAccounts = generateRandomAccounts('random', accounts, 2000)
-  const randomTransfers = generateRandomTransactions('random', transfers, randomAccounts, 100)
-
-  accounts.insert({
-    "id": "test/A",
-    "tenant": "test",
-    "name": "A",
-    "currency": "CZK",
-    "isBalanceCheck": false,
-  })
+  const randomAccounts = generateRandomAccounts('mock', accounts, 2000)
+  const randomTransfers = generateRandomTransactions('mock', transfers, randomAccounts, 100)
 
   // ------------------------------------------------------------------------ //
   // GraphQL methods
 
-  app.register(graphqlFastify, {
-    prefix: '/api/search/graphql',
-    graphql: {
-      schema: makeExecutableSchema({
-        typeDefs: fs.readFileSync(path.resolve(__dirname, "schema.graphql"), "utf8"),
-        resolvers: Object.freeze({
-          Query: {
-            ...Accounts,
-            ...Transactions,
-            ...Transfers,
-          },
-          Date: DateScalar,
-          Money: MoneyScalar
-        })
-      }),
-      context: {
-        db: {
-          transfers,
-          accounts,
+  app.use('/api/search/graphql', graphqlHTTP({
+    schema: makeExecutableSchema({
+      typeDefs: fs.readFileSync(path.resolve(__dirname, "schema.graphql"), "utf8"),
+      resolvers: Object.freeze({
+        Query: {
+          ...Accounts,
+          ...Transactions,
+          ...Transfers,
         },
-      }
+        Date: DateScalar,
+        Money: MoneyScalar
+      })
+    }),
+    context: {
+      db: {
+        transfers,
+        accounts,
+      },
     },
-  })
+    graphiql: true
+  }))
 
   // ------------------------------------------------------------------------ //
   // HTTP 1.0 methods
@@ -75,7 +65,7 @@ module.exports = function(application) {
   app.get('/api/vault/tenant', async (req, res) => {
     console.log('GET /api/vault/tenant')
 
-    res.type('application/json').code(200)
+    //res.type('application/json').code(200)
 
     const tenants = {}
     accounts
@@ -83,7 +73,10 @@ module.exports = function(application) {
       .forEach((item) => {
         tenants[item.tenant] = true
       })
-    return Object.keys(tenants)
+
+    res.status(200).json(Object.keys(tenants))
+
+    //return Object.keys(tenants)
   })
 
   app.post('/api/vault/account/:tenant', async (req, res) => {
@@ -92,21 +85,24 @@ module.exports = function(application) {
     const { tenant } = req.params
 
     if (!tenant) {
-      res.type('application/json').code(404)
-      return {}
+      //res.type('application/json').code(404)
+      res.status(404).json({})
+      return
     }
 
     if (!req.body) {
-      res.type('application/json').code(400)
-      return {}
+      //res.type('application/json').code(400)
+      res.status(404).json({})
+      return
     }
 
     try {
       const { accountNumber, currency, isBalanceCheck } = req.body
 
       if (!accountNumber || !currency || !isBalanceCheck) {
-        res.type('application/json').code(400)
-        return {}
+        //res.type('application/json').code(400)
+        res.status(400).json({})
+        return
       }
 
       accounts.insert({
@@ -118,12 +114,14 @@ module.exports = function(application) {
       })
 
       tenants
-      res.type('application/json').code(200)
-      return {}
+      //res.type('application/json').code(200)
+      res.status(200).json({})
+      return
     } catch (err) {
       console.log(err)
-      res.type('application/json').code(409)
-      return {}
+      //res.type('application/json').code(409)
+      res.status(409).json({})
+      return
     }
   })
 
@@ -136,15 +134,19 @@ module.exports = function(application) {
     const { tenant } = req.params
 
     if (!tenant) {
-      res.type('application/json').code(404)
-      return {}
+      //res.type('application/json').code(404)
+      res.status(404).json({})
+      return
     }
 
-    res.type('application/json').code(200)
-    return bondster.find({ tenant }).map((item) => ({
+    //res.type('application/json').code(200)
+
+    res.status(200).json(bondster.find({ tenant }).map((item) => ({
       value: item.id,
       createdAt: item.createdAt.toISOString(),
-    }))
+    })))
+
+    //return
   })
 
   app.post('/api/bondster/token/:tenant', async (req, res) => {
@@ -153,21 +155,24 @@ module.exports = function(application) {
     const { tenant } = req.params
 
     if (!tenant) {
-      res.type('application/json').code(404)
-      return {}
+      //res.type('application/json').code(404)
+      res.status(404).json({})
+      return
     }
 
     if (!req.body) {
-      res.type('application/json').code(400)
-      return {}
+      //res.type('application/json').code(400)
+      res.status(400).json({})
+      return
     }
 
     try {
       const { username, password } = req.body
 
       if (!username || !password) {
-        res.type('application/json').code(400)
-        return {}
+        //res.type('application/json').code(400)
+        res.status(400).json({})
+        return
       }
 
       let id = randomId()
@@ -185,15 +190,17 @@ module.exports = function(application) {
         createdAt,
       })
 
-      res.type('application/json').code(200)
-      return {
+      res.status(200).json({
         value: id,
         createdAt: createdAt.toISOString(),
-      }
+      })
+      //res.type('application/json').code(200)
+      return
     } catch (err) {
       console.log(err)
-      res.type('application/json').code(400)
-      return {}
+      //res.type('application/json').code(400)
+      res.status(400).json({})
+      return
     }
   })
 
@@ -206,15 +213,18 @@ module.exports = function(application) {
     const { tenant } = req.params
 
     if (!tenant) {
-      res.type('application/json').code(404)
-      return {}
+      res.status(404).json({})
+      //res.type('application/json').code(404)
+      return
     }
 
-    res.type('application/json').code(200)
-    return fio.find({ tenant }).map((item) => ({
+    //res.type('application/json').code(200)
+
+    res.status(200).json(fio.find({ tenant }).map((item) => ({
       value: item.id,
       createdAt: item.createdAt.toISOString(),
-    }))
+    })))
+    return
   })
 
   app.post('/api/fio/token/:tenant', async (req, res) => {
@@ -223,21 +233,24 @@ module.exports = function(application) {
     const { tenant } = req.params
 
     if (!tenant) {
-      res.type('application/json').code(404)
-      return {}
+      res.status(404).json({})
+      //res.type('application/json').code(404)
+      return
     }
 
     if (!req.body) {
-      res.type('application/json').code(400)
-      return {}
+      //res.type('application/json').code(400)
+      res.status(400).json({})
+      return
     }
 
     try {
       const { value } = req.body
 
       if (!value) {
-        res.type('application/json').code(400)
-        return {}
+        res.status(400).json({})
+        //res.type('application/json').code(400)
+        return
       }
 
       let id = randomId()
@@ -253,15 +266,17 @@ module.exports = function(application) {
         createdAt,
       })
 
-      res.type('application/json').code(200)
-      return {
+      res.status(200).json({
         value: id,
         createdAt: createdAt.toISOString(),
-      }
+      })
+      //res.type('application/json').code(200)
+      return
     } catch (err) {
       console.log(err)
-      res.type('application/json').code(400)
-      return {}
+      //res.type('application/json').code(400)
+      res.status(400).json({})
+      return
     }
   })
 

@@ -29,6 +29,9 @@ class List extends React.Component {
     const columns = [{
       Header: 'Name',
       accessor: 'name'
+    }, {
+      Header: 'Type',
+      accessor: 'type'
     }]
 
     return (

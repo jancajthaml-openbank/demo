@@ -38,6 +38,8 @@ services:
     <<: *node
     ports:
       - "4000:4000"
+    networks:
+      - overlay
     entrypoint: node
     command: ["/opt/project/mock/index.js"]
 
@@ -48,6 +50,8 @@ services:
     <<: *node
     ports:
       - "3000:3000"
+    networks:
+      - overlay
     depends_on:
       - server-mock
     command: ["run", "devserver"]
@@ -94,3 +98,6 @@ services:
 
 volumes:
   dependency-cache:
+
+networks:
+  overlay:
