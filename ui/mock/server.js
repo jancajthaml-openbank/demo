@@ -79,7 +79,7 @@ module.exports = function(application) {
     res.status(200).json(Object.keys(tenants))
   })
 
-  app.post('/api/vault/account/:tenant', async (req, res) => {
+  app.post('/api/vault/account/:tenant', express.json({ type: '*/*' }), async (req, res) => {
     const { tenant } = req.params
 
     if (!tenant) {
@@ -134,7 +134,7 @@ module.exports = function(application) {
     })))
   })
 
-  app.post('/api/bondster/token/:tenant', async (req, res) => {
+  app.post('/api/bondster/token/:tenant', express.json({ type: '*/*' }), async (req, res) => {
     const { tenant } = req.params
 
     if (!tenant) {
@@ -200,7 +200,7 @@ module.exports = function(application) {
     return
   })
 
-  app.post('/api/fio/token/:tenant', async (req, res) => {
+  app.post('/api/fio/token/:tenant', express.json({ type: '*/*' }), async (req, res) => {
     const { tenant } = req.params
 
     if (!tenant) {

@@ -24,7 +24,7 @@ services:
 
   ui-install-dependencies:
     <<: *node
-    command: ["i"]
+    command: ["install"]
 
   # -------------------------------------------------------------------------- #
 
@@ -40,7 +40,7 @@ services:
     ports:
       - "4000:4000"
     entrypoint: node
-    command: ["/opt/project/mock/index.js"]
+    command: ["/opt/project/node_modules/nodemon/bin/nodemon.js", "/opt/project/mock/index.js"]
 
   # -------------------------------------------------------------------------- #
 

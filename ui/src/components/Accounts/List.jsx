@@ -30,8 +30,8 @@ class List extends React.Component {
       Header: 'Name',
       accessor: 'name'
     }, {
-      Header: 'Type',
-      accessor: 'type'
+      Header: 'Format',
+      accessor: 'format'
     }]
 
     return (
