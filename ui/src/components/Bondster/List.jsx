@@ -29,8 +29,8 @@ class List extends React.Component {
         {tokens.length > 0
           ? (
             tokens.map((token) => (
-            <li key={token.value}>
-              {token.value}
+            <li key={token.id}>
+              {`${token.id} ${token.createdAt}`}
             </li>
           )))
           : 'No data'

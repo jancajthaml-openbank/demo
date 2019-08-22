@@ -129,7 +129,7 @@ module.exports = function(application) {
     }
 
     res.status(200).json(bondster.find({ tenant }).map((item) => ({
-      value: item.id,
+      id: item.id,
       createdAt: item.createdAt.toISOString(),
     })))
   })
@@ -171,7 +171,7 @@ module.exports = function(application) {
       })
 
       res.status(200).json({
-        value: id,
+        id,
         createdAt: createdAt.toISOString(),
       })
       return
@@ -194,7 +194,7 @@ module.exports = function(application) {
     }
 
     res.status(200).json(fio.find({ tenant }).map((item) => ({
-      value: item.id,
+      id: item.id,
       createdAt: item.createdAt.toISOString(),
     })))
     return
@@ -235,7 +235,7 @@ module.exports = function(application) {
       })
 
       res.status(200).json({
-        value: id,
+        id,
         createdAt: createdAt.toISOString(),
       })
       return

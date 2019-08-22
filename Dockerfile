@@ -25,7 +25,6 @@ RUN \
       lsb-release \
       curl \
       git \
-      cron \
       at \
       gnupg \
       logrotate \

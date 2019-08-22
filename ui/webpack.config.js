@@ -302,7 +302,7 @@ module.exports = function(env = {}, args = {}) {
     },
     devServer: production ? undefined : {
       stats: 'errors-only',
-      compress: true,
+      compress: false,
       disableHostCheck: true,
       clientLogLevel: 'none',
       publicPath: '/',
@@ -317,6 +317,7 @@ module.exports = function(env = {}, args = {}) {
       contentBase: path.resolve(__dirname, 'build'),
       historyApiFallback: {
         index: '/',
+        disableDotRule: true,
       },
       overlay: {
         errors: true,
@@ -332,12 +333,7 @@ module.exports = function(env = {}, args = {}) {
           ws: false,
           prependPath: false,
           changeOrigin: true,
-          /*
-          pathRewrite: {
-            '^/api': '/api',
-          },
-          */
-          logLevel: 'debug',
+          logLevel: 'info',
           secure: false,
           bypass: () => false,
         },

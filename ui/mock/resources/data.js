@@ -15,7 +15,7 @@ function generateRandomAccounts(tenant, collection, howMany) {
       id: `${tenant}/${name}`,
       tenant,
       name,
-      type: 'mock',
+      format: 'mock',
       currency: "EUR",
       isBalanceCheck: false,
     }

@@ -6,6 +6,7 @@ class CoreService {
         query {
           Accounts(tenant: "${tenant}") {
             name
+            format
           }
         }
       `
