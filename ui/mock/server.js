@@ -7,7 +7,11 @@ const loki = require('lokijs')
 const { randomId } = require('./utils/random')
 const { Accounts, Transactions, Transfers } = require('./resolver')
 const { DateScalar, MoneyScalar } = require('./scalar')
-const { generateRandomAccounts, generateRandomTransactions } = require('./resources/data')
+const {
+  generateRandomAccounts,
+  generateBondsterAccounts,
+  generateRandomTransactions,
+} = require('./resources/data')
 
 // -------------------------------------------------------------------------- //
 const logRequestStart = (req, res, next) => {
@@ -33,7 +37,9 @@ module.exports = function(application) {
   })
 
   const randomAccounts = generateRandomAccounts('mock', accounts, 2000)
-  const randomTransfers = generateRandomTransactions('mock', transfers, randomAccounts, 100)
+  const bondsterAccounts = generateBondsterAccounts('mock', accounts)
+  const generatedAccounts = [...randomAccounts, ...bondsterAccounts]
+  const randomTransfers = generateRandomTransactions('mock', transfers, generatedAccounts, 2000)
 
   app.use(logRequestStart)
 

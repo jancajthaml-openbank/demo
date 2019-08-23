@@ -17,4 +17,9 @@ export const Card = styled.div.attrs(() => ({
   border-radius: .5rem;
   flex: 1 1 auto;
   padding: 1.5rem;
+
+  table {
+    margin: .5rem -1.5rem;
+    width: calc(100% + 3rem);
+  }
 `;

@@ -1,6 +1,8 @@
 import React from 'react'
 
-import ReactTable from 'react-table'
+//import ReactTable from 'react-table'
+
+import Table from './Table'
 
 import PropTypes from 'prop-types'
 
@@ -30,18 +32,17 @@ class List extends React.Component {
       Header: 'Name',
       accessor: 'name'
     }, {
+      Header: 'Currency',
+      accessor: 'currency'
+    }, {
       Header: 'Format',
       accessor: 'format'
     }]
 
     return (
-      <ReactTable
-        filterable
-        minRows={5}
-        defaultPageSize={5}
-        loading={accountsLoading}
-        data={accounts}
+      <Table
         columns={columns}
+        data={accounts}
       />
     )
   }

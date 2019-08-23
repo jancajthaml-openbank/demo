@@ -7,6 +7,7 @@ class CoreService {
           Accounts(tenant: "${tenant}") {
             name
             format
+            currency
           }
         }
       `
