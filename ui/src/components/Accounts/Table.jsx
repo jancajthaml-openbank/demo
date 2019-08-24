@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { useTable, usePagination, useTableState } from 'react-table'
+import { useTable, usePagination, useTableState, useSortBy } from 'react-table'
 
 const Wrapper = styled.div.attrs(() => ({
 }))`
@@ -45,7 +45,7 @@ const Wrapper = styled.div.attrs(() => ({
 `;
 
 
-function Table({ columns, data }) {
+function Table({ columns, data, loading }) {
   const tableState = useTableState({ pageIndex: 0 })
 
   const {
@@ -68,7 +68,8 @@ function Table({ columns, data }) {
       data,
       state: tableState,
     },
-    usePagination
+    useSortBy,
+    usePagination,
   )
 
   return (
@@ -78,7 +79,19 @@ function Table({ columns, data }) {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                // Add the sorting props to control sorting. For this example
+                // we can add them into the header props
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  {column.render('Header')}
+                  {/* Add a sort direction indicator */}
+                  <span>
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? ' 🔽'
+                        : ' 🔼'
+                      : ''}
+                  </span>
+                </th>
               ))}
             </tr>
           ))}

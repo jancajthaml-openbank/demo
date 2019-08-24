@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { useTable, usePagination, useExpanded, useTableState } from 'react-table'
+import { useTable, usePagination, useExpanded, useTableState, useSortBy } from 'react-table'
 
 const Wrapper = styled.div.attrs(() => ({
 }))`
@@ -68,6 +68,7 @@ function Table({ columns, data, renderRowSubComponent }) {
       state: tableState,
     },
     useExpanded,
+    useSortBy,
     usePagination,
   )
 
@@ -75,10 +76,22 @@ function Table({ columns, data, renderRowSubComponent }) {
     <Wrapper>
       <table {...getTableProps()}>
         <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+          {headerGroups.map((headerGroup, i) => (
+            <tr key={`${i}-header`} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                // Add the sorting props to control sorting. For this example
+                // we can add them into the header props
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  {column.render('Header')}
+                  {/* Add a sort direction indicator */}
+                  <span>
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? ' 🔽'
+                        : ' 🔼'
+                      : ''}
+                  </span>
+                </th>
               ))}
             </tr>
           ))}
@@ -96,7 +109,7 @@ function Table({ columns, data, renderRowSubComponent }) {
                     })}
                   </tr>
                   {row.isExpanded ? (
-                    <tr>
+                    <tr key={`${i}-sub`}>
                       <td colSpan={columns.length}>
                         {/*
                           Inside it, call our renderRowSubComponent function. In reality,

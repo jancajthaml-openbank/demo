@@ -41,6 +41,7 @@ class List extends React.Component {
 
     return (
       <Table
+        loading={accountsLoading}
         columns={columns}
         data={accounts}
       />
