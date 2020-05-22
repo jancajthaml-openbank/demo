@@ -12,7 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+ARG LAKE_VERSION
+ARG VAULT_VERSION
+ARG LEDGER_VERSION
+ARG FIO_BCO_VERSION
+ARG BONDSTER_BCO_VERSION
+ARG SEARCH_VERSION
+
+FROM openbank/lake:v${LAKE_VERSION}-master as lake-artifacts
+FROM openbank/vault:v${VAULT_VERSION}-master as vault-artifacts
+FROM openbank/ledger:v${LEDGER_VERSION}-master as ledger-artifacts
+FROM openbank/fio-bco:v${FIO_BCO_VERSION}-master as fio-bco-artifacts
+FROM openbank/bondster-bco:v${BONDSTER_BCO_VERSION}-master as bondster-bco-artifacts
+FROM openbank/search:v${SEARCH_VERSION}-master as search-artifacts
+
 FROM debian:stretch
+
+ARG LAKE_VERSION
+ARG VAULT_VERSION
+ARG LEDGER_VERSION
+ARG FIO_BCO_VERSION
+ARG BONDSTER_BCO_VERSION
+ARG SEARCH_VERSION
 
 ENV DEBIAN_FRONTEND=noninteractive \
     LANG=C.UTF-8
@@ -25,9 +46,9 @@ RUN \
       lsb-release \
       curl \
       git \
-      cron \
       at \
       gnupg \
+      nginx \
       logrotate \
       rsyslog \
       unattended-upgrades \
@@ -74,60 +95,49 @@ RUN \
       systemd-logind.service && \
     systemctl set-default multi-user.target ;
 
-ENV \
-    LAKE_VERSION=1.1.7 \
-    VAULT_VERSION=1.2.5 \
-    LEDGER_VERSION=1.0.2 \
-    \
-    FIO_BCO_VERSION=1.2.4 \
-    BONDSTER_BCO_VERSION=1.2.5 \
-    \
-    CNB_RATES_VERSION=1.0.0 \
-    \
-    SEARCH_VERSION=1.2.5
+RUN mkdir -p /tmp/artifacts /tmp/debs
 
-RUN \
-    echo "downloading lake@${LAKE_VERSION}" && \
-    curl --fail -L "https://github.com/jancajthaml-openbank/lake/releases/download/v${LAKE_VERSION}/lake_${LAKE_VERSION}_amd64.deb" -# \
-    -o "/tmp/lake_${LAKE_VERSION}_amd64.deb" && \
-    \
-    echo "downloading vault@${VAULT_VERSION}" && \
-    curl --fail -L "https://github.com/jancajthaml-openbank/vault/releases/download/v${VAULT_VERSION}/vault_${VAULT_VERSION}_amd64.deb" -# \
-    -o "/tmp/vault_${VAULT_VERSION}_amd64.deb" && \
-    \
-    echo "downloading ledger@${LEDGER_VERSION}" && \
-    curl --fail -L "https://github.com/jancajthaml-openbank/ledger/releases/download/v${LEDGER_VERSION}/ledger_${LEDGER_VERSION}_amd64.deb" -# \
-    -o "/tmp/ledger_${LEDGER_VERSION}_amd64.deb" && \
-    \
-    echo "downloading search@${SEARCH_VERSION}" && \
-    curl --fail -L "https://github.com/jancajthaml-openbank/search/releases/download/v${SEARCH_VERSION}/search_${SEARCH_VERSION}_all.deb" -# \
-    -o "/tmp/search_${SEARCH_VERSION}_all.deb" && \
-    \
-    echo "downloading fio-bco@${FIO_BCO_VERSION}" && \
-    curl --fail -L "https://github.com/jancajthaml-openbank/fio-bco/releases/download/v${FIO_BCO_VERSION}/fio-bco_${FIO_BCO_VERSION}_amd64.deb" -# \
-    -o "/tmp/fio-bco_${FIO_BCO_VERSION}_amd64.deb" && \
-    \
-    echo "downloading bondster-bco@${BONDSTER_BCO_VERSION}" && \
-    curl --fail -L "https://github.com/jancajthaml-openbank/bondster-bco/releases/download/v${BONDSTER_BCO_VERSION}/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb" -# \
-    -o "/tmp/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb" && \
-    \
-    echo "downloading cnb-rates@${CNB_RATES_VERSION}" && \
-    curl --fail -L "https://github.com/jancajthaml-openbank/cnb-rates/releases/download/v${CNB_RATES_VERSION}/cnb-rates_${CNB_RATES_VERSION}_amd64.deb" -# \
-    -o "/tmp/cnb-rates_${CNB_RATES_VERSION}_amd64.deb" && \
-    \
-    ls -la /tmp && \
-    find /tmp -name "*.deb" -exec file {} \;
+RUN echo "downloading lake@${LAKE_VERSION}"
+COPY --from=lake-artifacts /opt/artifacts/* /tmp/artifacts/lake/
+RUN cp /tmp/artifacts/lake/lake_${LAKE_VERSION}+master_amd64.deb /tmp/debs/lake_${LAKE_VERSION}_amd64.deb
+
+RUN echo "downloading vault@${VAULT_VERSION}"
+COPY --from=vault-artifacts /opt/artifacts/* /tmp/artifacts/vault/
+RUN cp /tmp/artifacts/vault/vault_${VAULT_VERSION}+master_amd64.deb /tmp/debs/vault_${VAULT_VERSION}_amd64.deb
+
+RUN echo "downloading ledger@${LEDGER_VERSION}"
+COPY --from=ledger-artifacts /opt/artifacts/* /tmp/artifacts/ledger/
+RUN cp /tmp/artifacts/ledger/ledger_${LEDGER_VERSION}+master_amd64.deb /tmp/debs/ledger_${LEDGER_VERSION}_amd64.deb
+
+RUN echo "downloading fio-bco@${FIO_BCO_VERSION}"
+COPY --from=fio-bco-artifacts /opt/artifacts/* /tmp/artifacts/fio-bco/
+RUN cp /tmp/artifacts/fio-bco/fio-bco_${FIO_BCO_VERSION}+master_amd64.deb /tmp/debs/fio-bco_${FIO_BCO_VERSION}_amd64.deb
+
+RUN echo "downloading bondster-bco@${BONDSTER_BCO_VERSION}"
+COPY --from=bondster-bco-artifacts /opt/artifacts/* /tmp/artifacts/bondster-bco/
+RUN cp /tmp/artifacts/bondster-bco/bondster-bco_${BONDSTER_BCO_VERSION}+master_amd64.deb /tmp/debs/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb
+
+RUN echo "downloading search@${SEARCH_VERSION}"
+COPY --from=search-artifacts /opt/artifacts/* /tmp/artifacts/search/
+RUN cp /tmp/artifacts/search/search_${SEARCH_VERSION}+master_amd64.deb /tmp/debs/search_${SEARCH_VERSION}_amd64.deb
+
+RUN find /tmp/debs -name "*.deb" -exec file {} \; && \
+    rm -rf /tmp/artifacts
+
+RUN mkdir /etc/systemd/system/nginx.service.d && \
+    printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
 
 RUN \
     apt-get -y update && \
-    apt-get -y install -f /tmp/lake_${LAKE_VERSION}_amd64.deb && \
-    apt-get -y install -f /tmp/vault_${VAULT_VERSION}_amd64.deb && \
-    apt-get -y install -f /tmp/ledger_${LEDGER_VERSION}_amd64.deb && \
-    apt-get -y install -f /tmp/search_${SEARCH_VERSION}_all.deb && \
-    apt-get -y install -f /tmp/fio-bco_${FIO_BCO_VERSION}_amd64.deb && \
-    apt-get -y install -f /tmp/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb && \
-    apt-get -y install -f /tmp/cnb-rates_${CNB_RATES_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/debs/lake_${LAKE_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/debs/vault_${VAULT_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/debs/ledger_${LEDGER_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/debs/search_${SEARCH_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/debs/fio-bco_${FIO_BCO_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/debs/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb && \
     \
+    rm -rf /tmp/debs \
+    && \
     systemctl enable mongod \
     && \
     \
@@ -140,8 +150,7 @@ RUN rm -rf \
       /opt/vault/secrets \
       /opt/ledger/secrets \
       /opt/fio-bco/secrets \
-      /opt/bondster-bco/secrets \
-      /opt/cnb-rates/secrets && \
+      /opt/bondster-bco/secrets && \
     \
     sed -ri /etc/init/fio-bco.conf -e \
       's!^FIO_BCO_SECRETS=.*!FIO_BCO_SECRETS=/openbank/secrets!' && \
@@ -159,13 +168,13 @@ RUN rm -rf \
       's!^LEDGER_SECRETS=.*!LEDGER_SECRETS=/openbank/secrets!' &&\
     sed -ri /etc/init/ledger.conf -e \
       's!^LEDGER_LOG_LEVEL=.*!LEDGER_LOG_LEVEL=DEBUG!' && \
-    sed -ri /etc/init/cnb-rates.conf -e \
-      's!^CNB_RATES_SECRETS=.*!CNB_RATES_SECRETS=/openbank/secrets!' && \
     sed -ri /etc/init/bondster-bco.conf -e \
       's!^BONDSTER_BCO_ENCRYPTION_KEY=.*!BONDSTER_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
     sed -ri /etc/init/fio-bco.conf -e \
       's!^FIO_BCO_ENCRYPTION_KEY=.*!FIO_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
     :
+
+COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default
 
 RUN systemctl enable \
       vault-unit@demo \

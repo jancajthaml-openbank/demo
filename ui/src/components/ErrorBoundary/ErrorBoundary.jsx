@@ -23,12 +23,14 @@ class ErrorBoundary extends React.Component {
       return children
     }
 
-    console.log(error)
-
     // FIXME button to remount instead of reload
 
     // FIXME pretty display fatal error message
-    return 'Fatal error'
+    return (
+      <React.Fragment>
+        {String(error)}
+      </React.Fragment>
+    )
   }
 }
 

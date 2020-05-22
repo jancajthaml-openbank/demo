@@ -1,9 +1,22 @@
 import React from 'react'
 
-import ReactTable from 'react-table'
+import Table from './Table'
+
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import bigDecimal from 'js-big-decimal'
+
+const renderRowSubComponent = ({ row }) => {
+  return (
+    <pre
+      style={{
+        fontSize: '10px',
+      }}
+    >
+      <code>{JSON.stringify(row.original.transfers, null, 2)}</code>
+    </pre>
+  )
+}
 
 class List extends React.Component {
 
@@ -27,7 +40,33 @@ class List extends React.Component {
   render() {
     const { transactions, transactionsLoading } = this.props
 
-    const transactionColumns = [{
+    const columns = [
+      {
+        // Make an expander cell
+        Header: () => null, // No header
+        id: 'expander', // It needs an ID
+        Cell: ({ row }) => (
+          // Use Cell to render an expander for each row.
+          // We can use the getExpandedToggleProps prop-getter
+          // to build the expander.
+          <span {...row.getExpandedToggleProps()}>
+            {row.isExpanded ? '👇' : '👉'}
+          </span>
+        ),
+      },
+      {
+        Header: 'ID',
+        accessor: 'id',
+      },
+      {
+        Header: 'Status',
+        accessor: 'status',
+        maxWidth: 90,
+      },
+    ]
+
+    const transactionColumns = [
+    {
       Header: 'ID',
       accessor: 'id',
     }, {
@@ -58,7 +97,7 @@ class List extends React.Component {
       accessor: (row) => `${row.debit.tenant}/${row.debit.name}`,
     }]
 
-    return (
+    /*
       <ReactTable
         filterable
         minRows={5}
@@ -79,6 +118,14 @@ class List extends React.Component {
             </div>
           )
         }}
+      />
+      */
+
+    return (
+      <Table
+        columns={columns}
+        data={transactions}
+        renderRowSubComponent={renderRowSubComponent}
       />
     )
   }

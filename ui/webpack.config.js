@@ -1,8 +1,5 @@
 const path = require('path')
-const fs = require('fs')
-
 const webpack = require('webpack')
-
 const TerserPlugin = require('terser-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const SafePostCssParser = require('postcss-safe-parser')
@@ -11,7 +8,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const babelRc = require('./.babelrc')
 
 function getPlugins(production) {
@@ -22,7 +19,6 @@ function getPlugins(production) {
       },
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment\/src\/lib\/locale/),
-    new webpack.ProgressPlugin(),
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: ['**/*'],
       dangerouslyAllowCleanPatternsOutsideProject: false,
@@ -31,21 +27,19 @@ function getPlugins(production) {
     new webpack.ProvidePlugin({
       'fetch': 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch',
     }),
-    new CopyWebpackPlugin([{
-      from: path.resolve(__dirname, 'public'),
-    }]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'public'),
+          to: path.resolve(__dirname, 'build'),
+        },
+      ],
+      options: {
+        concurrency: 1,
+      },
+    }),
     new HtmlWebpackPlugin({
-      template: (() => {
-        try {
-          const appIndex = path.resolve(__dirname, 'public', 'index.html')
-          if (fs.statSync(appIndex).isFile()) {
-            return appIndex
-          }
-          return null
-        } catch (e) {
-          return null
-        }
-      })(),
+      template: path.resolve(__dirname, 'public', 'index.html'),
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -93,13 +87,14 @@ module.exports = function(env = {}, args = {}) {
   return {
     entry: (production
       ? [
-        path.resolve(__dirname, 'src', 'client.js'),
+        path.resolve(__dirname, 'src', 'index.js'),
       ]
       : [
-        path.resolve(__dirname, 'src', 'client.js'),
-        'webpack-dev-server/client?http://0.0.0.0:3000',
+        path.resolve(__dirname, 'src', 'index.js'),
+        'webpack-dev-server/client?http://127.0.0.1:3000',
         'webpack/hot/dev-server',
         'webpack/hot/only-dev-server',
+        'react-hot-loader/patch',
       ]
     ),
     mode: production ? 'production' : 'development',
@@ -114,7 +109,6 @@ module.exports = function(env = {}, args = {}) {
     module: {
       strictExportPresence: true,
       noParse: [
-        /sinon|bindings/,
       ],
     },
     resolve: {
@@ -136,8 +130,6 @@ module.exports = function(env = {}, args = {}) {
       ],
       alias: {
         'react-dom': production ? 'react-dom' : '@hot-loader/react-dom',
-        'react-virtualized/AutoSizer': 'react-virtualized/dist/es/AutoSizer',
-        'react-virtualized/List': 'react-virtualized/dist/es/List',
       },
       mainFields: [
         'browser',
@@ -174,48 +166,10 @@ module.exports = function(env = {}, args = {}) {
           loader: 'babel-loader',
           options: {
             babelrc: false,
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  targets: {
-                    browsers: [
-                      'last 2 versions',
-                    ],
-                  },
-                  modules: false,
-                  shippedProposals: true,
-                },
-              ],
-              '@babel/preset-react',
-            ],
-            plugins: babelRc.plugins,
-            env: {
-              development: {
-                plugins: [
-                  'react-hot-loader/babel'
-                ]
-              },
-              production: {
-                plugins: [
-                  [
-                    'transform-react-remove-prop-types', {
-                      mode: 'wrap',
-                    },
-                  ],
-                ],
-              },
-              test: {
-                plugins: [
-                  'babel-plugin-transform-es2015-modules-commonjs',
-                ],
-              },
-            },
-
+            ...babelRc,
             ignore: [
               'build',
             ],
-
             cacheDirectory: !production,
             sourceMaps: !production,
           },
@@ -275,8 +229,8 @@ module.exports = function(env = {}, args = {}) {
     },
     performance: production ? {
       hints: false,
-      maxEntrypointSize: 1048576, // 1 MB
-      maxAssetSize: 1048576,      // 1 MB
+      maxEntrypointSize: 1048576,
+      maxAssetSize: 1048576,
     } : false,
     plugins: getPlugins(production),
     optimization: {
@@ -344,7 +298,7 @@ module.exports = function(env = {}, args = {}) {
       stats: 'errors-only',
       compress: false,
       disableHostCheck: true,
-      clientLogLevel: 'none',
+      clientLogLevel: 'debug',
       publicPath: '/',
       host: '0.0.0.0',
       port: 3000,
@@ -358,25 +312,14 @@ module.exports = function(env = {}, args = {}) {
       historyApiFallback: {
         index: '/',
         disableDotRule: true,
+        logger: console.log.bind(console),
       },
       overlay: {
         errors: true,
         warnings: true,
       },
-      watchOptions: {
-        aggregateTimeout: 300,
-        poll: 1000,
-      },
       proxy: {
-        '/api/*': {
-          target: 'http://server-mock:4000/api',
-          ws: true,
-          prependPath: false,
-          changeOrigin: true,
-          logLevel: 'info',
-          secure: false,
-          bypass: () => false,
-        },
+        '/api/': 'http://server-mock:4000',
       }
     },
     devtool: production ? false : 'source-map',

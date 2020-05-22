@@ -1,8 +1,10 @@
 import React from 'react'
 
-import ReactTable from 'react-table'
+import Table from './Table'
 
 import PropTypes from 'prop-types'
+
+// FIXME convert to react hook
 
 class List extends React.Component {
 
@@ -29,16 +31,19 @@ class List extends React.Component {
     const columns = [{
       Header: 'Name',
       accessor: 'name'
+    }, {
+      Header: 'Currency',
+      accessor: 'currency'
+    }, {
+      Header: 'Format',
+      accessor: 'format'
     }]
 
     return (
-      <ReactTable
-        filterable
-        minRows={5}
-        defaultPageSize={5}
+      <Table
         loading={accountsLoading}
-        data={accounts}
         columns={columns}
+        data={accounts}
       />
     )
   }

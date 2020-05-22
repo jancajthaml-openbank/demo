@@ -21,6 +21,7 @@ type Transfer {
 type Account {
     tenant: String!
     name: String!
+    format: String
     currency: String
     isBalanceCheck: Boolean
 }
@@ -37,11 +38,12 @@ type Query {
 
     Account(
         tenant: String!,
-        name: String!
+        name: String!,
     ): Account
 
     Accounts(
         tenant: String!,
+        format: String,
         currency: String,
         isBalanceCheck: Boolean,
         take: Int,

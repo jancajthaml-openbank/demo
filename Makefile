@@ -15,9 +15,9 @@ build:
 .PHONY: dev
 dev:
 	@docker-compose down --remove-orphans
-	@docker-compose up ui-development
+	@docker-compose up --abort-on-container-exit ui-development
 
 .PHONY: run
 run:
 	@docker-compose down --remove-orphans
-	@docker-compose up ui-production
+	@docker-compose up --abort-on-container-exit production

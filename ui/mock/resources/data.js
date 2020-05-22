@@ -1,6 +1,41 @@
 
 /* -------------------------------------------------------------------------- */
 
+function generateBondsterAccounts(tenant, collection) {
+  const result = []
+
+  const currencies = ['CZK', 'EUR']
+  const types = [
+    'TYPE_BUYBACK_FINANCIAL',
+    'TYPE_INTEREST_PAYMENT_PARTICIPATION',
+    'TYPE_BUYBACK_PARTICIPATION_FINANCIAL',
+    'TYPE_SANCTION_PAYMENT_PARTICIPATION',
+    'TYPE_PRIMARY_MARKET_FINANCIAL',
+    'TYPE_INTEREST_PAYMENT',
+    'TYPE_SANCTION_PAYMENT',
+    'TYPE_PRINCIPAL_PAYMENT_FINANCIAL',
+    'TYPE_SECESSION_FINANCIAL',
+  ]
+
+  currencies.forEach((currency) => {
+    types.forEach((type) => {
+      const name = `${currency}_${type}`
+      const item = {
+        id: `${tenant}/${name}`,
+        tenant,
+        name,
+        format: "BONDSTER_TECHNICAL",
+        currency,
+        isBalanceCheck: false,
+      }
+      collection.insert(item)
+      result.push(item)
+    })
+  })
+
+  return result
+}
+
 function generateRandomAccounts(tenant, collection, howMany) {
   const result = []
 
@@ -15,6 +50,7 @@ function generateRandomAccounts(tenant, collection, howMany) {
       id: `${tenant}/${name}`,
       tenant,
       name,
+      format: "IBAN",
       currency: "EUR",
       isBalanceCheck: false,
     }
@@ -98,5 +134,6 @@ function generateRandomTransactions(tenant, collection, accounts, howMany) {
 
 module.exports = Object.freeze({
   generateRandomAccounts,
+  generateBondsterAccounts,
   generateRandomTransactions,
 })

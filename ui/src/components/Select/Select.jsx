@@ -2,6 +2,10 @@ import React from 'react'
 
 import PropTypes from 'prop-types'
 
+// https://react-select.com/home
+
+// FIXME convert to react hook
+
 class Select extends React.Component {
 
   static propTypes = {
@@ -57,12 +61,17 @@ class Select extends React.Component {
 
     if (disabled || !selected) {
       return (
-        <select disabled/>
+        <select disabled>
+          <option>–––</option>
+        </select>
       )
     }
 
     return (
-      <select value={selected} onChange={this.onChange} disabled={disabled}>
+      <select
+        value={selected}
+        onChange={this.onChange}
+      >
         {options.map((item) =>
           <option key={item} value={item}>{item}</option>
         )}
