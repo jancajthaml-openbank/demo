@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { useTable, usePagination, useTableState, useSortBy } from 'react-table'
+import { useTable, usePagination,  useSortBy } from 'react-table'
 
 const Wrapper = styled.div.attrs(() => ({
 }))`
@@ -46,8 +46,6 @@ const Wrapper = styled.div.attrs(() => ({
 
 
 function Table({ columns, data, loading }) {
-  const tableState = useTableState({ pageIndex: 0 })
-
   const {
     getTableProps,
     headerGroups,
@@ -61,12 +59,12 @@ function Table({ columns, data, loading }) {
     nextPage,
     previousPage,
     setPageSize,
-    state: [{ pageIndex, pageSize }],
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
       data,
-      state: tableState,
+      initialState: { pageIndex: 0 },
     },
     useSortBy,
     usePagination,

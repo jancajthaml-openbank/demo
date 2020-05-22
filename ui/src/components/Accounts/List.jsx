@@ -1,10 +1,10 @@
 import React from 'react'
 
-//import ReactTable from 'react-table'
-
 import Table from './Table'
 
 import PropTypes from 'prop-types'
+
+// FIXME convert to react hook
 
 class List extends React.Component {
 

@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 
 // https://react-select.com/home
 
+// FIXME convert to react hook
+
 class Select extends React.Component {
 
   static propTypes = {

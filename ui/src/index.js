@@ -7,12 +7,15 @@ import './stylesheets'
 import { configureGlobalisation, configureStore } from './setup'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { Layout } from './containers/Layout'
+import { createBrowserHistory } from "history";
+
+const history = createBrowserHistory();
 
 const App = (store, globalisation) => (
   <ErrorBoundary>
     <React.StrictMode>
       <ReduxProvider store={store}>
-        <Router>
+        <Router history={history}>
           <Layout />
         </Router>
       </ReduxProvider>
@@ -21,20 +24,8 @@ const App = (store, globalisation) => (
 )
 
 const start = async function() {
-  const serverState = document.getElementById("__STATE__")
-  let initialState = {}
-  if (serverState) {
-    try {
-      initialState = JSON.parse(serverState.innerText)
-    } catch (err) {
-      // pass
-    } finally {
-      serverState.remove()
-    }
-  }
-
   const [ store, globalisation ] = await Promise.all([
-    configureStore(initialState),
+    configureStore({}),
     configureGlobalisation(),
   ])
 

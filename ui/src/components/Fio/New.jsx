@@ -48,8 +48,7 @@ class New extends React.Component {
           value: '',
         }}
         validationSchema={Yup.object().shape({
-          value: Yup.string()
-            .required('Value is required!'),
+          value: Yup.string().required('Value is required!'),
         })}
         onSubmit={this.handleSubmit}
         render={({

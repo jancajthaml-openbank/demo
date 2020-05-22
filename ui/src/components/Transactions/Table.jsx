@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { useTable, usePagination, useExpanded, useTableState, useSortBy } from 'react-table'
+import { useTable, usePagination, useExpanded, useSortBy } from 'react-table'
 
 const Wrapper = styled.div.attrs(() => ({
 }))`
@@ -32,9 +32,9 @@ const Wrapper = styled.div.attrs(() => ({
 
       td {
         white-space: nowrap;
-            padding: .9375rem;
-            vertical-align: top;
-    border-top: 1px solid #edf2f9;
+        padding: .9375rem;
+        vertical-align: top;
+        border-top: 1px solid #edf2f9;
       }
     }
   }
@@ -45,7 +45,7 @@ const Wrapper = styled.div.attrs(() => ({
 `;
 
 function Table({ columns, data, renderRowSubComponent }) {
-  const tableState = useTableState({ pageIndex: 0 })
+  //const tableState = useTableState({ pageIndex: 0 })
 
   const {
     getTableProps,
@@ -60,12 +60,20 @@ function Table({ columns, data, renderRowSubComponent }) {
     nextPage,
     previousPage,
     setPageSize,
-    state: [{ expanded, pageIndex, pageSize }],
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
       data,
-      state: tableState,
+      initialState: { pageIndex: 0 }, // Pass our hoisted table state
+      //manualPagination: true, // Tell the usePagination
+      // hook that we'll handle our own data fetching
+      // This means we'll also have to provide our own
+      // pageCount.
+      //pageCount: controlledPageCount,
+      //columns,
+      //data,
+      //state: tableState,
     },
     useExpanded,
     useSortBy,

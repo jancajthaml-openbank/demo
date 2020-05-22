@@ -2,6 +2,8 @@ import React from 'react'
 
 import PropTypes from 'prop-types'
 
+// FIXME refactor to react hook
+
 class List extends React.Component {
 
   static propTypes = {
