@@ -19,6 +19,13 @@ const logRequestStart = (req, res, next) => {
   next()
 }
 
+async function generateData(accounts, transfers) {
+  const randomAccounts = generateRandomAccounts('mock', accounts, 1000)
+  const bondsterAccounts = generateBondsterAccounts('mock', accounts)
+  const generatedAccounts = [...randomAccounts, ...bondsterAccounts]
+  const randomTransfers = generateRandomTransactions('mock', transfers, generatedAccounts, 1000)
+}
+
 module.exports = function(application) {
   const app = application || express()
   const db = new loki('db.json')
@@ -36,10 +43,7 @@ module.exports = function(application) {
     unique: ['id'],
   })
 
-  const randomAccounts = generateRandomAccounts('mock', accounts, 2000)
-  const bondsterAccounts = generateBondsterAccounts('mock', accounts)
-  const generatedAccounts = [...randomAccounts, ...bondsterAccounts]
-  const randomTransfers = generateRandomTransactions('mock', transfers, generatedAccounts, 2000)
+  generateData(accounts, transfers)
 
   app.use(logRequestStart)
 

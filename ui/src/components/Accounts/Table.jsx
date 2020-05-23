@@ -3,8 +3,7 @@ import styled from 'styled-components'
 
 import { useTable, usePagination,  useSortBy } from 'react-table'
 
-const Wrapper = styled.div.attrs(() => ({
-}))`
+const Wrapper = styled.div`
   table {
     width: 100%;
     color: #12263f;

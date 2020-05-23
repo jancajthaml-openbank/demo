@@ -108,8 +108,8 @@ function Table({ columns, data, renderRowSubComponent }) {
           {page.map(
             (row, i) =>
               prepareRow(row) || (
-                <React.Fragment>
-                  <tr key={i} {...row.getRowProps()}>
+                <React.Fragment key={i}>
+                  <tr {...row.getRowProps()}>
                     {row.cells.map(cell => {
                       return (
                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
@@ -117,7 +117,7 @@ function Table({ columns, data, renderRowSubComponent }) {
                     })}
                   </tr>
                   {row.isExpanded ? (
-                    <tr key={`${i}-sub`}>
+                    <tr>
                       <td colSpan={columns.length}>
                         {/*
                           Inside it, call our renderRowSubComponent function. In reality,

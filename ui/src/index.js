@@ -1,24 +1,39 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider as ReduxProvider } from 'react-redux'
+import { ApolloClient } from 'apollo-client';
 import { BrowserRouter as Router } from "react-router-dom"
-
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { HttpLink } from 'apollo-link-http';
+import { ApolloProvider } from '@apollo/react-hooks';
 import './stylesheets'
 import { configureGlobalisation, configureStore } from './setup'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { Layout } from './containers/Layout'
-import { createBrowserHistory } from "history";
+import { resolvers, typeDefs } from './resolvers';
 
-const history = createBrowserHistory();
+
+const cache = new InMemoryCache();
+
+const client = new ApolloClient({
+  cache,
+  link: new HttpLink({
+    uri: '/api/search/graphql',
+  }),
+  resolvers,
+  typeDefs,
+});
 
 const App = (store, globalisation) => (
   <ErrorBoundary>
     <React.StrictMode>
-      <ReduxProvider store={store}>
-        <Router history={history}>
-          <Layout />
-        </Router>
-      </ReduxProvider>
+      <ApolloProvider client={client}>
+        <ReduxProvider store={store}>
+          <Router>
+            <Layout />
+          </Router>
+        </ReduxProvider>
+      </ApolloProvider>
     </React.StrictMode>
   </ErrorBoundary>
 )

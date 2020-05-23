@@ -2,6 +2,7 @@
 /* -------------------------------------------------------------------------- */
 
 async function AccountsResolve(_, params, context) {
+
   let orderBy = (a, b) => 0
 
   if (params.sortField) {

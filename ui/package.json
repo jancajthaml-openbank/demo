@@ -27,7 +27,13 @@
     "yup": "0.29.0",
     "toposort": "2.0.2",
     "memoize-state": "2.0.15",
-    "js-big-decimal": "1.2.2"
+    "js-big-decimal": "1.2.2",
+    "@apollo/react-hooks": "3.0.0",
+    "graphql": "^14.4.2",
+    "graphql-tag": "^2.10.1",
+    "apollo-link-http": "^1.5.15",
+    "apollo-client": "^2.6.3",
+    "apollo-cache-inmemory": "^1.6.2"
   },
   "devDependencies": {
     "@babel/core": "7.9.6",

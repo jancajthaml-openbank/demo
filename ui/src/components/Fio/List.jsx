@@ -1,45 +1,23 @@
 import React from 'react'
 
-import PropTypes from 'prop-types'
+const List = (props) => {
+  React.useEffect(() => {
+    props.loadTokens(props.tenant)
+  }, [props.tenant])
 
-// FIXME refactor to react hook
-
-class List extends React.Component {
-
-  static propTypes = {
-    loadTokens: PropTypes.func.isRequired,
-    tenant: PropTypes.string.isRequired,
-    tokens: PropTypes.array,
-    tokensLoading: PropTypes.bool,
+  if (props.tokens.length == 0) {
+    return 'No data'
   }
 
-  componentDidMount() {
-    this.props.loadTokens(this.props.tenant)
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.tenant !== this.props.tenant) {
-      this.props.loadTokens(this.props.tenant)
-    }
-  }
-
-  render() {
-    const { tokens, tokensLoading } = this.props
-
-    return (
-      <ul>
-        {tokens.length > 0
-          ? (
-            tokens.map((token) => (
-            <li key={token.id}>
-              {`${token.id} ${token.createdAt}`}
-            </li>
-          )))
-          : 'No data'
-        }
-      </ul>
-    )
-  }
+  return (
+    <ul>
+      {props.tokens.map((token) => (
+        <li key={token.id}>
+          {`${token.id} ${token.createdAt}`}
+        </li>
+      ))}
+    </ul>
+  )
 }
 
 export default List
