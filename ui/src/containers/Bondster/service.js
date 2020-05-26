@@ -1,5 +1,5 @@
 
-class FioService {
+class BondsterService {
   async getTokens(tenant) {
     const res = await fetch(`/api/bondster/token/${tenant}`)
 
@@ -10,8 +10,10 @@ class FioService {
     return res.json()
   }
 
-  async deleteToken(tenant, token) {
-    const res = await fetch(`/api/bondster/token/${tenant}/${token}`)
+  async deleteToken(tenant, id) {
+    const res = await fetch(`/api/bondster/token/${tenant}/${id}`, {
+      method: 'DELETE',
+    })
 
     if (res.status !== 200) {
       throw new Error('DELETE_TOKEN_FAILED')
@@ -43,4 +45,4 @@ class FioService {
   }
 }
 
-export default new FioService()
+export default new BondsterService()

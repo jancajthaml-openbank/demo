@@ -44,9 +44,7 @@ class Header extends React.Component {
             </li>
           </ul>
         </HeaderNavigation>
-        <HeaderLogo>
-        logo
-        </HeaderLogo>
+        <HeaderLogo />
         <TenantSelect
           disabled={!tenants}
           options={tenants}

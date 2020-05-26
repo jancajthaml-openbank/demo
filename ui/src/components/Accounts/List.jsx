@@ -1,17 +1,8 @@
 import React from 'react'
-import gql from 'graphql-tag'
+//import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import Table from './Table'
-
-export const GET_ACCOUNTS = gql`
-  query GetAccounts($tenant: String!) {
-    Accounts(tenant: $tenant) {
-      name
-      format
-      currency
-    }
-  }
-`;
+import { GET_ACCOUNTS } from '../../resolvers';
 
 const List = (props) => {
   const { data, loading, error } = useQuery(GET_ACCOUNTS, {

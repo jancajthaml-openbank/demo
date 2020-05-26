@@ -35,8 +35,12 @@ services:
   # -------------------------------------------------------------------------- #
 
   server-mock:
-    <<: *node
+    image: node:10.9.0
+    volumes:
+      - ./ui/mock:/opt/project/mock
+      - dependency-cache:/opt/project/node_modules
     hostname: server-mock
+    working_dir: /opt/project/mock
     ports:
       - "4000:4000"
     entrypoint: node

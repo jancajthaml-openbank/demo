@@ -144,6 +144,21 @@ module.exports = function(application) {
     })))
   })
 
+  app.delete('/api/bondster/token/:tenant/:id', async (req, res) => {
+    const { tenant, id } = req.params
+
+    if (!tenant || !id) {
+      res.status(404).json({})
+      return
+    }
+
+    if (!bondster.chain().find({ tenant, id }).remove()) {
+      return res.status(404).json({})
+    }
+
+    res.status(200).json({})
+  })
+
   app.post('/api/bondster/token/:tenant', express.json({ type: '*/*' }), async (req, res) => {
     const { tenant } = req.params
 
@@ -208,6 +223,21 @@ module.exports = function(application) {
       createdAt: item.createdAt.toISOString(),
     })))
     return
+  })
+
+  app.delete('/api/fio/token/:tenant/:id', async (req, res) => {
+    const { tenant, id } = req.params
+
+    if (!tenant || !id) {
+      res.status(404).json({})
+      return
+    }
+
+    if (!fio.chain().find({ tenant, id }).remove()) {
+      return res.status(404).json({})
+    }
+
+    res.status(200).json({})
   })
 
   app.post('/api/fio/token/:tenant', express.json({ type: '*/*' }), async (req, res) => {

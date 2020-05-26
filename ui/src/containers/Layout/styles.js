@@ -90,11 +90,12 @@ export const HeaderLogo = styled.a.attrs(() => ({
   display: inline-block;
   padding-top: 0;
   padding-bottom: 0;
-  margin-right: 1rem;
-  font-size: 1.0625rem;
+  margin-right: .5rem;
   line-height: inherit;
   white-space: nowrap;
-  border: 1px solid red;
-  max-width: 100%;
-  max-height: 1.5rem;
+  width: 2rem;
+  height: 2rem;
+  background-position: center;
+  background-size: contain;
+  background-image: url('https://avatars3.githubusercontent.com/u/33759883');
 `;

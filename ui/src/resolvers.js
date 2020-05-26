@@ -1,11 +1,54 @@
 import gql from 'graphql-tag';
-//import { GET_CART_ITEMS } from './pages/cart';
-//import * as LaunchTileTypes from './pages/__generated__/LaunchTile';
 import { ApolloCache } from 'apollo-cache';
-//import * as GetCartItemTypes from './pages/__generated__/GetCartItems';
 import { Resolvers } from 'apollo-client'
+import BondsterService from 'containers/Bondster/service';
+import FioService from 'containers/Fio/service';
+
+
+export const GET_ACCOUNTS = gql`
+  query GetAccounts($tenant: String!) {
+    Accounts(tenant: $tenant) {
+      name
+      format
+      currency
+    }
+  }
+`;
+
+
+export const GET_BONDSTER_TOKENS = gql`
+  query GetBonsterTokens($tenant: String!) {
+    bondsterTokens(tenant: $tenant) @client
+  }
+`;
+
+export const GET_FIO_TOKENS = gql`
+  query GetFioTokens($tenant: String!) {
+    fioTokens(tenant: $tenant) @client
+  }
+`;
 
 export const typeDefs = gql`
+
+  scalar Date
+  scalar Money
+
+  type Token {
+    id: String!
+    createdAt: Date!
+  }
+
+  extend type Mutation {
+    createBondsterToken(tenant: String!, username: String!, password: String!): [Token!]!
+    removeBondsterToken(tenant: String!, id: String!): [Token!]!
+    createFioToken(tenant: String!, value: String!): [Token!]!
+    removeFioToken(tenant: String!, id: String!): [Token!]!
+  }
+
+  extend type Query {
+    bondsterTokens(tenant: String!): [Token!]!
+    fioTokens(tenant: String!): [Token!]!
+  }
 
   type Transaction {
     tenant: String!
@@ -34,8 +77,6 @@ export const typeDefs = gql`
     isBalanceCheck: Boolean
   }
 
-  scalar Date
-  scalar Money
 
   enum SortOrder {
     ASC
@@ -113,31 +154,77 @@ export const typeDefs = gql`
 
 
 export const resolvers = {
-  /*
-  Launch: {
-    isInCart: (launch) => {
-      const queryResult = cache.readQuery({ query: GET_CART_ITEMS });
-      if (queryResult) {
-        return queryResult.cartItems.includes(launch.id)
-      }
-      return false;
-    }
-  },
+
   Mutation: {
-    addOrRemoveFromCart: (_, { id }, { cache }) => {
-      const queryResult = cache.readQuery({ query: GET_CART_ITEMS });
+    createBondsterToken: async (_, request, { cache }) => {
+      const result = await BondsterService.createToken(request.tenant, request.username, request.password)
+      const queryResult = cache.readQuery({ query: GET_BONDSTER_TOKENS });
       if (queryResult) {
-        const { cartItems } = queryResult;
+        const { bondsterTokens } = queryResult;
         const data = {
-          cartItems: cartItems.includes(id)
-            ? cartItems.filter((i) => i !== id)
-            : [...cartItems, id],
+          bondsterTokens: bondsterTokens.find((item) => item.id == result.id)
+            ? bondsterTokens
+            : [...bondsterTokens, result],
         };
-        cache.writeQuery({ query: GET_CART_ITEMS, data });
-        return data.cartItems;
+        cache.writeQuery({ query: GET_BONDSTER_TOKENS, data });
+        return data.bondsterTokens;
+      }
+      return [];
+    },
+    removeBondsterToken: async (_, request, { cache }) => {
+      await BondsterService.deleteToken(request.tenant, request.id)
+      const queryResult = cache.readQuery({ query: GET_BONDSTER_TOKENS });
+      if (queryResult) {
+        const { bondsterTokens } = queryResult;
+        const data = {
+          bondsterTokens: bondsterTokens.filter((item) => item.id !== request.id),
+        };
+        cache.writeQuery({ query: GET_BONDSTER_TOKENS, data });
+        return data.bondsterTokens;
+      }
+      return [];
+    },
+    createFioToken: async (_, request, { cache }) => {
+      const result = await FioService.createToken(request.tenant, request.value)
+      const queryResult = cache.readQuery({ query: GET_FIO_TOKENS });
+      if (queryResult) {
+        const { fioTokens } = queryResult;
+        const data = {
+          fioTokens: fioTokens.find((item) => item.id == result.id)
+            ? fioTokens
+            : [...fioTokens, result],
+        };
+        cache.writeQuery({ query: GET_FIO_TOKENS, data });
+        return data.fioTokens;
+      }
+      return [];
+    },
+    removeFioToken: async (_, request, { cache }) => {
+      await FioService.deleteToken(request.tenant, request.id)
+      const queryResult = cache.readQuery({ query: GET_FIO_TOKENS });
+      if (queryResult) {
+        const { fioTokens } = queryResult;
+        const data = {
+          fioTokens: fioTokens.filter((item) => item.id !== request.id),
+        };
+        cache.writeQuery({ query: GET_FIO_TOKENS, data });
+        return data.fioTokens;
       }
       return [];
     },
   },
-  */
+  Query: {
+    bondsterTokens: async (_, request, { cache }) => {
+      const result = await BondsterService.getTokens(request.tenant);
+      const data = { bondsterTokens: result }
+      cache.writeQuery({ query: GET_BONDSTER_TOKENS, data });
+      return data.bondsterTokens;
+    },
+    fioTokens: async (_, request, { cache }) => {
+      const result = await FioService.getTokens(request.tenant);
+      const data = { fioTokens: result }
+      cache.writeQuery({ query: GET_FIO_TOKENS, data });
+      return data.fioTokens;
+    }
+  },
 };
