@@ -1,13 +1,15 @@
 import React from 'react'
-//import gql from 'graphql-tag'
+import { useTenant } from 'containers/Tenant'
 import { useQuery } from '@apollo/react-hooks'
 import Table from './Table'
-import { GET_ACCOUNTS } from '../../resolvers';
+import { GET_ACCOUNTS } from '../../resolvers'
 
 const List = (props) => {
+  const tenant = useTenant()
+
   const { data, loading, error } = useQuery(GET_ACCOUNTS, {
     variables: {
-      tenant: props.tenant,
+      tenant: tenant,
     },
     pollInterval: 1000,
   });

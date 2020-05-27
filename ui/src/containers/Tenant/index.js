@@ -1,1 +1,2 @@
-export { withTenant, providingTenant, TenantCtx } from './Tenant'
+export { useTenant, TenantContextProvider } from './TenantContext'
+export TenantService from './service'

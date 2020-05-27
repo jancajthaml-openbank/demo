@@ -1,5 +1,6 @@
 import React from 'react'
 import gql from 'graphql-tag';
+import { useTenant } from 'containers/Tenant'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { GET_BONDSTER_TOKENS } from '../../resolvers';
 
@@ -11,13 +12,15 @@ export const DELETE_TOKEN = gql`
 
 
 const List = (props) => {
-  if (!props.tenant) {
+  const tenant = useTenant()
+
+  if (!tenant) {
     return null
   }
 
   const { data, error } = useQuery(GET_BONDSTER_TOKENS, {
     variables: {
-      tenant: props.tenant,
+      tenant: tenant,
     },
   });
 
@@ -26,13 +29,13 @@ const List = (props) => {
   const deleteToken = (id) => {
     mutate({
       variables: {
-        tenant: props.tenant,
+        tenant: tenant,
         id: id,
       },
       refetchQueries: [
         {
           query: GET_BONDSTER_TOKENS,
-          variables: { tenant: props.tenant },
+          variables: { tenant: tenant },
         },
       ]
     })

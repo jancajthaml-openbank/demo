@@ -1,15 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider as ReduxProvider } from 'react-redux'
 import { ApolloClient } from 'apollo-client';
 import { BrowserRouter as Router } from "react-router-dom"
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
 import { ApolloProvider } from '@apollo/react-hooks';
 import './stylesheets'
-import { configureGlobalisation, configureStore } from './setup'
+import { configureGlobalisation } from './setup'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { Layout } from './containers/Layout'
+import { TenantContextProvider } from './containers/Tenant'
+
 import { resolvers, typeDefs } from './resolvers';
 
 
@@ -24,23 +25,22 @@ const client = new ApolloClient({
   typeDefs,
 });
 
-const App = (store, globalisation) => (
+const App = (globalisation) => (
   <ErrorBoundary>
     <React.StrictMode>
       <ApolloProvider client={client}>
-        <ReduxProvider store={store}>
+        <TenantContextProvider tenant={'mock'} >
           <Router>
             <Layout />
           </Router>
-        </ReduxProvider>
+        </TenantContextProvider>
       </ApolloProvider>
     </React.StrictMode>
   </ErrorBoundary>
 )
 
 const start = async function() {
-  const [ store, globalisation ] = await Promise.all([
-    configureStore({}),
+  const [ globalisation ] = await Promise.all([
     configureGlobalisation(),
   ])
 
@@ -50,7 +50,7 @@ const start = async function() {
     ? ReactDOM.render
     : ReactDOM.hydrate
 
-  render(App(store, globalisation), mountNode)
+  render(App(globalisation), mountNode)
 }
 
 document.addEventListener("DOMContentLoaded", () => {

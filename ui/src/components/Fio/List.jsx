@@ -1,6 +1,7 @@
 import React from 'react'
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useTenant } from 'containers/Tenant'
 import { GET_FIO_TOKENS } from '../../resolvers';
 
 export const DELETE_TOKEN = gql`
@@ -9,15 +10,16 @@ export const DELETE_TOKEN = gql`
   }
 `;
 
-
 const List = (props) => {
-  if (!props.tenant) {
+  const tenant = useTenant()
+
+  if (!tenant) {
     return null
   }
 
   const { data, error } = useQuery(GET_FIO_TOKENS, {
     variables: {
-      tenant: props.tenant,
+      tenant: tenant,
     },
   });
 
@@ -26,13 +28,13 @@ const List = (props) => {
   const deleteToken = (id) => {
     mutate({
       variables: {
-        tenant: props.tenant,
+        tenant: tenant,
         id: id,
       },
       refetchQueries: [
         {
           query: GET_FIO_TOKENS,
-          variables: { tenant: props.tenant },
+          variables: { tenant: tenant },
         },
       ]
     })

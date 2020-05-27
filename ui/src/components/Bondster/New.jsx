@@ -1,6 +1,6 @@
 import React from 'react'
 import { useMutation } from '@apollo/react-hooks';
-import PropTypes from 'prop-types'
+import { useTenant } from 'containers/Tenant'
 import * as Yup from 'yup'
 import { Formik, Form, Field } from 'formik'
 import gql from 'graphql-tag';
@@ -14,21 +14,22 @@ export const CREATE_TOKEN = gql`
 `;
 
 
-const New = (props) => {
+const New = () => {
+  const tenant = useTenant()
   const [mutate, { loading, error }] = useMutation(CREATE_TOKEN);
 
   const handleSubmit = (values, actions) => {
     actions.resetForm()
     mutate({
       variables: {
-        tenant: props.tenant,
+        tenant: tenant,
         username: values.username,
         password: values.password,
       },
       refetchQueries: [
         {
           query: GET_BONDSTER_TOKENS,
-          variables: { tenant: props.tenant },
+          variables: { tenant: tenant },
         },
       ]
     })

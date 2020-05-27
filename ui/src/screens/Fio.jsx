@@ -1,9 +1,7 @@
 import React from 'react'
-
-import { List, New } from '../containers/Fio'
-
-import { Card } from '../components/Card'
-import { ErrorBoundary } from '../components/ErrorBoundary'
+import { List, New } from 'components/Fio'
+import { Card } from 'components/Card'
+import { ErrorBoundary } from 'components/ErrorBoundary'
 
 function Fio(props) {
   return (

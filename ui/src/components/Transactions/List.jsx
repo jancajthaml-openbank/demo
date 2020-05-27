@@ -1,7 +1,8 @@
 import React from 'react'
-import Table from './Table'
 import moment from 'moment'
 import bigDecimal from 'js-big-decimal'
+import { useTenant } from 'containers/Tenant'
+import Table from './Table'
 
 const renderRowSubComponent = (data) => (
   <pre
@@ -14,9 +15,11 @@ const renderRowSubComponent = (data) => (
 )
 
 const List = (props) => {
+  const tenant = useTenant()
+
   React.useEffect(() => {
-    props.loadTransactions(props.tenant)
-  }, [props.tenant])
+    props.loadTransactions(tenant)
+  }, [tenant])
 
   const columns = [
     {
