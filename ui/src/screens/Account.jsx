@@ -1,5 +1,5 @@
 import React from 'react'
-import { List, New } from 'components/Accounts'
+import { List, New } from 'components/Account'
 import { Card } from 'components/Card'
 import { ErrorBoundary } from 'components/ErrorBoundary'
 
@@ -23,6 +23,7 @@ function Account() {
   )
 }
 
+/*
 let Exported = Account
 
 if (process.env.NODE_ENV !== 'production' && module.hot) {
@@ -34,5 +35,6 @@ if (process.env.NODE_ENV !== 'production' && module.hot) {
   })
   Exported = hot(Account)
 }
+*/
 
-export default Exported
+export default Account

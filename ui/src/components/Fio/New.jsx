@@ -3,15 +3,9 @@ import { useMutation } from '@apollo/react-hooks';
 import * as Yup from 'yup'
 import { Formik, Form, Field } from 'formik'
 import gql from 'graphql-tag';
-import { GET_FIO_TOKENS } from '../../resolvers';
+import { GET_TOKENS } from './queries'
+import { CREATE_TOKEN } from './mutations'
 import { useTenant } from 'containers/Tenant'
-
-
-export const CREATE_TOKEN = gql`
-  mutation createFioToken($tenant: String!, $value: String!) {
-    createFioToken(tenant: $tenant, value: $value) @client
-  }
-`;
 
 
 const New = () => {
@@ -27,7 +21,7 @@ const New = () => {
       },
       refetchQueries: [
         {
-          query: GET_FIO_TOKENS,
+          query: GET_TOKENS,
           variables: { tenant: tenant },
         },
       ]

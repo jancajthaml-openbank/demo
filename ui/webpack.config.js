@@ -85,18 +85,7 @@ module.exports = function(env = {}, args = {}) {
   const production = process.env.NODE_ENV === 'production'
 
   return {
-    entry: (production
-      ? [
-        path.resolve(__dirname, 'src', 'index.js'),
-      ]
-      : [
-        path.resolve(__dirname, 'src', 'index.js'),
-        'webpack-dev-server/client?http://127.0.0.1:3000',
-        'webpack/hot/dev-server',
-        'webpack/hot/only-dev-server',
-        'react-hot-loader/patch',
-      ]
-    ),
+    entry: path.resolve(__dirname, 'src', 'index.js'),
     mode: production ? 'production' : 'development',
     stats: production ? 'normal' : 'minimal',
     output: {

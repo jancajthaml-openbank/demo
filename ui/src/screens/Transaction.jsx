@@ -18,7 +18,7 @@ function Transaction() {
     </React.Fragment>
   )
 }
-
+/*
 let Exported = Transaction
 
 if (process.env.NODE_ENV !== 'production' && module.hot) {
@@ -30,5 +30,5 @@ if (process.env.NODE_ENV !== 'production' && module.hot) {
   })
   Exported = hot(Transaction)
 }
-
-export default Exported
+*/
+export default Transaction

@@ -22,7 +22,7 @@ function Fio(props) {
     </React.Fragment>
   )
 }
-
+/*
 let Exported = Fio
 
 if (process.env.NODE_ENV !== 'production' && module.hot) {
@@ -34,5 +34,5 @@ if (process.env.NODE_ENV !== 'production' && module.hot) {
   })
   Exported = hot(Fio)
 }
-
-export default Exported
+*/
+export default Fio

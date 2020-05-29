@@ -11,15 +11,17 @@ class Layout extends React.Component {
       <div>
         <Header />
         <div>
-          {routes.map((route) => (
-            <Route
-              key={route.path}
-              path={route.path}
-              exact
-              component={route.component}
-            />
-          ))}
-          <Redirect to='/' />
+          <Switch>
+            {routes.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                exact
+                component={route.component}
+              />
+            ))}
+            <Redirect to='/' />
+          </Switch>
         </div>
       </div>
     )

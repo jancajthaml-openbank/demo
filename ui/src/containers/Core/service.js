@@ -1,5 +1,6 @@
 
 class CoreService {
+  /*
   async getAccounts(tenant) {
     const req = {
       query: `
@@ -41,7 +42,7 @@ class CoreService {
     }
 
     return result.data.Accounts
-  }
+  }*/
 
   async createAccount(tenant, accountNumber, currency, isBalanceCheck) {
     const req = {

@@ -2,7 +2,7 @@ import React from 'react'
 import { useTenant } from 'containers/Tenant'
 import { useQuery } from '@apollo/react-hooks'
 import Table from './Table'
-import { GET_ACCOUNTS } from '../../resolvers'
+import { GET_ACCOUNTS } from './queries'
 
 const List = (props) => {
   const tenant = useTenant()
@@ -11,7 +11,7 @@ const List = (props) => {
     variables: {
       tenant: tenant,
     },
-    pollInterval: 1000,
+    //pollInterval: 1000,
   });
 
   const columns = [{

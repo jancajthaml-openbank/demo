@@ -13,9 +13,10 @@ import { TenantContextProvider } from './containers/Tenant'
 
 import { resolvers, typeDefs } from './resolvers';
 
+import { createBrowserHistory } from 'history'
 
-const cache = new InMemoryCache();
-
+const cache = new InMemoryCache()
+const history = createBrowserHistory({})
 const client = new ApolloClient({
   cache,
   link: new HttpLink({
@@ -30,7 +31,7 @@ const App = (globalisation) => (
     <React.StrictMode>
       <ApolloProvider client={client}>
         <TenantContextProvider tenant={'mock'} >
-          <Router>
+          <Router history={history}>
             <Layout />
           </Router>
         </TenantContextProvider>
@@ -46,11 +47,7 @@ const start = async function() {
 
   const mountNode = document.getElementById("mount")
 
-  const render = (process.env.NODE_ENV !== 'production' && module.hot)
-    ? ReactDOM.render
-    : ReactDOM.hydrate
-
-  render(App(globalisation), mountNode)
+  ReactDOM.render(App(globalisation), mountNode)
 }
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -22,7 +22,7 @@ function Bondster(props) {
     </React.Fragment>
   )
 }
-
+/*
 let Exported = Bondster
 
 if (process.env.NODE_ENV !== 'production' && module.hot) {
@@ -34,5 +34,5 @@ if (process.env.NODE_ENV !== 'production' && module.hot) {
   })
   Exported = hot(Bondster)
 }
-
-export default Exported
+*/
+export default Bondster

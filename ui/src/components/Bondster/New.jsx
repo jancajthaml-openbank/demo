@@ -3,16 +3,8 @@ import { useMutation } from '@apollo/react-hooks';
 import { useTenant } from 'containers/Tenant'
 import * as Yup from 'yup'
 import { Formik, Form, Field } from 'formik'
-import gql from 'graphql-tag';
-import { GET_BONDSTER_TOKENS } from '../../resolvers';
-
-
-export const CREATE_TOKEN = gql`
-  mutation createBondsterToken($tenant: String!, $username: String!, $password: String!) {
-    createBondsterToken(tenant: $tenant, username: $username, password: $password) @client
-  }
-`;
-
+import { GET_TOKENS } from './queries'
+import { CREATE_TOKEN } from './mutations'
 
 const New = () => {
   const tenant = useTenant()
@@ -28,7 +20,7 @@ const New = () => {
       },
       refetchQueries: [
         {
-          query: GET_BONDSTER_TOKENS,
+          query: GET_TOKENS,
           variables: { tenant: tenant },
         },
       ]

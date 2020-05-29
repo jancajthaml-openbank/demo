@@ -1,6 +1,6 @@
 import React from 'react'
 import * as Yup from 'yup'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form, Field } from 'formik'
 import { useTenant } from 'containers/Tenant'
 
 
@@ -50,8 +50,10 @@ const New = (props) => {
           .uppercase('Currency must be uppercase!')
           .length(3, 'Currency must be 3 characters!'),
       })}
+      validateOnMount
       onSubmit={handleSubmit}
-      render={({
+    >
+      {({
         values,
         errors,
         isValid,
@@ -66,9 +68,6 @@ const New = (props) => {
             type="text"
             value={values.accountNumber}
           />
-          <div>
-            <ErrorMessage name="username" />
-          </div>
           <label htmlFor="currency">Currency</label>
           <Field
             autoComplete="off"
@@ -76,9 +75,6 @@ const New = (props) => {
             type="text"
             value={values.currency}
           />
-          <div>
-            <ErrorMessage name="currency" />
-          </div>
           <button
             type="submit"
             disabled={isSubmitting || !isValid}
@@ -87,7 +83,7 @@ const New = (props) => {
           </button>
         </Form>
       )}
-    />
+    </Formik>
   )
 }
 

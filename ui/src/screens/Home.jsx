@@ -15,7 +15,7 @@ function Home() {
     </React.Fragment>
   )
 }
-
+/*
 let Exported = Home
 
 if (process.env.NODE_ENV !== 'production' && module.hot) {
@@ -27,5 +27,5 @@ if (process.env.NODE_ENV !== 'production' && module.hot) {
   })
   Exported = hot(Home)
 }
-
-export default Exported
+*/
+export default Home

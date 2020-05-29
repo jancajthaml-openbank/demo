@@ -1,32 +1,17 @@
-import gql from 'graphql-tag';
-import { ApolloCache } from 'apollo-cache';
+import gql from 'graphql-tag'
+import { ApolloCache } from 'apollo-cache'
 import { Resolvers } from 'apollo-client'
-import BondsterService from 'containers/Bondster/service';
-import FioService from 'containers/Fio/service';
+import FioService from 'components/Fio/service'
 
+import bondsterQueries from 'components/Bondster/queries'
+import bondsterMutations from 'components/Bondster/mutations'
 
-export const GET_ACCOUNTS = gql`
-  query GetAccounts($tenant: String!) {
-    Accounts(tenant: $tenant) {
-      name
-      format
-      currency
-    }
-  }
-`;
+import fioQueries from 'components/Fio/queries'
+import fioMutations from 'components/Fio/mutations'
 
+import accountQueries from 'components/Account/queries'
+import accountMutations from 'components/Account/mutations'
 
-export const GET_BONDSTER_TOKENS = gql`
-  query GetBonsterTokens($tenant: String!) {
-    bondsterTokens(tenant: $tenant) @client
-  }
-`;
-
-export const GET_FIO_TOKENS = gql`
-  query GetFioTokens($tenant: String!) {
-    fioTokens(tenant: $tenant) @client
-  }
-`;
 
 export const typeDefs = gql`
 
@@ -154,77 +139,14 @@ export const typeDefs = gql`
 
 
 export const resolvers = {
-
   Mutation: {
-    createBondsterToken: async (_, request, { cache }) => {
-      const result = await BondsterService.createToken(request.tenant, request.username, request.password)
-      const queryResult = cache.readQuery({ query: GET_BONDSTER_TOKENS });
-      if (queryResult) {
-        const { bondsterTokens } = queryResult;
-        const data = {
-          bondsterTokens: bondsterTokens.find((item) => item.id == result.id)
-            ? bondsterTokens
-            : [...bondsterTokens, result],
-        };
-        cache.writeQuery({ query: GET_BONDSTER_TOKENS, data });
-        return data.bondsterTokens;
-      }
-      return [];
-    },
-    removeBondsterToken: async (_, request, { cache }) => {
-      await BondsterService.deleteToken(request.tenant, request.id)
-      const queryResult = cache.readQuery({ query: GET_BONDSTER_TOKENS });
-      if (queryResult) {
-        const { bondsterTokens } = queryResult;
-        const data = {
-          bondsterTokens: bondsterTokens.filter((item) => item.id !== request.id),
-        };
-        cache.writeQuery({ query: GET_BONDSTER_TOKENS, data });
-        return data.bondsterTokens;
-      }
-      return [];
-    },
-    createFioToken: async (_, request, { cache }) => {
-      const result = await FioService.createToken(request.tenant, request.value)
-      const queryResult = cache.readQuery({ query: GET_FIO_TOKENS });
-      if (queryResult) {
-        const { fioTokens } = queryResult;
-        const data = {
-          fioTokens: fioTokens.find((item) => item.id == result.id)
-            ? fioTokens
-            : [...fioTokens, result],
-        };
-        cache.writeQuery({ query: GET_FIO_TOKENS, data });
-        return data.fioTokens;
-      }
-      return [];
-    },
-    removeFioToken: async (_, request, { cache }) => {
-      await FioService.deleteToken(request.tenant, request.id)
-      const queryResult = cache.readQuery({ query: GET_FIO_TOKENS });
-      if (queryResult) {
-        const { fioTokens } = queryResult;
-        const data = {
-          fioTokens: fioTokens.filter((item) => item.id !== request.id),
-        };
-        cache.writeQuery({ query: GET_FIO_TOKENS, data });
-        return data.fioTokens;
-      }
-      return [];
-    },
+    ...bondsterMutations,
+    ...fioMutations,
+    ...accountMutations,
   },
   Query: {
-    bondsterTokens: async (_, request, { cache }) => {
-      const result = await BondsterService.getTokens(request.tenant);
-      const data = { bondsterTokens: result }
-      cache.writeQuery({ query: GET_BONDSTER_TOKENS, data });
-      return data.bondsterTokens;
-    },
-    fioTokens: async (_, request, { cache }) => {
-      const result = await FioService.getTokens(request.tenant);
-      const data = { fioTokens: result }
-      cache.writeQuery({ query: GET_FIO_TOKENS, data });
-      return data.fioTokens;
-    }
+    ...bondsterQueries,
+    ...fioQueries,
+    ...accountQueries,
   },
 };
