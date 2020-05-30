@@ -20,4 +20,4 @@ dev:
 .PHONY: run
 run:
 	@docker-compose down --remove-orphans
-	@docker-compose up --abort-on-container-exit production
+	@docker-compose up --abort-on-container-exit demo

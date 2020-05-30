@@ -43,8 +43,17 @@ const List = (props) => {
           )
         }
 
+        case 'BONDSTER_ORIGINATOR': {
+        // FIXME component
+          return (
+            <span>
+              {row.original.name.replace(`${row.original.currency}_ORIGINATOR_`, '')}
+            </span>
+          )
+        }
+
         default: {
-          return null
+          return row.original.name
         }
       }
     },

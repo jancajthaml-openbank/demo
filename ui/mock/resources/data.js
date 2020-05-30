@@ -15,6 +15,9 @@ function generateBondsterAccounts(tenant, collection) {
     'TYPE_SANCTION_PAYMENT',
     'TYPE_PRINCIPAL_PAYMENT_FINANCIAL',
     'TYPE_SECESSION_FINANCIAL',
+    'TYPE_INVESTOR_INVESTMENT_FEE',
+    'TYPE_NOSTRO',
+    'TYPE_INVESTOR_DEPOSIT',
   ]
 
   currencies.forEach((currency) => {
