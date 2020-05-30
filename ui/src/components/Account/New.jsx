@@ -5,7 +5,7 @@ import { useTenant } from 'containers/Tenant'
 
 
 const New = (props) => {
-  const tenant = useTenant()
+  const { tenant } = useTenant()
 
   function handleSubmit(values, actions) {
     /*

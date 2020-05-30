@@ -1,31 +1,36 @@
 import React from 'react'
 
-import { ErrorBoundary } from '../components/ErrorBoundary'
-import { useTenant } from '../containers/Tenant'
+import { useQuery } from '@apollo/react-hooks'
+import { useTenant } from 'containers/Tenant'
+import { ErrorBoundary } from 'components/ErrorBoundary'
+import { GET_ACCOUNTS } from 'components/Account/queries'
 
 function Home() {
-  const tenant = useTenant()
+  const { tenant } = useTenant()
+
+  const { data, loading, error } = useQuery(GET_ACCOUNTS, {
+    variables: {
+      tenant: tenant,
+    },
+    pollInterval: 1000,
+  });
+
+  const getNumberOfAccounts = () => {
+    if (loading || error) {
+      return '---'
+    }
+    return data.Accounts.length
+  }
 
   return (
     <React.Fragment>
       <header>
         <h1>Home</h1>
-        <h6>Current tenant is {tenant}.</h6>
+        <h6>Current tenant is <b>{tenant}</b>.</h6>
+        <h6>That has <b>{getNumberOfAccounts()}</b> accounts</h6>
       </header>
     </React.Fragment>
   )
 }
-/*
-let Exported = Home
 
-if (process.env.NODE_ENV !== 'production' && module.hot) {
-  const { hot } = require('react-hot-loader/root')
-  const { setConfig } = require('react-hot-loader')
-  setConfig({
-    logLevel: 'debug',
-    errorReporter: ErrorBoundary,
-  })
-  Exported = hot(Home)
-}
-*/
 export default Home

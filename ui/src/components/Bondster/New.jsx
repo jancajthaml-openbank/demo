@@ -7,7 +7,7 @@ import { GET_TOKENS } from './queries'
 import { CREATE_TOKEN } from './mutations'
 
 const New = () => {
-  const tenant = useTenant()
+  const { tenant } = useTenant()
   const [mutate, { loading, error }] = useMutation(CREATE_TOKEN);
 
   const handleSubmit = (values, actions) => {

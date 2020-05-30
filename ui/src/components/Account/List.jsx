@@ -5,18 +5,49 @@ import Table from './Table'
 import { GET_ACCOUNTS } from './queries'
 
 const List = (props) => {
-  const tenant = useTenant()
+  const { tenant } = useTenant()
 
   const { data, loading, error } = useQuery(GET_ACCOUNTS, {
     variables: {
       tenant: tenant,
     },
-    //pollInterval: 1000,
+    pollInterval: 10000,
   });
+
+  if (error) {
+    return null
+  }
 
   const columns = [{
     Header: 'Name',
-    accessor: 'name'
+    list: 'name',
+    Cell: ({ row }) => {
+
+      switch (row.original.format) {
+
+        case 'IBAN': {
+          // FIXME component
+          return (
+            <span>
+              {row.original.name.match(/.{1,4}/g).join(' ')}
+            </span>
+          )
+        }
+
+        case 'BONDSTER_TECHNICAL': {
+          // FIXME component
+          return (
+            <span>
+              {row.original.name.replace(`${row.original.currency}_TYPE_`, '').replace('_FINANCIAL', '')}
+            </span>
+          )
+        }
+
+        default: {
+          return null
+        }
+      }
+    },
   }, {
     Header: 'Currency',
     accessor: 'currency'

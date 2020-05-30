@@ -22,17 +22,5 @@ function Bondster(props) {
     </React.Fragment>
   )
 }
-/*
-let Exported = Bondster
 
-if (process.env.NODE_ENV !== 'production' && module.hot) {
-  const { hot } = require('react-hot-loader/root')
-  const { setConfig } = require('react-hot-loader')
-  setConfig({
-    logLevel: 'debug',
-    errorReporter: ErrorBoundary,
-  })
-  Exported = hot(Bondster)
-}
-*/
 export default Bondster

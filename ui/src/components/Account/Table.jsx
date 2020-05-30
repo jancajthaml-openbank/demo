@@ -31,9 +31,9 @@ const Wrapper = styled.div`
 
       td {
         white-space: nowrap;
-            padding: .9375rem;
-            vertical-align: top;
-    border-top: 1px solid #edf2f9;
+        padding: .9375rem;
+        vertical-align: top;
+        border-top: 1px solid #edf2f9;
       }
     }
   }

@@ -23,18 +23,4 @@ function Account() {
   )
 }
 
-/*
-let Exported = Account
-
-if (process.env.NODE_ENV !== 'production' && module.hot) {
-  const { hot } = require('react-hot-loader/root')
-  const { setConfig } = require('react-hot-loader')
-  setConfig({
-    logLevel: 'debug',
-    errorReporter: ErrorBoundary,
-  })
-  Exported = hot(Account)
-}
-*/
-
 export default Account

@@ -9,7 +9,7 @@ import { useTenant } from 'containers/Tenant'
 
 
 const New = () => {
-  const tenant = useTenant()
+  const { tenant } = useTenant()
   const [mutate, { loading, error }] = useMutation(CREATE_TOKEN);
 
   const handleSubmit = (values, actions) => {

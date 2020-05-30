@@ -18,17 +18,5 @@ function Transaction() {
     </React.Fragment>
   )
 }
-/*
-let Exported = Transaction
 
-if (process.env.NODE_ENV !== 'production' && module.hot) {
-  const { hot } = require('react-hot-loader/root')
-  const { setConfig } = require('react-hot-loader')
-  setConfig({
-    logLevel: 'debug',
-    errorReporter: ErrorBoundary,
-  })
-  Exported = hot(Transaction)
-}
-*/
 export default Transaction

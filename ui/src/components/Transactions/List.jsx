@@ -15,7 +15,7 @@ const renderRowSubComponent = (data) => (
 )
 
 const List = (props) => {
-  const tenant = useTenant()
+  const { tenant } = useTenant()
 
   React.useEffect(() => {
     props.loadTransactions(tenant)

@@ -1,16 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-//import { connect } from 'react-redux'
-//import memoize from 'memoize-state'
-
-//import { tenantsApiRequestInit, changeTenant } from '../Tenant/actions'
-//import { useTenant } from './containets/Tenant/TenantContext'
-
-import { HeaderWrapper, HeaderLogo, TenantSelect, HeaderNavigation } from './styles'
+import { useTenant } from 'containers/Tenant'
+import { Select } from 'components/Select'
+import { HeaderWrapper, HeaderLogo, HeaderNavigation } from './styles'
 import SafeLink from './SafeLink'
 
 const Header = (props) => {
-  //const tenant = useTenant()
+  const { tenants, setTenant } = useTenant()
 
   return (
     <HeaderWrapper>
@@ -34,13 +30,13 @@ const Header = (props) => {
         </ul>
       </HeaderNavigation>
       <HeaderLogo />
-      {/*
-      <TenantSelect
+      {
+      <Select
         disabled={!tenants}
         options={tenants}
-        valueChanged={this.tenantChanged}
+        valueChanged={setTenant}
       />
-      */}
+      }
     </HeaderWrapper>
   )
 }

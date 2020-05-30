@@ -6,7 +6,7 @@ import { DELETE_TOKEN } from './mutations'
 
 
 const List = (props) => {
-  const tenant = useTenant()
+  const { tenant } = useTenant()
 
   const query = useQuery(GET_TOKENS, {
     variables: {

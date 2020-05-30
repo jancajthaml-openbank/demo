@@ -1,9 +1,5 @@
 import styled from 'styled-components'
 
-import { Select } from '../../components/Select'
-
-export const TenantSelect = Select
-
 import {
   $white,
   $black,
