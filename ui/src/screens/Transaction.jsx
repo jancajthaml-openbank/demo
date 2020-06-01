@@ -1,5 +1,5 @@
 import React from 'react'
-import { List } from 'components/Transactions'
+import { List } from 'components/Transaction'
 import { Card } from 'components/Card'
 import { ErrorBoundary } from 'components/ErrorBoundary'
 

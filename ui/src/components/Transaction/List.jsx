@@ -2,7 +2,9 @@ import React from 'react'
 import moment from 'moment'
 import bigDecimal from 'js-big-decimal'
 import { useTenant } from 'containers/Tenant'
+import { useQuery } from '@apollo/react-hooks'
 import Table from './Table'
+import { GET_TRANSACTIONS } from './queries'
 
 const renderRowSubComponent = (data) => (
   <pre
@@ -17,9 +19,16 @@ const renderRowSubComponent = (data) => (
 const List = (props) => {
   const { tenant } = useTenant()
 
-  React.useEffect(() => {
-    props.loadTransactions(tenant)
-  }, [tenant])
+  const { data, loading, error } = useQuery(GET_TRANSACTIONS, {
+    variables: {
+      tenant: tenant,
+    },
+    pollInterval: 10000,
+  });
+
+  if (error) {
+    return null
+  }
 
   const columns = [
     {
@@ -81,7 +90,7 @@ const List = (props) => {
   return (
     <Table
       columns={columns}
-      data={props.transactions}
+      data={data.Transactions || []}
       renderRowSubComponent={renderRowSubComponent}
     />
   )

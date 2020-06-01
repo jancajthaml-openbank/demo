@@ -12,6 +12,9 @@ import fioMutations from 'components/Fio/mutations'
 import accountQueries from 'components/Account/queries'
 import accountMutations from 'components/Account/mutations'
 
+import transactionQueries from 'components/Transaction/queries'
+import transactionMutations from 'components/Transaction/mutations'
+
 
 export const typeDefs = gql`
 
@@ -143,10 +146,12 @@ export const resolvers = {
     ...bondsterMutations,
     ...fioMutations,
     ...accountMutations,
+    ...transactionMutations,
   },
   Query: {
     ...bondsterQueries,
     ...fioQueries,
     ...accountQueries,
+    ...transactionQueries,
   },
 };

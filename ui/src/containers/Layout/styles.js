@@ -8,8 +8,7 @@ import {
   $callout3,
 } from '../../stylesheets/variables'
 
-export const HeaderNavigation = styled.div.attrs(() => ({
-}))`
+export const HeaderNavigation = styled.div`
   display: flex;
   flex-basis: auto;
   flex-grow: inherit;
@@ -64,8 +63,7 @@ export const HeaderNavigation = styled.div.attrs(() => ({
   }
 `;
 
-export const HeaderWrapper = styled.nav.attrs(() => ({
-}))`
+export const HeaderWrapper = styled.nav`
   background-color: #fff;
   border-color: #e3ebf6;
   border-width: 0 0 1px;
@@ -81,8 +79,7 @@ export const HeaderWrapper = styled.nav.attrs(() => ({
   box-sizing: border-box;
 `;
 
-export const HeaderLogo = styled.a.attrs(() => ({
-}))`
+export const HeaderLogo = styled.a`
   display: inline-block;
   padding-top: 0;
   padding-bottom: 0;
