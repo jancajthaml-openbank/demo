@@ -1,9 +1,7 @@
 import React from 'react'
-
-import { List, New } from '../containers/Bondster'
-
-import { Card } from '../components/Card'
-import { ErrorBoundary } from '../components/ErrorBoundary'
+import { List, New } from 'components/Bondster'
+import { Card } from 'components/Card'
+import { ErrorBoundary } from 'components/ErrorBoundary'
 
 function Bondster(props) {
   return (
@@ -25,16 +23,4 @@ function Bondster(props) {
   )
 }
 
-let Exported = Bondster
-
-if (process.env.NODE_ENV !== 'production' && module.hot) {
-  const { hot } = require('react-hot-loader/root')
-  const { setConfig } = require('react-hot-loader')
-  setConfig({
-    logLevel: 'debug',
-    errorReporter: ErrorBoundary,
-  })
-  Exported = hot(Bondster)
-}
-
-export default Exported
+export default Bondster

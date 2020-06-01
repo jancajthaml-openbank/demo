@@ -1,85 +1,70 @@
 import React from 'react'
-
-import PropTypes from 'prop-types'
-
+import { useMutation } from '@apollo/react-hooks';
 import * as Yup from 'yup'
+import { Formik, Form, Field } from 'formik'
+import gql from 'graphql-tag';
+import { GET_TOKENS } from './queries'
+import { CREATE_TOKEN } from './mutations'
+import { useTenant } from 'containers/Tenant'
 
-import { Formik, Form, Field, ErrorMessage } from 'formik'
 
-class New extends React.Component {
+const New = () => {
+  const { tenant } = useTenant()
+  const [mutate, { loading, error }] = useMutation(CREATE_TOKEN);
 
-  static propTypes = {
-    tenant: PropTypes.string.isRequired,
-    createToken: PropTypes.func.isRequired,
-    onNewToken: PropTypes.func,
+  const handleSubmit = (values, actions) => {
+    actions.resetForm()
+    mutate({
+      variables: {
+        tenant: tenant,
+        value: values.value,
+      },
+      refetchQueries: [
+        {
+          query: GET_TOKENS,
+          variables: { tenant: tenant },
+        },
+      ]
+    })
   }
 
-  constructor(props) {
-    super(props)
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
-
-  async handleSubmit(values, actions) {
-    const {
-      tenant,
-      createToken,
-      onNewToken,
-    } = this.props
-
-    try {
-      actions.setSubmitting(true)
-      const value = await createToken(tenant, values.value)
-      if (onNewToken) {
-        onNewToken(value)
-      }
-    } catch(err) {
-      console.log('err', err)
-    } finally {
-      actions.setSubmitting(false)
-      actions.resetForm()
-    }
-  }
-
-  render() {
-
-    return (
-      <Formik
-        initialValues={{
-          value: '',
-        }}
-        validationSchema={Yup.object().shape({
-          value: Yup.string().required('Value is required!'),
-        })}
-        onSubmit={this.handleSubmit}
-        render={({
-          values,
-          errors,
-          isValid,
-          isSubmitting,
-          handleSubmit,
-        }) => (
-          <Form>
-            <label htmlFor="value">Token</label>
-            <Field
-              autoComplete="off"
-              name="value"
-              type="value"
-              value={values.value}
-            />
-            <div>
-              <ErrorMessage name="value" />
-            </div>
-            <button
-              type="submit"
-              disabled={isSubmitting || !isValid}
-            >
-              Create
-            </button>
-          </Form>
-        )}
-      />
-    )
-  }
+  return (
+    <Formik
+      initialValues={{
+        value: '',
+      }}
+      validationSchema={Yup.object().shape({
+        value: Yup.string().required('Value is required!'),
+      })}
+      onSubmit={handleSubmit}
+      validateOnMount
+    >
+      {({
+        values,
+        errors,
+        isValid,
+        touched,
+        isSubmitting,
+        handleSubmit,
+      }) => (
+        <Form>
+          <label htmlFor="value">Token</label>
+          <Field
+            autoComplete="off"
+            name="value"
+            type="value"
+            value={values.value}
+          />
+          <button
+            type="submit"
+            disabled={isSubmitting || !isValid}
+          >
+            Create
+          </button>
+        </Form>
+      )}
+    </Formik>
+  )
 }
 
 export default New

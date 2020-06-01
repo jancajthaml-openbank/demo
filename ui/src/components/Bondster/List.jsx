@@ -1,44 +1,58 @@
 import React from 'react'
+import { useTenant } from 'containers/Tenant'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import { GET_TOKENS } from './queries'
+import { DELETE_TOKEN } from './mutations'
 
-import PropTypes from 'prop-types'
 
+const List = (props) => {
+  const { tenant } = useTenant()
 
-class List extends React.Component {
+  const query = useQuery(GET_TOKENS, {
+    variables: {
+      tenant: tenant,
+    },
+  });
 
-  static propTypes = {
-    loadTokens: PropTypes.func.isRequired,
-    tenant: PropTypes.string.isRequired,
-    tokens: PropTypes.array,
-    tokensLoading: PropTypes.bool,
+  const [mutate, mutation] = useMutation(DELETE_TOKEN);
+
+  if (query.error || !tenant) {
+    return null
   }
 
-  componentDidMount() {
-    this.props.loadTokens(this.props.tenant)
+  const deleteToken = (id) => {
+    mutate({
+      variables: {
+        tenant: tenant,
+        id: id,
+      },
+      refetchQueries: [
+        {
+          query: GET_TOKENS,
+          variables: { tenant: tenant },
+        },
+      ]
+    })
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.tenant !== this.props.tenant) {
-      this.props.loadTokens(this.props.tenant)
-    }
+  if (!query.data.bondsterTokens || query.data.bondsterTokens.length == 0) {
+    return 'No data'
   }
 
-  render() {
-    const { tokens, tokensLoading } = this.props
-
-    return (
-      <ul>
-        {tokens.length > 0
-          ? (
-            tokens.map((token) => (
-            <li key={token.id}>
-              {`${token.id} ${token.createdAt}`}
-            </li>
-          )))
-          : 'No data'
-        }
-      </ul>
-    )
-  }
+  return (
+    <ul>
+      {query.data.bondsterTokens.map((token) => (
+        <li key={token.id}>
+          {`${token.id} ${token.createdAt}`}
+          <button
+            onClick={() => deleteToken(token.id)}
+          >
+            delete
+          </button>
+        </li>
+      ))}
+    </ul>
+  )
 }
 
 export default List

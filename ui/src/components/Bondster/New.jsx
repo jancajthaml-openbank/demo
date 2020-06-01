@@ -1,100 +1,80 @@
 import React from 'react'
-
-import PropTypes from 'prop-types'
-
+import { useMutation } from '@apollo/react-hooks';
+import { useTenant } from 'containers/Tenant'
 import * as Yup from 'yup'
+import { Formik, Form, Field } from 'formik'
+import { GET_TOKENS } from './queries'
+import { CREATE_TOKEN } from './mutations'
 
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+const New = () => {
+  const { tenant } = useTenant()
+  const [mutate, { loading, error }] = useMutation(CREATE_TOKEN);
 
-class New extends React.Component {
-
-  static propTypes = {
-    tenant: PropTypes.string.isRequired,
-    createToken: PropTypes.func.isRequired,
-    onNewToken: PropTypes.func,
+  const handleSubmit = (values, actions) => {
+    actions.resetForm()
+    mutate({
+      variables: {
+        tenant: tenant,
+        username: values.username,
+        password: values.password,
+      },
+      refetchQueries: [
+        {
+          query: GET_TOKENS,
+          variables: { tenant: tenant },
+        },
+      ]
+    })
   }
 
-  constructor(props) {
-    super(props)
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
-
-  async handleSubmit(values, actions) {
-    const {
-      tenant,
-      createToken,
-      onNewToken
-    } = this.props
-
-    try {
-      actions.setSubmitting(true)
-      const value = await createToken(tenant, values.username, values.password)
-      if (onNewToken) {
-        onNewToken(value)
-      }
-    } catch(err) {
-      console.log('err', err)
-    } finally {
-      actions.setSubmitting(false)
-      actions.resetForm()
-    }
-  }
-
-  render() {
-
-    return (
-      <Formik
-        initialValues={{
-          username: '',
-          password: '',
-        }}
-        validationSchema={Yup.object().shape({
-          username: Yup.string()
-            .email('Invalid email address')
-            .required('Username is required!'),
-          password: Yup.string()
-            .required('Password is required!'),
-        })}
-        onSubmit={this.handleSubmit}
-        render={({
-          values,
-          errors,
-          isValid,
-          isSubmitting,
-          handleSubmit,
-        }) => (
-          <Form>
-            <label htmlFor="username">Username</label>
-            <Field
-              autoComplete="off"
-              name="username"
-              type="email"
-              value={values.username}
-            />
-            <div>
-              <ErrorMessage name="username" />
-            </div>
-            <label htmlFor="password">Password</label>
-            <Field
-              autoComplete="off"
-              name="password"
-              type="password"
-              value={values.password}
-            />
-            <div>
-              <ErrorMessage name="password" />
-            </div>
-            <button
-              type="submit"
-              disabled={isSubmitting || !isValid}
-            >
-              Create
-            </button>
-          </Form>
-        )}
-      />
-    )
-  }
+  return (
+    <Formik
+      initialValues={{
+        username: '',
+        password: '',
+      }}
+      validationSchema={Yup.object().shape({
+        username: Yup.string()
+          .email('Invalid email address')
+          .required('Username is required!'),
+        password: Yup.string()
+          .required('Password is required!'),
+      })}
+      onSubmit={handleSubmit}
+      validateOnMount
+    >
+      {({
+        values,
+        errors,
+        isValid,
+        isSubmitting,
+        handleSubmit,
+      }) => (
+        <Form>
+          <label htmlFor="username">Username</label>
+          <Field
+            autoComplete="off"
+            name="username"
+            type="email"
+            value={values.username}
+          />
+          <label htmlFor="password">Password</label>
+          <Field
+            autoComplete="off"
+            name="password"
+            type="password"
+            value={values.password}
+          />
+          <button
+            type="submit"
+            disabled={loading || isSubmitting || !isValid}
+          >
+            Create
+          </button>
+        </Form>
+      )}
+    </Formik>
+  )
 }
 
 export default New

@@ -7,27 +7,22 @@ import Bondster from './screens/Bondster'
 const routes =  [
   {
     path: '/',
-    exact: true,
     component: Home,
   },
   {
     path: '/account',
-    exact: true,
     component: Account,
   },
   {
     path: '/transaction',
-    exact: true,
     component: Transaction,
   },
   {
     path: '/fio',
-    exact: true,
     component: Fio,
   },
   {
     path: '/bondster',
-    exact: true,
     component: Bondster,
   }
 ]

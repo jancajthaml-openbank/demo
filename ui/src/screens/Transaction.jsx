@@ -1,11 +1,9 @@
 import React from 'react'
+import { List } from 'components/Transaction'
+import { Card } from 'components/Card'
+import { ErrorBoundary } from 'components/ErrorBoundary'
 
-import { TransactionsList } from '../containers/Core'
-
-import { Card } from '../components/Card'
-import { ErrorBoundary } from '../components/ErrorBoundary'
-
-function Transaction(props) {
+function Transaction() {
   return (
     <React.Fragment>
       <header>
@@ -14,23 +12,11 @@ function Transaction(props) {
       <main>
         <Card>
           <h6>Transactions</h6>
-          <TransactionsList tenant={props.tenant} />
+          <List />
         </Card>
       </main>
     </React.Fragment>
   )
 }
 
-let Exported = Transaction
-
-if (process.env.NODE_ENV !== 'production' && module.hot) {
-  const { hot } = require('react-hot-loader/root')
-  const { setConfig } = require('react-hot-loader')
-  setConfig({
-    logLevel: 'debug',
-    errorReporter: ErrorBoundary,
-  })
-  Exported = hot(Transaction)
-}
-
-export default Exported
+export default Transaction

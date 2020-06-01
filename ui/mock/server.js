@@ -19,6 +19,13 @@ const logRequestStart = (req, res, next) => {
   next()
 }
 
+async function generateData(accounts, transfers) {
+  const randomAccounts = generateRandomAccounts('mock', accounts, 1000)
+  const bondsterAccounts = generateBondsterAccounts('mock', accounts)
+  const generatedAccounts = [...randomAccounts, ...bondsterAccounts]
+  const randomTransfers = generateRandomTransactions('mock', transfers, generatedAccounts, 1000)
+}
+
 module.exports = function(application) {
   const app = application || express()
   const db = new loki('db.json')
@@ -36,10 +43,7 @@ module.exports = function(application) {
     unique: ['id'],
   })
 
-  const randomAccounts = generateRandomAccounts('mock', accounts, 2000)
-  const bondsterAccounts = generateBondsterAccounts('mock', accounts)
-  const generatedAccounts = [...randomAccounts, ...bondsterAccounts]
-  const randomTransfers = generateRandomTransactions('mock', transfers, generatedAccounts, 2000)
+  generateData(accounts, transfers)
 
   app.use(logRequestStart)
 
@@ -140,6 +144,21 @@ module.exports = function(application) {
     })))
   })
 
+  app.delete('/api/bondster/token/:tenant/:id', async (req, res) => {
+    const { tenant, id } = req.params
+
+    if (!tenant || !id) {
+      res.status(404).json({})
+      return
+    }
+
+    if (!bondster.chain().find({ tenant, id }).remove()) {
+      return res.status(404).json({})
+    }
+
+    res.status(200).json({})
+  })
+
   app.post('/api/bondster/token/:tenant', express.json({ type: '*/*' }), async (req, res) => {
     const { tenant } = req.params
 
@@ -204,6 +223,21 @@ module.exports = function(application) {
       createdAt: item.createdAt.toISOString(),
     })))
     return
+  })
+
+  app.delete('/api/fio/token/:tenant/:id', async (req, res) => {
+    const { tenant, id } = req.params
+
+    if (!tenant || !id) {
+      res.status(404).json({})
+      return
+    }
+
+    if (!fio.chain().find({ tenant, id }).remove()) {
+      return res.status(404).json({})
+    }
+
+    res.status(200).json({})
   })
 
   app.post('/api/fio/token/:tenant', express.json({ type: '*/*' }), async (req, res) => {

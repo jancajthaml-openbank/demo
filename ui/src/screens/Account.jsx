@@ -1,11 +1,9 @@
 import React from 'react'
+import { List, New } from 'components/Account'
+import { Card } from 'components/Card'
+import { ErrorBoundary } from 'components/ErrorBoundary'
 
-import { AccountsList, NewAccount } from '../containers/Core'
-
-import { Card } from '../components/Card'
-import { ErrorBoundary } from '../components/ErrorBoundary'
-
-function Account(props) {
+function Account() {
   return (
     <React.Fragment>
       <header>
@@ -14,27 +12,15 @@ function Account(props) {
       <main>
         <Card>
           <h6>New Account</h6>
-          <NewAccount tenant={props.tenant} />
+          <New />
         </Card>
         <Card>
           <h6>Accounts</h6>
-          <AccountsList tenant={props.tenant} />
+          <List />
         </Card>
       </main>
     </React.Fragment>
   )
 }
 
-let Exported = Account
-
-if (process.env.NODE_ENV !== 'production' && module.hot) {
-  const { hot } = require('react-hot-loader/root')
-  const { setConfig } = require('react-hot-loader')
-  setConfig({
-    logLevel: 'debug',
-    errorReporter: ErrorBoundary,
-  })
-  Exported = hot(Account)
-}
-
-export default Exported
+export default Account

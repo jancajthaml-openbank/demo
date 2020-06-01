@@ -1,9 +1,5 @@
 import styled from 'styled-components'
 
-import { Select } from '../../components/Select'
-
-export const TenantSelect = Select
-
 import {
   $white,
   $black,
@@ -12,8 +8,7 @@ import {
   $callout3,
 } from '../../stylesheets/variables'
 
-export const HeaderNavigation = styled.div.attrs(() => ({
-}))`
+export const HeaderNavigation = styled.div`
   display: flex;
   flex-basis: auto;
   flex-grow: inherit;
@@ -68,8 +63,7 @@ export const HeaderNavigation = styled.div.attrs(() => ({
   }
 `;
 
-export const HeaderWrapper = styled.nav.attrs(() => ({
-}))`
+export const HeaderWrapper = styled.nav`
   background-color: #fff;
   border-color: #e3ebf6;
   border-width: 0 0 1px;
@@ -85,16 +79,16 @@ export const HeaderWrapper = styled.nav.attrs(() => ({
   box-sizing: border-box;
 `;
 
-export const HeaderLogo = styled.a.attrs(() => ({
-}))`
+export const HeaderLogo = styled.a`
   display: inline-block;
   padding-top: 0;
   padding-bottom: 0;
-  margin-right: 1rem;
-  font-size: 1.0625rem;
+  margin-right: .5rem;
   line-height: inherit;
   white-space: nowrap;
-  border: 1px solid red;
-  max-width: 100%;
-  max-height: 1.5rem;
+  width: 2rem;
+  height: 2rem;
+  background-position: center;
+  background-size: contain;
+  background-image: url('https://avatars3.githubusercontent.com/u/33759883');
 `;
