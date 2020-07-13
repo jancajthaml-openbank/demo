@@ -67,9 +67,9 @@ async function TransfersResolve(_, params, context) {
     .sort(orderBy)
     .slice(actualSkip, actualTake)
     .map((transfer) => ({
-      id: transfer.transfer,
+      transfer: transfer.transfer,
       transaction: transfer.transaction,
-      status: transfer.status,
+      //status: transfer.status,
       credit: context.db.accounts.findOne({
         id: transfer.credit
       }),
@@ -82,6 +82,7 @@ async function TransfersResolve(_, params, context) {
     }))
 }
 
+/*
 async function TransferResolve(_, params, context) {
   if (!params.tenant || !params.transaction || !params.transfer) {
     return null
@@ -108,11 +109,11 @@ async function TransferResolve(_, params, context) {
     amount: transfer.amount,
     currency: transfer.currency,
   }
-}
+}*/
 
 /* -------------------------------------------------------------------------- */
 
 module.exports = Object.freeze({
-  Transfers: TransfersResolve,
-  Transfer: TransferResolve,
+  transfers: TransfersResolve,
+  //Transfer: TransferResolve,
 })

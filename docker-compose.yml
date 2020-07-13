@@ -58,33 +58,45 @@ services:
 
   # -------------------------------------------------------------------------- #
 
+  postgres:
+    image: openbak/postgres
+    hostname: postgres
+    build: postgres
+    volumes:
+      - openbank-secondary:/var/lib/postgresql/data
+
+  # -------------------------------------------------------------------------- #
+
   demo:
     image: openbank/demo
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        LAKE_VERSION: 1.2.2
+        LAKE_VERSION: 1.2.3
         VAULT_VERSION: 1.3.1
         LEDGER_VERSION: 1.1.1
-        FIO_BCO_VERSION: 1.2.8
-        BONDSTER_BCO_VERSION: 1.2.9
-        SEARCH_VERSION: 1.2.7
+        FIO_BCO_VERSION: 1.2.9
+        BONDSTER_BCO_VERSION: 1.2.10
+        DWH_VERSION: 0.0.0
     ports:
       - "443:443"
-      - "8080:8080"
+      - "8443:8443"
       - "4400:4400"
       - "4401:4401"
       - "4001:4001"
       - "4002:4002"
+    links:
+      - postgres
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - ./data/openbank:/data
-      - ./data/mongo:/var/lib/mongodb
+      - openbank-primary:/data
       - ./secrets:/openbank/secrets
       - ./ui/build:/var/www
 
 # ---------------------------------------------------------------------------- #
 
 volumes:
+  openbank-primary:
+  openbank-secondary:
   dependency-cache:

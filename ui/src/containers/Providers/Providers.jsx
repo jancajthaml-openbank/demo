@@ -27,7 +27,7 @@ const Providers = (props) => {
     const client = new ApolloClient({
       cache: new InMemoryCache(),
       link: new HttpLink({
-        uri: '/api/search/graphql',
+        uri: '/api/data-warehouse/graphql',
       }),
       resolvers,
       typeDefs,
