@@ -5,6 +5,6 @@ const BigDecimalScalar = require("./BigDecimal")
 /* -------------------------------------------------------------------------- */
 
 module.exports = Object.freeze({
-  DateTime,
-  BigDecimal,
+  DateTimeScalar,
+  BigDecimalScalar,
 })

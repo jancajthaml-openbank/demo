@@ -1,5 +1,5 @@
 import React from 'react'
-import TenantService from 'containers/Tenant/service'
+//import TenantService from 'containers/Tenant/service'
 import { TenantContextProvider } from 'containers/Tenant'
 import { ApolloClient } from 'apollo-client';
 import { BrowserRouter as Router } from "react-router-dom"
@@ -8,21 +8,22 @@ import { HttpLink } from 'apollo-link-http';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { resolvers, typeDefs } from '../../resolvers';
 
-
 const Providers = (props) => {
 
   const [state, setState] = React.useState({
-    tenants: null,
+    //tenants: null,
     client: null,
     isReady: false,
   })
 
   const setup = async () => {
+    /*
     const [
       tenants,
     ] = await Promise.all([
       TenantService.getTenants(),
     ])
+    */
 
     const client = new ApolloClient({
       cache: new InMemoryCache(),
@@ -35,7 +36,7 @@ const Providers = (props) => {
 
     setState({
       client: client,
-      tenants: tenants,
+      //tenants: tenants,
       isReady: true,
     })
   }
@@ -43,6 +44,9 @@ const Providers = (props) => {
   React.useEffect(() => {
     setup()
   }, [])
+
+
+  //console.log('query', query)
 
   if (!state.isReady) {
     return (
@@ -54,7 +58,7 @@ const Providers = (props) => {
 
   return (
     <ApolloProvider client={state.client}>
-      <TenantContextProvider tenants={state.tenants}>
+      <TenantContextProvider>
         <Router>
           {props.children}
         </Router>

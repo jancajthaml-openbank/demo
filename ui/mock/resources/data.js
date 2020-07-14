@@ -8,8 +8,8 @@ function randomAmount() {
 
 function generateRandomTenants(collection, howMany) {
   const result = []
-
-  [...Array(5).keys()].forEach(() => {
+  const range = [...Array(5).keys()]
+  range.forEach(() => {
     const item = {
       name: `tenant-${Math.random().toString(36).substring(7)}`,
     }
@@ -153,6 +153,7 @@ function generateRandomTransactions(tenant, collection, accounts, howMany) {
 /* -------------------------------------------------------------------------- */
 
 module.exports = Object.freeze({
+  generateRandomTenants,
   generateRandomAccounts,
   generateBondsterAccounts,
   generateRandomTransactions,

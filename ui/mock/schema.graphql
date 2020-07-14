@@ -1,52 +1,56 @@
-
-
 scalar DateTime
+
 scalar BigDecimal
 
-
 type Tenant {
-    name: String!
+  name: String!
 }
 
 type Transfer {
-    tenant: Tenant!
-    transaction: String!
-    transfer: String!
-    credit: Account!
-    debit: Account!
-    valueDate: DateTime!
-    amount: BigDecimal!
-    currency: String!
+  tenant: Tenant!
+  transaction: String!
+  transfer: String!
+  credit: Account!
+  debit: Account!
+  valueDate: DateTime!
+  amount: BigDecimal!
+  currency: String!
 }
 
 type Account {
-    tenant: Tenant!
-    name: String!
-    format: String!
-    currency: String!
-    balance: BigDecimal!
+  tenant: Tenant!
+  name: String!
+  format: String!
+  currency: String!
+  balance: BigDecimal!
 }
 
 type query {
 
-    accounts(
-        tenant: String!,
-        format: String,
-        currency: String,
-        limit: Int,
-        offset: Int,
-    ): [Account]
+  tenants(
+    limit: Int!,
+    offset: Int!
+  ): [Tenant!]!
 
-    transfers(
-        tenant: String!,
-        transaction: String,
-        currency: String,
-        valueDateLte: DateTime,
-        valueDateGte: DateTime,
-        amountLte: BigDecimal,
-        amountGte: BigDecimal,
-        limit: Int,
-        offset: Int,
-    ): [Transfer]
+  accounts(
+    tenant: String!,
+    format: String,
+    currency: String,
+    format: String,
+    limit: Int!,
+    offset: Int!
+  ): [Account!]!
+
+  transfers(
+    tenant: String!,
+    transaction: String,
+    currency: String,
+    valueDateLte: DateTime,
+    valueDateGte: DateTime,
+    amountLte: BigDecimal,
+    amountGte: BigDecimal,
+    limit: Int!,
+    offset: Int!
+  ): [Transfer!]!
 
 }

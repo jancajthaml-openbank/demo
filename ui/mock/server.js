@@ -52,7 +52,7 @@ module.exports = function(application) {
     unique: ['id'],
   })
 
-  window.setTimeout(() => generateData(tenants, accounts, transfers), 1000)
+  global.setTimeout(() => generateData(tenants, accounts, transfers), 1000)
 
   app.use(logRequestStart)
 
@@ -63,7 +63,7 @@ module.exports = function(application) {
     schema: makeExecutableSchema({
       typeDefs: fs.readFileSync(path.resolve(__dirname, "schema.graphql"), "utf8"),
       resolvers: Object.freeze({
-        Query: {
+        query: {
           ...Tenants,
           ...Accounts,
           ...Transfers,
