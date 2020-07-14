@@ -11,22 +11,16 @@ import { resolvers, typeDefs } from '../../resolvers';
 const Providers = (props) => {
 
   const [state, setState] = React.useState({
-    //tenants: null,
     client: null,
     isReady: false,
   })
 
   const setup = async () => {
-    /*
-    const [
-      tenants,
-    ] = await Promise.all([
-      TenantService.getTenants(),
-    ])
-    */
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new InMemoryCache({
+        addTypename: false,
+      }),
       link: new HttpLink({
         uri: '/api/data-warehouse/graphql',
       }),
@@ -36,7 +30,6 @@ const Providers = (props) => {
 
     setState({
       client: client,
-      //tenants: tenants,
       isReady: true,
     })
   }
@@ -44,9 +37,6 @@ const Providers = (props) => {
   React.useEffect(() => {
     setup()
   }, [])
-
-
-  //console.log('query', query)
 
   if (!state.isReady) {
     return (

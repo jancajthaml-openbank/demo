@@ -1,3 +1,6 @@
+
+/* -------------------------------------------------------------------------- */
+
 const decimalRegex = new RegExp("^[+-]?\\d{1,35}(\\.\\d{1,35})?$", "i")
 const sciNotationRegex = new RegExp("\\d+\\.?\\d*E[+-]*\\d+", "i")
 
@@ -61,3 +64,5 @@ module.exports = Object.freeze({
   dateToString,
   decimalToString,
 })
+
+/* -------------------------------------------------------------------------- */

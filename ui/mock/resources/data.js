@@ -158,3 +158,5 @@ module.exports = Object.freeze({
   generateBondsterAccounts,
   generateRandomTransactions,
 })
+
+/* -------------------------------------------------------------------------- */

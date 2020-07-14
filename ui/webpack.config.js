@@ -24,9 +24,11 @@ function getPlugins(production) {
       dangerouslyAllowCleanPatternsOutsideProject: false,
       cleanStaleWebpackAssets: true,
     }),
+    /*
     new webpack.ProvidePlugin({
-      'fetch': 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch',
+      fetch: 'exports-loader?self.fetch!whatwg-fetch',
     }),
+    */
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -103,8 +105,8 @@ module.exports = function(env = {}, args = {}) {
     resolve: {
       unsafeCache: false,
       modules: [
-        path.resolve(__dirname, 'src'),
         path.resolve(__dirname, 'node_modules'),
+        path.resolve(__dirname, 'src'),
       ],
       extensions: [
         '.js',

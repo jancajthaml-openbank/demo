@@ -1,8 +1,10 @@
 
+/* -------------------------------------------------------------------------- */
+
 const fs = require('fs')
 const path = require('path')
 const express = require('express')
-const graphqlHTTP = require('express-graphql')
+const { graphqlHTTP } = require('express-graphql')
 const { makeExecutableSchema } = require('graphql-tools')
 const loki = require('lokijs')
 const { randomId } = require('./utils/random')
@@ -17,6 +19,7 @@ const {
 } = require('./resources/data')
 
 // -------------------------------------------------------------------------- //
+
 const logRequestStart = (req, res, next) => {
   console.info(`${req.method} ${req.originalUrl}`)
   next()
@@ -63,7 +66,7 @@ module.exports = function(application) {
     schema: makeExecutableSchema({
       typeDefs: fs.readFileSync(path.resolve(__dirname, "schema.graphql"), "utf8"),
       resolvers: Object.freeze({
-        query: {
+        Query: {
           ...Tenants,
           ...Accounts,
           ...Transfers,
@@ -79,7 +82,7 @@ module.exports = function(application) {
         accounts,
       },
     },
-    graphiql: true
+    graphiql: true,
   }))
 
   // ------------------------------------------------------------------------ //
@@ -248,3 +251,6 @@ module.exports = function(application) {
 
   return app
 }
+
+/* -------------------------------------------------------------------------- */
+

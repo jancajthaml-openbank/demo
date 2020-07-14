@@ -27,14 +27,14 @@ export const typeDefs = gql`
     createdAt: DateTime!
   }
 
-  extend type mutation {
+  extend type Mutation {
     createBondsterToken(tenant: String!, username: String!, password: String!): [Token!]!
     removeBondsterToken(tenant: String!, id: String!): [Token!]!
     createFioToken(tenant: String!, value: String!): [Token!]!
     removeFioToken(tenant: String!, id: String!): [Token!]!
   }
 
-  extend type query {
+  extend type Query {
     bondsterTokens(tenant: String!): [Token!]!
     fioTokens(tenant: String!): [Token!]!
   }
@@ -62,7 +62,7 @@ export const typeDefs = gql`
     balance: BigDecimal!
   }
 
-  type query {
+  type Query {
 
     tenants(
       limit: Int!,

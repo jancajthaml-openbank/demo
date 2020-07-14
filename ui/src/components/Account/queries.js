@@ -1,11 +1,12 @@
 import gql from 'graphql-tag';
 
 export const GET_ACCOUNTS = gql`
-  query GetAccounts($tenant: String!) {
-    accounts(tenant: $tenant, limit: 10000, offset: 0) {
+  query GetAccounts($tenant: String!, $limit: Int!, $offset: Int!) {
+    accounts(tenant: $tenant, limit: $limit, offset: $offset) {
       name
       format
       currency
+      balance
     }
   }
 `;

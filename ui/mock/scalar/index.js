@@ -8,3 +8,5 @@ module.exports = Object.freeze({
   DateTimeScalar,
   BigDecimalScalar,
 })
+
+/* -------------------------------------------------------------------------- */

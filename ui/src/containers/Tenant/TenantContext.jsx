@@ -16,26 +16,18 @@ export const TenantContextProvider = (props) => {
     },
   });
 
-  console.log(query)
-  /*
-  React.useEffect(() => {
-    setTenant(props.tenants[0])
-  }, [props.tenants.join(',')])
+  if (query.error || !query.data) {
+    return null
+  }
 
-  const updateTenant = (nextTenant) => {
-    if (props.tenants.includes(nextTenant)) {
-      setTenant(nextTenant)
-    }
-  }*/
-
-  return null
+  const tenants = query.data.tenants.map((tenant) => tenant.name)
 
   return (
     <TenantContext.Provider
       value={{
-        tenant: tenant || props.tenants[0],
-        tenants: props.tenants,
-        setTenant: updateTenant,
+        tenant: tenant || tenants[0],
+        tenants: tenants,
+        setTenant: setTenant,
       }}
     >
       {props.children}

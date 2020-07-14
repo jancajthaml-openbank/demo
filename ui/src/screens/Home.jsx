@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { useTenant } from 'containers/Tenant'
 import { ErrorBoundary } from 'components/ErrorBoundary'
 import { GET_ACCOUNTS } from 'components/Account/queries'
-import { GET_TRANSACTIONS } from 'components/Transaction/queries'
+import { GET_TRANSFERS } from 'components/Transaction/queries'
 
 function Home() {
   const { tenant } = useTenant()
@@ -12,29 +12,33 @@ function Home() {
   const accounts = useQuery(GET_ACCOUNTS, {
     variables: {
       tenant: tenant,
+      offset: 0,
+      limit: 10000,
     },
-    pollInterval: 10000,
+    pollInterval: 60 * 1000,
   });
 
-  const transactions = useQuery(GET_TRANSACTIONS, {
+  const transfers = useQuery(GET_TRANSFERS, {
     variables: {
       tenant: tenant,
+      offset: 0,
+      limit: 10000,
     },
-    pollInterval: 10000,
+    pollInterval: 60 * 1000,
   });
 
   const getNumberOfAccounts = () => {
     if (accounts.loading || accounts.error) {
       return '---'
     }
-    return accounts.data.Accounts.length
+    return accounts.data.accounts.length
   }
 
-  const getNumberOfTransactions = () => {
-    if (transactions.loading || transactions.error) {
+  const getNumberOfTransfers = () => {
+    if (transfers.loading || transfers.error) {
       return '---'
     }
-    return transactions.data.Transactions.length
+    return transfers.data.transfers.length
   }
 
   return (
@@ -43,7 +47,7 @@ function Home() {
         <h1>Home</h1>
         <h6>Current tenant is <b>{tenant}</b>.</h6>
         <h6>That has <b>{getNumberOfAccounts()}</b> accounts</h6>
-        <h6>and <b>{getNumberOfTransactions()}</b> transactions</h6>
+        <h6>and <b>{getNumberOfTransfers()}</b> transfers</h6>
       </header>
     </React.Fragment>
   )

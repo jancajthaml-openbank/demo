@@ -1,24 +1,23 @@
 import gql from 'graphql-tag';
 
-export const GET_TRANSACTIONS = gql`
-  query GetTransactions($tenant: String!) {
-    Transactions(tenant: $tenant) {
-      id
-      status
-      transfers {
-        id
-        amount
-        currency
-        valueDate
-        credit {
+export const GET_TRANSFERS = gql`
+  query GetTransfers($tenant: String!, $limit: Int!, $offset: Int!) {
+    transfers(tenant: $tenant, limit: $limit, offset: $offset) {
+      transaction
+      transfer
+      amount
+      currency
+      valueDate
+      credit {
+        name
+        tenant {
           name
-          tenant
-          isBalanceCheck
         }
-        debit {
+      }
+      debit {
+        name
+        tenant {
           name
-          tenant
-          isBalanceCheck
         }
       }
     }

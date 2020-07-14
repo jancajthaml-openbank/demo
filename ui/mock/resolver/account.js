@@ -56,23 +56,10 @@ async function AccountsResolve(_, params, context) {
     .slice(actualSkip, actualTake)
 }
 
-/*
-async function AccountResolve(_, params, context) {
-  if (!params.tenant || !params.name) {
-    return null
-  }
-
-  const query = {
-    id: `${params.tenant}/${params.name}`
-  }
-
-  return context.db.accounts
-    .findOne(query)
-}*/
-
 /* -------------------------------------------------------------------------- */
 
 module.exports = Object.freeze({
   accounts: AccountsResolve,
-  //Account: AccountResolve,
 })
+
+/* -------------------------------------------------------------------------- */
