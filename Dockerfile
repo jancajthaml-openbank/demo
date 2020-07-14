@@ -169,8 +169,6 @@ COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default
 RUN systemctl enable \
       vault-unit@demo \
       ledger-unit@demo \
-      vault-unit@test \
-      ledger-unit@test \
       bondster-bco-import@demo \
       fio-bco-import@demo \
     ;

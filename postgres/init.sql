@@ -66,3 +66,5 @@ CREATE VIEW account_balance_change AS (
   GROUP BY
     (account.tenant, account.name, transfer.value_date)
 );
+
+INSERT INTO tenant(name) VALUES ('demo');

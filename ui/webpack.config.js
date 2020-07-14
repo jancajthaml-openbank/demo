@@ -24,11 +24,6 @@ function getPlugins(production) {
       dangerouslyAllowCleanPatternsOutsideProject: false,
       cleanStaleWebpackAssets: true,
     }),
-    /*
-    new webpack.ProvidePlugin({
-      fetch: 'exports-loader?self.fetch!whatwg-fetch',
-    }),
-    */
     new CopyWebpackPlugin({
       patterns: [
         {

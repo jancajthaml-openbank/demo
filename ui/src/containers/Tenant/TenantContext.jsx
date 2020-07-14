@@ -14,6 +14,7 @@ export const TenantContextProvider = (props) => {
       limit: 100,
       offset: 0,
     },
+    pollInterval: 30 * 1000,
   });
 
   if (query.error || !query.data) {
@@ -21,6 +22,10 @@ export const TenantContextProvider = (props) => {
   }
 
   const tenants = query.data.tenants.map((tenant) => tenant.name)
+
+  if (tenants.length === 0) {
+    return null
+  }
 
   return (
     <TenantContext.Provider
