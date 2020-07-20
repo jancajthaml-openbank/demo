@@ -10,7 +10,7 @@ bootstrap:
 
 .PHONY: build
 build:
-	@docker-compose build demo
+	@docker-compose build --pull demo
 	@docker-compose run --rm ui-build
 
 .PHONY: dev

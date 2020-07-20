@@ -24,9 +24,9 @@ FROM openbank/vault:v${VAULT_VERSION}-master as vault-artifacts
 FROM openbank/ledger:v${LEDGER_VERSION}-master as ledger-artifacts
 FROM openbank/fio-bco:v${FIO_BCO_VERSION}-master as fio-bco-artifacts
 FROM openbank/bondster-bco:v${BONDSTER_BCO_VERSION}-master as bondster-bco-artifacts
-FROM openbank/data-warehouse:v${DWH_VERSION}-master as dwh-artifacts
+FROM openbank/data-warehouse:v${DWH_VERSION}-master as data-warehouse-artifacts
 
-FROM debian:stretch
+FROM debian:buster
 
 ARG LAKE_VERSION
 ARG VAULT_VERSION
@@ -39,57 +39,56 @@ ENV DEBIAN_FRONTEND=noninteractive \
     LANG=C.UTF-8
 
 RUN \
-    apt-get -y update && \
-    apt-get -y install \
-      apt-utils \
-      openssl \
-      lsb-release \
-      curl \
-      git \
-      at \
-      gnupg \
-      nginx \
-      logrotate \
-      rsyslog \
-      unattended-upgrades \
-      ssmtp \
-      lsof \
-      procps \
-      initscripts \
-      libsystemd0 \
-      libudev1 \
-      systemd \
-      sysvinit-utils \
-      udev \
-      util-linux \
-      \
-      openjdk-8-jre \
-      libzmq5>=4.2.1~ \
-      && \
-    \
-    (\
-      ln -s /usr/bin/java /bin/java && \
-      ls /lib/systemd/system/sysinit.target.wants | \
-      grep -v systemd-tmpfiles-setup.service | \
-      xargs rm -f \
-    ) && \
-    (rm -f /lib/systemd/system/sockets.target.wants/*udev*) && \
-    systemctl mask -- \
-      tmp.mount \
-      etc-hostname.mount \
-      etc-hosts.mount \
-      etc-resolv.conf.mount \
-      -.mount \
-      swap.target \
-      getty.target \
-      getty-static.service \
-      dev-mqueue.mount \
-      cgproxy.service \
+  apt-get update -y && \
+  \
+  apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    git \
+    tar \
+    cron \
+    bzip2 \
+    nginx \
+    apt-utils \
+    dpkg-dev \
+    netcat-openbsd \
+    rsyslog \
+    libzmq5>=4.2.1~ \
+    openjdk-11-jre \
+    systemd \
+    systemd-sysv \
+    dbus \
+    dbus-user-session \
+  && \
+  apt-get clean -y \
+  && \
+  rm -rf \
+    /var/lib/apt/lists/* \
+    /var/log/alternatives.log \
+    /var/log/apt/history.log \
+    /var/log/apt/term.log \
+    /var/log/dpkg.log \
+  :
+
+RUN \
+    sed -i '/imklog/{s/^/#/}' /etc/rsyslog.conf && \
+    sed -ri /etc/systemd/journald.conf -e 's!^#?Storage=.*!Storage=volatile!'
+
+RUN systemctl mask -- \
+      dev-hugepages.mount \
+      sys-fs-fuse-connections.mount \
       systemd-tmpfiles-setup-dev.service \
-      systemd-remount-fs.service \
+      systemd-firstboot.service \
+      systemd-udevd.service \
+      systemd-resolved.service \
       systemd-ask-password-wall.path \
       systemd-logind.service && \
-    systemctl set-default multi-user.target ;
+    :
+
+RUN rm -f \
+      /etc/machine-id \
+      /var/lib/dbus/machine-id && \
+    :
 
 RUN mkdir -p /tmp/artifacts /tmp/debs
 
@@ -108,11 +107,8 @@ RUN cp /tmp/artifacts/fio-bco/fio-bco_${FIO_BCO_VERSION}+master_amd64.deb /tmp/d
 COPY --from=bondster-bco-artifacts /opt/artifacts/* /tmp/artifacts/bondster-bco/
 RUN cp /tmp/artifacts/bondster-bco/bondster-bco_${BONDSTER_BCO_VERSION}+master_amd64.deb /tmp/debs/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb
 
-COPY --from=dwh-artifacts /opt/artifacts/* /tmp/artifacts/dwh/
-RUN cp /tmp/artifacts/dwh/dwh_${DWH_VERSION}+master_amd64.deb /tmp/debs/dwh_${DWH_VERSION}_amd64.deb
-
-RUN find /tmp/debs -name "*.deb" -exec file {} \; && \
-    rm -rf /tmp/artifacts
+COPY --from=data-warehouse-artifacts /opt/artifacts/* /tmp/artifacts/data-warehouse/
+RUN cp /tmp/artifacts/data-warehouse/data-warehouse_${DWH_VERSION}+master_amd64.deb /tmp/debs/data-warehouse_${DWH_VERSION}_amd64.deb
 
 RUN mkdir /etc/systemd/system/nginx.service.d && \
     printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
@@ -124,7 +120,7 @@ RUN \
     apt-get -y install -f /tmp/debs/ledger_${LEDGER_VERSION}_amd64.deb && \
     apt-get -y install -f /tmp/debs/fio-bco_${FIO_BCO_VERSION}_amd64.deb && \
     apt-get -y install -f /tmp/debs/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb && \
-    apt-get -y install -f /tmp/debs/dwh_${DWH_VERSION}_amd64.deb && \
+    apt-get -y install -f /tmp/debs/data-warehouse_${DWH_VERSION}_amd64.deb && \
     \
     rm -rf /tmp/debs \
     && \
@@ -160,18 +156,19 @@ RUN rm -rf \
       's!^BONDSTER_BCO_ENCRYPTION_KEY=.*!BONDSTER_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
     sed -ri /etc/init/fio-bco.conf -e \
       's!^FIO_BCO_ENCRYPTION_KEY=.*!FIO_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
-    sed -ri /etc/init/dwh.conf -e \
+    sed -ri /etc/init/data-warehouse.conf -e \
       's!^DWH_POSTGRES_URL=.*!DWH_POSTGRES_URL=jdbc:postgresql://postgres:5432/openbank!' && \
     :
 
 COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default
 
-RUN systemctl enable \
-      vault-unit@demo \
-      ledger-unit@demo \
-      bondster-bco-import@demo \
-      fio-bco-import@demo \
-    ;
+RUN \
+  systemctl enable \
+    vault-unit@demo \
+    ledger-unit@demo \
+    bondster-bco-import@demo \
+    fio-bco-import@demo \
+  ;
 
 STOPSIGNAL SIGTERM
 
