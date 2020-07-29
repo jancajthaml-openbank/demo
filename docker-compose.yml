@@ -22,7 +22,7 @@ services:
 
   # -------------------------------------------------------------------------- #
 
-  ui-install-dependencies:
+  ui-sync:
     <<: *node
     command: ["install"]
 
