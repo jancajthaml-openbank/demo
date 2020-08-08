@@ -43,15 +43,10 @@ RUN \
   \
   apt-get install -y --no-install-recommends \
     ca-certificates \
-    curl \
-    git \
-    tar \
     cron \
-    bzip2 \
     nginx \
     apt-utils \
     dpkg-dev \
-    netcat-openbsd \
     rsyslog \
     libzmq5>=4.2.1~ \
     openjdk-11-jre \
@@ -93,22 +88,22 @@ RUN rm -f \
 RUN mkdir -p /tmp/artifacts /tmp/debs
 
 COPY --from=lake-artifacts /opt/artifacts/* /tmp/artifacts/lake/
-RUN cp /tmp/artifacts/lake/lake_${LAKE_VERSION}+master_amd64.deb /tmp/debs/lake_${LAKE_VERSION}_amd64.deb
+RUN cp /tmp/artifacts/lake/lake_${LAKE_VERSION}_amd64.deb /tmp/debs/lake_${LAKE_VERSION}_amd64.deb
 
 COPY --from=vault-artifacts /opt/artifacts/* /tmp/artifacts/vault/
-RUN cp /tmp/artifacts/vault/vault_${VAULT_VERSION}+master_amd64.deb /tmp/debs/vault_${VAULT_VERSION}_amd64.deb
+RUN cp /tmp/artifacts/vault/vault_${VAULT_VERSION}_amd64.deb /tmp/debs/vault_${VAULT_VERSION}_amd64.deb
 
 COPY --from=ledger-artifacts /opt/artifacts/* /tmp/artifacts/ledger/
-RUN cp /tmp/artifacts/ledger/ledger_${LEDGER_VERSION}+master_amd64.deb /tmp/debs/ledger_${LEDGER_VERSION}_amd64.deb
+RUN cp /tmp/artifacts/ledger/ledger_${LEDGER_VERSION}_amd64.deb /tmp/debs/ledger_${LEDGER_VERSION}_amd64.deb
 
 COPY --from=fio-bco-artifacts /opt/artifacts/* /tmp/artifacts/fio-bco/
-RUN cp /tmp/artifacts/fio-bco/fio-bco_${FIO_BCO_VERSION}+master_amd64.deb /tmp/debs/fio-bco_${FIO_BCO_VERSION}_amd64.deb
+RUN cp /tmp/artifacts/fio-bco/fio-bco_${FIO_BCO_VERSION}_amd64.deb /tmp/debs/fio-bco_${FIO_BCO_VERSION}_amd64.deb
 
 COPY --from=bondster-bco-artifacts /opt/artifacts/* /tmp/artifacts/bondster-bco/
-RUN cp /tmp/artifacts/bondster-bco/bondster-bco_${BONDSTER_BCO_VERSION}+master_amd64.deb /tmp/debs/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb
+RUN cp /tmp/artifacts/bondster-bco/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb /tmp/debs/bondster-bco_${BONDSTER_BCO_VERSION}_amd64.deb
 
 COPY --from=data-warehouse-artifacts /opt/artifacts/* /tmp/artifacts/data-warehouse/
-RUN cp /tmp/artifacts/data-warehouse/data-warehouse_${DWH_VERSION}+master_amd64.deb /tmp/debs/data-warehouse_${DWH_VERSION}_amd64.deb
+RUN cp /tmp/artifacts/data-warehouse/data-warehouse_${DWH_VERSION}_amd64.deb /tmp/debs/data-warehouse_${DWH_VERSION}_amd64.deb
 
 RUN mkdir /etc/systemd/system/nginx.service.d && \
     printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
@@ -136,28 +131,30 @@ RUN rm -rf \
       /opt/fio-bco/secrets \
       /opt/bondster-bco/secrets && \
     \
-    sed -ri /etc/init/fio-bco.conf -e \
+    sed -ri /etc/fio-bco/conf.d/init.conf -e \
       's!^FIO_BCO_SECRETS=.*!FIO_BCO_SECRETS=/openbank/secrets!' && \
-    sed -ri /etc/init/fio-bco.conf -e \
+    sed -ri /etc/fio-bco/conf.d/init.conf -e \
       's!^FIO_BCO_LOG_LEVEL=.*!FIO_BCO_LOG_LEVEL=DEBUG!' && \
-    sed -ri /etc/init/bondster-bco.conf -e \
-      's!^BONDSTER_BCO_SECRETS=.*!BONDSTER_BCO_SECRETS=/openbank/secrets!' && \
-    sed -ri /etc/init/bondster-bco.conf -e \
-      's!^BONDSTER_BCO_LOG_LEVEL=.*!BONDSTER_BCO_LOG_LEVEL=DEBUG!' && \
-    sed -ri /etc/init/vault.conf -e \
-      's!^VAULT_SECRETS=.*!VAULT_SECRETS=/openbank/secrets!' && \
-    sed -ri /etc/init/vault.conf -e \
-      's!^VAULT_LOG_LEVEL=.*!VAULT_LOG_LEVEL=DEBUG!' && \
-    sed -ri /etc/init/ledger.conf -e \
-      's!^LEDGER_SECRETS=.*!LEDGER_SECRETS=/openbank/secrets!' &&\
-    sed -ri /etc/init/ledger.conf -e \
-      's!^LEDGER_LOG_LEVEL=.*!LEDGER_LOG_LEVEL=DEBUG!' && \
-    sed -ri /etc/init/bondster-bco.conf -e \
-      's!^BONDSTER_BCO_ENCRYPTION_KEY=.*!BONDSTER_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
-    sed -ri /etc/init/fio-bco.conf -e \
+    sed -ri /etc/fio-bco/conf.d/init.conf -e \
       's!^FIO_BCO_ENCRYPTION_KEY=.*!FIO_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
-    sed -ri /etc/init/data-warehouse.conf -e \
-      's!^DWH_POSTGRES_URL=.*!DWH_POSTGRES_URL=jdbc:postgresql://postgres:5432/openbank!' && \
+    sed -ri /etc/bondster-bco/conf.d/init.conf -e \
+      's!^BONDSTER_BCO_SECRETS=.*!BONDSTER_BCO_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/bondster-bco/conf.d/init.conf -e \
+      's!^BONDSTER_BCO_LOG_LEVEL=.*!BONDSTER_BCO_LOG_LEVEL=DEBUG!' && \
+    sed -ri /etc/bondster-bco/conf.d/init.conf -e \
+      's!^BONDSTER_BCO_ENCRYPTION_KEY=.*!BONDSTER_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
+    sed -ri /etc/vault/conf.d/init.conf -e \
+      's!^VAULT_SECRETS=.*!VAULT_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/vault/conf.d/init.conf -e \
+      's!^VAULT_LOG_LEVEL=.*!VAULT_LOG_LEVEL=DEBUG!' && \
+    sed -ri /etc/ledger/conf.d/init.conf -e \
+      's!^LEDGER_SECRETS=.*!LEDGER_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/ledger/conf.d/init.conf -e \
+      's!^LEDGER_LOG_LEVEL=.*!LEDGER_LOG_LEVEL=DEBUG!' && \
+    sed -ri /etc/data-warehouse/conf.d/init.conf -e \
+      's!^DATA_WAREHOUSE_POSTGRES_URL=.*!DATA_WAREHOUSE_POSTGRES_URL=jdbc:postgresql://postgres:5432/openbank!' && \
+    sed -ri /etc/data-warehouse/conf.d/init.conf -e \
+      's!^DATA_WAREHOUSE_LOG_LEVEL=.*!DATA_WAREHOUSE_LOG_LEVEL=DEBUG!' && \
     :
 
 COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default
