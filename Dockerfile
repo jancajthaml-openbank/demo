@@ -157,7 +157,12 @@ RUN rm -rf \
       's!^DATA_WAREHOUSE_LOG_LEVEL=.*!DATA_WAREHOUSE_LOG_LEVEL=DEBUG!' && \
     :
 
+RUN mkdir -p /openbank/secrets
+RUN openssl dhparam -out "/openbank/secrets/nginx.params.pem" 2048
 COPY etc/nginx/nginx.cfg /etc/nginx/sites-available/default
+
+COPY generate-secrets.sh /tmp/generate-secrets.sh
+RUN /tmp/generate-secrets.sh && rm /tmp/generate-secrets.sh
 
 RUN \
   systemctl enable \

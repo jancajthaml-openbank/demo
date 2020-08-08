@@ -91,7 +91,6 @@ services:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - openbank-primary:/data
-      - ./secrets:/openbank/secrets
       - ./ui/build:/var/www
 
 # ---------------------------------------------------------------------------- #
