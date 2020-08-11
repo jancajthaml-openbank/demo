@@ -3,7 +3,7 @@ const webpack = require('webpack')
 const TerserPlugin = require('terser-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const SafePostCssParser = require('postcss-safe-parser')
-const PnpWebpackPlugin = require('pnp-webpack-plugin')
+//const PnpWebpackPlugin = require('pnp-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default
@@ -70,7 +70,7 @@ function getPlugins(production) {
   } else {
     plugins.push(...[
       new webpack.NamedModulesPlugin(),
-      new webpack.HotModuleReplacementPlugin(),
+      //new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
     ])
   }
@@ -115,21 +115,24 @@ module.exports = function(env = {}, args = {}) {
         '.web.jsx',
       ],
       alias: {
-        'react-dom': production ? 'react-dom' : '@hot-loader/react-dom',
+        'react-dom': 'react-dom', // : '@hot-loader/react-dom',
       },
       mainFields: [
         'browser',
         'main',
       ],
+      /*
       plugins: [
-        PnpWebpackPlugin
+        //PnpWebpackPlugin
       ],
+      */
     },
+    /*
     resolveLoader: {
       plugins: [
         PnpWebpackPlugin.moduleLoader(module),
       ],
-    },
+    },*/
     target: 'web',
     node: {
       dgram: 'empty',
@@ -255,7 +258,7 @@ module.exports = function(env = {}, args = {}) {
           },
           parallel: true,
           cache: true,
-          sourceMap: !production,
+          sourceMap: false,
         }),
       ] : [],
       splitChunks: {

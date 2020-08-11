@@ -40,7 +40,7 @@ const List = (props) => {
           // FIXME component
           return (
             <span>
-              {row.original.name.replace(`${row.original.currency}_TYPE_`, '').replace('_FINANCIAL', '')}
+              {row.original.name.replace(`${row.original.currency}_TYPE_`, '')}
             </span>
           )
         }

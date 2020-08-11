@@ -14,7 +14,7 @@ export const TenantContextProvider = (props) => {
       limit: 100,
       offset: 0,
     },
-    pollInterval: 30 * 1000,
+    pollInterval: 3 * 1000,
   });
 
   if (query.error || !query.data) {

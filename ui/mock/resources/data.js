@@ -8,7 +8,7 @@ function randomAmount() {
 
 function generateRandomTenants(collection, howMany) {
   const result = []
-  const range = [...Array(5).keys()]
+  const range = [...Array(howMany).keys()]
   range.forEach(() => {
     const item = {
       name: `tenant-${Math.random().toString(36).substring(7)}`,
@@ -17,7 +17,6 @@ function generateRandomTenants(collection, howMany) {
     collection.insert(item)
     result.push(item)
   })
-
   return result
 }
 
@@ -26,18 +25,22 @@ function generateBondsterAccounts(tenant, collection) {
 
   const currencies = ['CZK', 'EUR']
   const types = [
-    'TYPE_BUYBACK_FINANCIAL',
+    'TYPE_INVESTOR_BONUS',
+    'TYPE_INTEREST_PAYMENT',
     'TYPE_INTEREST_PAYMENT_PARTICIPATION',
+    'TYPE_BUYBACK_FINANCIAL',
     'TYPE_BUYBACK_PARTICIPATION_FINANCIAL',
+    'TYPE_SANCTION_PAYMENT',
     'TYPE_SANCTION_PAYMENT_PARTICIPATION',
     'TYPE_PRIMARY_MARKET_FINANCIAL',
-    'TYPE_INTEREST_PAYMENT',
-    'TYPE_SANCTION_PAYMENT',
+    'TYPE_PRIMARY_MARKET_PARTICIPATION_FINANCIAL',
     'TYPE_PRINCIPAL_PAYMENT_FINANCIAL',
+    'TYPE_PRINCIPAL_PAYMENT_PARTICIPATION_FINANCIAL',
     'TYPE_SECESSION_FINANCIAL',
     'TYPE_INVESTOR_INVESTMENT_FEE',
     'TYPE_NOSTRO',
     'TYPE_INVESTOR_DEPOSIT',
+    'TYPE_INVESTOR_WITHDRAWAL',
   ]
 
   currencies.forEach((currency) => {

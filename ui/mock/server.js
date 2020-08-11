@@ -26,12 +26,12 @@ const logRequestStart = (req, res, next) => {
 }
 
 async function generateData(tenants, accounts, transfers) {
-  const randomTenants = generateRandomTenants(tenants, 2)
+  const randomTenants = generateRandomTenants(tenants, 3)
   randomTenants.forEach((tenant) => {
-    const randomAccounts = generateRandomAccounts(tenant.name, accounts, 1000)
+    const randomAccounts = generateRandomAccounts(tenant.name, accounts, 100)
     const bondsterAccounts = generateBondsterAccounts(tenant.name, accounts)
     const generatedAccounts = [...randomAccounts, ...bondsterAccounts]
-    const randomTransfers = generateRandomTransactions(tenant.name, transfers, generatedAccounts, 1000)
+    const randomTransfers = generateRandomTransactions(tenant.name, transfers, generatedAccounts, 100)
   })
 }
 

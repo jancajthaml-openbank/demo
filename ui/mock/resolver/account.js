@@ -43,10 +43,6 @@ async function AccountsResolve(_, params, context) {
     query.currency = params.currency
   }
 
-  //if (params.isBalanceCheck !== undefined) {
-    //query.isBalanceCheck = params.isBalanceCheck
-  //}
-
   const actualSkip = params.skip || 0
   const actualTake = params.take ? (params.take + actualSkip) : undefined
 
@@ -56,10 +52,23 @@ async function AccountsResolve(_, params, context) {
     .slice(actualSkip, actualTake)
 }
 
+
+async function AccountResolve(_, params, context) {
+
+  const query = {
+    tenant: params.tenant,
+    name: params.name,
+  }
+
+  return context.db.accounts
+    .findOne(query)
+}
+
 /* -------------------------------------------------------------------------- */
 
 module.exports = Object.freeze({
   accounts: AccountsResolve,
+  account: AccountResolve,
 })
 
 /* -------------------------------------------------------------------------- */

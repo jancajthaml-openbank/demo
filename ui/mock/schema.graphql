@@ -41,6 +41,11 @@ type Query {
     offset: Int!
   ): [Account!]!
 
+  account(
+    tenant: String!,
+    name: String!
+  ): Account
+
   transfers(
     tenant: String!,
     transaction: String,
