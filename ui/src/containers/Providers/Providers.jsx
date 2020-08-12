@@ -40,9 +40,7 @@ const Providers = (props) => {
 
   if (!state.isReady) {
     return (
-      <div>
-        Loading...
-      </div>
+      null
     )
   }
 

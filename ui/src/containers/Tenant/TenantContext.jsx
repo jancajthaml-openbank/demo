@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { SplashScreen } from 'components/SplashScreen'
+
 import { useQuery } from '@apollo/react-hooks'
 import { GET_TENANTS } from './queries'
 
@@ -17,14 +19,20 @@ export const TenantContextProvider = (props) => {
     pollInterval: 3 * 1000,
   });
 
+  if (query.loading) {
+    return <React.Fragment />
+  }
+
   if (query.error || !query.data) {
-    return null
+    return (
+      <SplashScreen />
+    )
   }
 
   const tenants = query.data.tenants.map((tenant) => tenant.name)
 
   if (tenants.length === 0) {
-    return null
+    return <React.Fragment />
   }
 
   return (
