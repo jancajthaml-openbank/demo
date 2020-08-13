@@ -1,35 +1,47 @@
+
+/* -------------------------------------------------------------------------- */
+
 const fs = require('fs')
 const path = require('path')
 const express = require('express')
-const graphqlHTTP = require('express-graphql')
+const { graphqlHTTP } = require('express-graphql')
 const { makeExecutableSchema } = require('graphql-tools')
 const loki = require('lokijs')
 const { randomId } = require('./utils/random')
-const { Accounts, Transactions, Transfers } = require('./resolver')
-const { DateScalar, MoneyScalar } = require('./scalar')
+const { Tenants, Accounts, Transfers } = require('./resolver')
+const { DateTimeScalar, BigDecimalScalar } = require('./scalar')
+
 const {
+  generateRandomTenants,
   generateRandomAccounts,
   generateBondsterAccounts,
   generateRandomTransactions,
 } = require('./resources/data')
 
 // -------------------------------------------------------------------------- //
+
 const logRequestStart = (req, res, next) => {
   console.info(`${req.method} ${req.originalUrl}`)
   next()
 }
 
-async function generateData(accounts, transfers) {
-  const randomAccounts = generateRandomAccounts('mock', accounts, 1000)
-  const bondsterAccounts = generateBondsterAccounts('mock', accounts)
-  const generatedAccounts = [...randomAccounts, ...bondsterAccounts]
-  const randomTransfers = generateRandomTransactions('mock', transfers, generatedAccounts, 1000)
+async function generateData(tenants, accounts, transfers) {
+  const randomTenants = generateRandomTenants(tenants, 3)
+  randomTenants.forEach((tenant) => {
+    const randomAccounts = generateRandomAccounts(tenant.name, accounts, 100)
+    const bondsterAccounts = generateBondsterAccounts(tenant.name, accounts)
+    const generatedAccounts = [...randomAccounts, ...bondsterAccounts]
+    const randomTransfers = generateRandomTransactions(tenant.name, transfers, generatedAccounts, 100)
+  })
 }
 
 module.exports = function(application) {
   const app = application || express()
   const db = new loki('db.json')
 
+  const tenants = db.addCollection('tenants', {
+    unique: ['name'],
+  })
   const accounts = db.addCollection('accounts', {
     unique: ['id'],
   })
@@ -43,89 +55,38 @@ module.exports = function(application) {
     unique: ['id'],
   })
 
-  generateData(accounts, transfers)
+  global.setTimeout(() => generateData(tenants, accounts, transfers), 1000)
 
   app.use(logRequestStart)
 
   // ------------------------------------------------------------------------ //
   // GraphQL methods
 
-  app.use('/api/search/graphql', graphqlHTTP({
+  app.use('/api/data-warehouse/graphql', graphqlHTTP({
     schema: makeExecutableSchema({
       typeDefs: fs.readFileSync(path.resolve(__dirname, "schema.graphql"), "utf8"),
       resolvers: Object.freeze({
         Query: {
+          ...Tenants,
           ...Accounts,
-          ...Transactions,
           ...Transfers,
         },
-        Date: DateScalar,
-        Money: MoneyScalar
+        DateTime: DateTimeScalar,
+        BigDecimal: BigDecimalScalar,
       })
     }),
     context: {
       db: {
+        tenants,
         transfers,
         accounts,
       },
     },
-    graphiql: true
+    graphiql: true,
   }))
 
   // ------------------------------------------------------------------------ //
   // HTTP 1.0 methods
-
-  // ------------------------------------------------------------------------ //
-  // Vault
-
-  app.get('/api/vault/tenant', async (req, res) => {
-    const tenants = {}
-    accounts
-      .find()
-      .forEach((item) => {
-        tenants[item.tenant] = true
-      })
-
-    res.status(200).json(Object.keys(tenants))
-  })
-
-  app.post('/api/vault/account/:tenant', express.json({ type: '*/*' }), async (req, res) => {
-    const { tenant } = req.params
-
-    if (!tenant) {
-      res.status(404).json({})
-      return
-    }
-
-    if (!req.body) {
-      res.status(404).json({})
-      return
-    }
-
-    try {
-      const { accountNumber, currency, isBalanceCheck } = req.body
-
-      if (!accountNumber || !currency || !isBalanceCheck) {
-        res.status(400).json({})
-        return
-      }
-
-      accounts.insert({
-        id: `${tenant}/${accountNumber}`,
-        tenant,
-        name: accountNumber,
-        currency,
-        isBalanceCheck,
-      })
-
-      res.status(200).json({})
-      return
-    } catch (err) {
-      console.log(err)
-      res.status(409).json({})
-      return
-    }
-  })
 
   // ------------------------------------------------------------------------ //
   // Bondster
@@ -290,3 +251,6 @@ module.exports = function(application) {
 
   return app
 }
+
+/* -------------------------------------------------------------------------- */
+

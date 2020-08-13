@@ -18,12 +18,13 @@ import transactionMutations from 'components/Transaction/mutations'
 
 export const typeDefs = gql`
 
-  scalar Date
-  scalar Money
+  scalar DateTime
+
+  scalar BigDecimal
 
   type Token {
     id: String!
-    createdAt: Date!
+    createdAt: DateTime!
   }
 
   extend type Mutation {
@@ -38,106 +39,59 @@ export const typeDefs = gql`
     fioTokens(tenant: String!): [Token!]!
   }
 
-  type Transaction {
-    tenant: String!
-    id: String
-    status: String
-    transfers: [Transfer]!
+  type Tenant {
+    name: String!
   }
 
   type Transfer {
-    tenant: String!
-    transaction: String
-    id: String
-    status: String
-    credit: Account
-    debit: Account
-    valueDate: Date
-    amount: Money
-    currency: String
+    tenant: Tenant!
+    transaction: String!
+    transfer: String!
+    credit: Account!
+    debit: Account!
+    valueDate: DateTime!
+    amount: BigDecimal!
+    currency: String!
   }
 
   type Account {
-    tenant: String!
+    tenant: Tenant!
     name: String!
-    format: String
-    currency: String
-    isBalanceCheck: Boolean
-  }
-
-
-  enum SortOrder {
-    ASC
-    DESC
+    format: String!
+    currency: String!
+    balance: BigDecimal!
   }
 
   type Query {
 
-    Account(
-      tenant: String!,
-      name: String!
-    ): Account
+    tenants(
+      limit: Int!,
+      offset: Int!
+    ): [Tenant!]!
 
-    Accounts(
+    accounts(
       tenant: String!,
       format: String,
       currency: String,
-      isBalanceCheck: Boolean,
-      take: Int,
-      skip: Int,
-      sortField: String,
-      sortOrder: SortOrder
-    ): [Account]
+      format: String,
+      limit: Int!,
+      offset: Int!
+    ): [Account!]!
 
-    Transaction(
-      tenant: String!,
-      transaction: String!
-    ): Transaction
-
-    Transactions(
-      tenant: String!,
-      credit: String,
-      debit: String,
-      status: String,
-      currency: String,
-      amount: Money,
-      minAmount: Money,
-      maxAmount: Money,
-      valueDate: Date,
-      toValueDate: Date,
-      fromValueDate: Date,
-      take: Int,
-      skip: Int,
-      sortField: String,
-      sortOrder: SortOrder
-    ): [Transaction]
-
-    Transfer(
-      tenant: String!,
-      transaction: String!,
-      transfer: String!
-    ): Transfer
-
-    Transfers(
+    transfers(
       tenant: String!,
       transaction: String,
-      credit: String,  # FIXME account
-      debit: String,   # FIXME account
-      status: String,  # FIXME enum
       currency: String,
-      amount: Money,
-      minAmount: Money,
-      maxAmount: Money,
-      valueDate: Date,
-      toValueDate: Date,
-      fromValueDate: Date,
-      take: Int,
-      skip: Int,
-      sortField: String,
-      sortOrder: SortOrder
-    ): [Transfer]
+      valueDateLte: DateTime,
+      valueDateGte: DateTime,
+      amountLte: BigDecimal,
+      amountGte: BigDecimal,
+      limit: Int!,
+      offset: Int!
+    ): [Transfer!]!
 
   }
+
 `;
 
 

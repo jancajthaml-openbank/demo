@@ -1,3 +1,8 @@
+
+export COMPOSE_DOCKER_CLI_BUILD = 1
+export DOCKER_BUILDKIT = 1
+export COMPOSE_PROJECT_NAME = demo
+
 .ONESHELL:
 
 .PHONY: all
@@ -6,10 +11,11 @@ all: bootstrap build run
 .PHONY: bootstrap
 bootstrap:
 	@docker-compose build node
-	@docker-compose run --rm ui-install-dependencies
+	@docker-compose run --rm ui-sync
 
 .PHONY: build
 build:
+	@docker-compose build --pull demo
 	@docker-compose run --rm ui-build
 
 .PHONY: dev

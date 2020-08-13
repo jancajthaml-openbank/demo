@@ -21,4 +21,11 @@ export const Card = styled.div`
     margin: .5rem -1.5rem;
     width: calc(100% + 3rem);
   }
+
+  hr {
+    width: 100%;
+    border-style: dashed;
+    border-color: #95aac9;
+    border-width: 1px 0 0 0;
+  }
 `;

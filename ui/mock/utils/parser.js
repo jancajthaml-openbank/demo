@@ -39,3 +39,5 @@ module.exports = Object.freeze({
   dateFromString,
   decimalFromString,
 })
+
+/* -------------------------------------------------------------------------- */

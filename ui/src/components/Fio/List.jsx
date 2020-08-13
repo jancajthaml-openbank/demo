@@ -35,7 +35,7 @@ const List = (props) => {
     })
   }
 
-  if (!query.data.fioTokens || query.data.fioTokens.length == 0) {
+  if (!query.data || !query.data.fioTokens || query.data.fioTokens.length == 0) {
     return 'No data'
   }
 

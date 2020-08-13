@@ -35,7 +35,7 @@ const List = (props) => {
     })
   }
 
-  if (!query.data.bondsterTokens || query.data.bondsterTokens.length == 0) {
+  if (!query.data || !query.data.bondsterTokens || query.data.bondsterTokens.length == 0) {
     return 'No data'
   }
 

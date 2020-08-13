@@ -1,33 +1,27 @@
 import React from 'react'
-import TenantService from 'containers/Tenant/service'
 import { TenantContextProvider } from 'containers/Tenant'
-import { ApolloClient } from 'apollo-client';
+import { ApolloClient } from 'apollo-client'
 import { BrowserRouter as Router } from "react-router-dom"
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from 'apollo-link-http';
-import { ApolloProvider } from '@apollo/react-hooks';
-import { resolvers, typeDefs } from '../../resolvers';
-
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import { HttpLink } from 'apollo-link-http'
+import { ApolloProvider } from '@apollo/react-hooks'
+import { resolvers, typeDefs } from '../../resolvers'
 
 const Providers = (props) => {
 
   const [state, setState] = React.useState({
-    tenants: null,
     client: null,
     isReady: false,
   })
 
   const setup = async () => {
-    const [
-      tenants,
-    ] = await Promise.all([
-      TenantService.getTenants(),
-    ])
 
     const client = new ApolloClient({
-      cache: new InMemoryCache(),
+      cache: new InMemoryCache({
+        addTypename: false,
+      }),
       link: new HttpLink({
-        uri: '/api/search/graphql',
+        uri: '/api/data-warehouse/graphql',
       }),
       resolvers,
       typeDefs,
@@ -35,7 +29,6 @@ const Providers = (props) => {
 
     setState({
       client: client,
-      tenants: tenants,
       isReady: true,
     })
   }
@@ -46,15 +39,13 @@ const Providers = (props) => {
 
   if (!state.isReady) {
     return (
-      <div>
-        Loading...
-      </div>
+      null
     )
   }
 
   return (
     <ApolloProvider client={state.client}>
-      <TenantContextProvider tenants={state.tenants}>
+      <TenantContextProvider>
         <Router>
           {props.children}
         </Router>

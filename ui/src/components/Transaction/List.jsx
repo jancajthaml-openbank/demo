@@ -4,7 +4,7 @@ import bigDecimal from 'js-big-decimal'
 import { useTenant } from 'containers/Tenant'
 import { useQuery } from '@apollo/react-hooks'
 import Table from './Table'
-import { GET_TRANSACTIONS } from './queries'
+import { GET_TRANSFERS } from './queries'
 
 const renderRowSubComponent = (data) => (
   <pre
@@ -19,11 +19,13 @@ const renderRowSubComponent = (data) => (
 const List = (props) => {
   const { tenant } = useTenant()
 
-  const { data, loading, error } = useQuery(GET_TRANSACTIONS, {
+  const { data, loading, error } = useQuery(GET_TRANSFERS, {
     variables: {
       tenant: tenant,
+      offset: 0,
+      limit: 10000,
     },
-    pollInterval: 10000,
+    pollInterval: 60 * 1000,
   });
 
   if (error) {
@@ -45,52 +47,58 @@ const List = (props) => {
       ),
     },
     {
-      Header: 'ID',
-      accessor: 'id',
-    },
-    {
-      Header: 'Status',
-      accessor: 'status',
-      maxWidth: 90,
+      Header: 'Transaction',
+      accessor: 'transaction',
     },
   ]
 
-  const transactionColumns = [
-  {
-    Header: 'ID',
-    accessor: 'id',
-  }, {
-    Header: 'Status',
-    accessor: 'status',
-    maxWidth: 90,
-  }]
+  const transferColumns = [
+    {
+      Header: 'Transfer',
+      accessor: 'transfer',
+    }, {
+      Header: 'Amount',
+      id: 'amount',
+      accessor: (row) => `${new bigDecimal(row.amount).round(2, bigDecimal.RoundingModes.HALF_EVEN).getValue()} ${row.currency}`,
+    }, {
+      Header: 'Value Date',
+      id: 'valueDate',
+      accessor: (row) => moment(row.credit.valueDate).utc().format('DD.MM.YYYY HH:mm'),
+      maxWidth: 130,
+    }, {
+      Header: 'Credit',
+      id: 'credit',
+      accessor: (row) => `${row.credit.tenant}/${row.credit.name}`,
+    }, {
+      Header: 'Debit',
+      id: 'debit',
+      accessor: (row) => `${row.debit.tenant}/${row.debit.name}`,
+    }
+  ]
 
-  const transferColumns = [{
-    Header: 'ID',
-    accessor: 'id',
-  }, {
-    Header: 'Amount',
-    id: 'amount',
-    accessor: (row) => `${new bigDecimal(row.amount).round(2, bigDecimal.RoundingModes.HALF_EVEN).getValue()} ${row.currency}`,
-  }, {
-    Header: 'Value Date',
-    id: 'valueDate',
-    accessor: (row) => moment(row.credit.valueDate).utc().format('DD.MM.YYYY HH:mm'),
-    maxWidth: 130,
-  }, {
-    Header: 'Credit',
-    id: 'credit',
-    accessor: (row) => `${row.credit.tenant}/${row.credit.name}`,
-  }, {
-    Header: 'Debit',
-    id: 'debit',
-    accessor: (row) => `${row.debit.tenant}/${row.debit.name}`,
-  }]
+  const groupBy = (items, key) => items.reduce(
+    (result, item) => ({
+      ...result,
+      [item[key]]: [
+        ...(result[item[key]] || []),
+        item,
+      ],
+    }),
+    {},
+  );
+
+  const transfers = (data && data.transfers) || []
+  const transactions = Object
+    .entries(groupBy(transfers, 'transaction'))
+    .map(([transaction, transfers]) => ({
+      transaction,
+      transfers,
+    }))
 
   return (
     <Table
       columns={columns}
-      data={data.Transactions || []}
+      data={transactions}
       renderRowSubComponent={renderRowSubComponent}
     />
   )

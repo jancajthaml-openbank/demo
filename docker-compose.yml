@@ -22,9 +22,9 @@ services:
 
   # -------------------------------------------------------------------------- #
 
-  ui-install-dependencies:
+  ui-sync:
     <<: *node
-    command: ["install"]
+    command: ["ci"]
 
   # -------------------------------------------------------------------------- #
 
@@ -58,33 +58,44 @@ services:
 
   # -------------------------------------------------------------------------- #
 
+  postgres:
+    image: openbak/postgres
+    hostname: postgres
+    build: postgres
+    volumes:
+      - openbank-secondary:/var/lib/postgresql/data
+
+  # -------------------------------------------------------------------------- #
+
   demo:
     image: openbank/demo
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        LAKE_VERSION: 1.2.2
-        VAULT_VERSION: 1.3.1
-        LEDGER_VERSION: 1.1.1
-        FIO_BCO_VERSION: 1.2.8
-        BONDSTER_BCO_VERSION: 1.2.9
-        SEARCH_VERSION: 1.2.7
+        LAKE_VERSION: 1.2.5
+        VAULT_VERSION: 1.3.2
+        LEDGER_VERSION: 1.1.2
+        FIO_BCO_VERSION: 1.3.0
+        BONDSTER_BCO_VERSION: 1.3.0
+        DWH_VERSION: 1.0.0
     ports:
       - "443:443"
-      - "8080:8080"
+      - "8443:8443"
       - "4400:4400"
       - "4401:4401"
       - "4001:4001"
       - "4002:4002"
+    links:
+      - postgres
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - ./data/openbank:/data
-      - ./data/mongo:/var/lib/mongodb
-      - ./secrets:/openbank/secrets
+      - openbank-primary:/data
       - ./ui/build:/var/www
 
 # ---------------------------------------------------------------------------- #
 
 volumes:
+  openbank-primary:
+  openbank-secondary:
   dependency-cache:

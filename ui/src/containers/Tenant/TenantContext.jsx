@@ -1,27 +1,46 @@
 import React from 'react'
 
+import { SplashScreen } from 'components/SplashScreen'
+
+import { useQuery } from '@apollo/react-hooks'
+import { GET_TENANTS } from './queries'
+
 const TenantContext = React.createContext([null, () => {}])
 
 
 export const TenantContextProvider = (props) => {
   const [tenant, setTenant] = React.useState()
 
-  React.useEffect(() => {
-    setTenant(props.tenants[0])
-  }, [props.tenants.join(',')])
+  const query = useQuery(GET_TENANTS, {
+    variables: {
+      limit: 100,
+      offset: 0,
+    },
+    pollInterval: 3 * 1000,
+  });
 
-  const updateTenant = (nextTenant) => {
-    if (props.tenants.includes(nextTenant)) {
-      setTenant(nextTenant)
-    }
+  if (query.loading) {
+    return <React.Fragment />
+  }
+
+  if (query.error || !query.data) {
+    return (
+      <SplashScreen />
+    )
+  }
+
+  const tenants = query.data.tenants.map((tenant) => tenant.name)
+
+  if (tenants.length === 0) {
+    return <React.Fragment />
   }
 
   return (
     <TenantContext.Provider
       value={{
-        tenant: tenant || props.tenants[0],
-        tenants: props.tenants,
-        setTenant: updateTenant,
+        tenant: tenant || tenants[0],
+        tenants: tenants,
+        setTenant: setTenant,
       }}
     >
       {props.children}

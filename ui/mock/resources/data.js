@@ -1,23 +1,46 @@
 
 /* -------------------------------------------------------------------------- */
 
+// FIXME move to utils/random
+function randomAmount() {
+  return Number((Math.random() * (9999 - 0.0009) + 0.0009).toFixed(35))
+}
+
+function generateRandomTenants(collection, howMany) {
+  const result = []
+  const range = [...Array(howMany).keys()]
+  range.forEach(() => {
+    const item = {
+      name: `tenant-${Math.random().toString(36).substring(7)}`,
+    }
+
+    collection.insert(item)
+    result.push(item)
+  })
+  return result
+}
+
 function generateBondsterAccounts(tenant, collection) {
   const result = []
 
   const currencies = ['CZK', 'EUR']
   const types = [
-    'TYPE_BUYBACK_FINANCIAL',
+    'TYPE_INVESTOR_BONUS',
+    'TYPE_INTEREST_PAYMENT',
     'TYPE_INTEREST_PAYMENT_PARTICIPATION',
+    'TYPE_BUYBACK_FINANCIAL',
     'TYPE_BUYBACK_PARTICIPATION_FINANCIAL',
+    'TYPE_SANCTION_PAYMENT',
     'TYPE_SANCTION_PAYMENT_PARTICIPATION',
     'TYPE_PRIMARY_MARKET_FINANCIAL',
-    'TYPE_INTEREST_PAYMENT',
-    'TYPE_SANCTION_PAYMENT',
+    'TYPE_PRIMARY_MARKET_PARTICIPATION_FINANCIAL',
     'TYPE_PRINCIPAL_PAYMENT_FINANCIAL',
+    'TYPE_PRINCIPAL_PAYMENT_PARTICIPATION_FINANCIAL',
     'TYPE_SECESSION_FINANCIAL',
     'TYPE_INVESTOR_INVESTMENT_FEE',
     'TYPE_NOSTRO',
     'TYPE_INVESTOR_DEPOSIT',
+    'TYPE_INVESTOR_WITHDRAWAL',
   ]
 
   currencies.forEach((currency) => {
@@ -25,11 +48,11 @@ function generateBondsterAccounts(tenant, collection) {
       const name = `${currency}_${type}`
       const item = {
         id: `${tenant}/${name}`,
-        tenant,
+        tenant: tenant,
         name,
         format: "BONDSTER_TECHNICAL",
         currency,
-        isBalanceCheck: false,
+        balance: randomAmount(),
       }
       collection.insert(item)
       result.push(item)
@@ -51,11 +74,11 @@ function generateRandomAccounts(tenant, collection, howMany) {
 
     const item = {
       id: `${tenant}/${name}`,
-      tenant,
+      tenant: tenant,
       name,
       format: "IBAN",
       currency: "EUR",
-      isBalanceCheck: false,
+      balance: randomAmount(),
     }
 
     try {
@@ -98,8 +121,6 @@ function generateRandomTransactions(tenant, collection, accounts, howMany) {
       ? (((Math.random() * 32768) >>> 0) % (39)) + 1
       : (((Math.random() * 32768) >>> 0) % (9)) + 1
 
-    const transactionStatus = (Math.floor(Math.random() * 2) == 0) ? 'committed' : 'rollbacked'
-
     for (let i = 0; i < howManyTransfers; i++) {
       const account_to = first[Math.floor(Math.random() * first.length)]
       const account_from = second[Math.floor(Math.random() * second.length)]
@@ -109,8 +130,7 @@ function generateRandomTransactions(tenant, collection, accounts, howMany) {
         tenant: tenant,
         transfer: `${transaction}_${i+1}`,
         transaction: transaction,
-        status: transactionStatus,
-        amount: (Math.random() * (9999 - 0.0009) + 0.0009).toFixed(35),
+        amount: randomAmount(),
         currency: account_to.currency,
         credit: account_to.id,
         debit: account_from.id,
@@ -136,7 +156,10 @@ function generateRandomTransactions(tenant, collection, accounts, howMany) {
 /* -------------------------------------------------------------------------- */
 
 module.exports = Object.freeze({
+  generateRandomTenants,
   generateRandomAccounts,
   generateBondsterAccounts,
   generateRandomTransactions,
 })
+
+/* -------------------------------------------------------------------------- */

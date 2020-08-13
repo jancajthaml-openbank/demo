@@ -10,8 +10,10 @@ const List = (props) => {
   const { data, loading, error } = useQuery(GET_ACCOUNTS, {
     variables: {
       tenant: tenant,
+      offset: 0,
+      limit: 10000,
     },
-    pollInterval: 10000,
+    pollInterval: 60 * 1000,
   });
 
   if (error) {
@@ -38,7 +40,7 @@ const List = (props) => {
           // FIXME component
           return (
             <span>
-              {row.original.name.replace(`${row.original.currency}_TYPE_`, '').replace('_FINANCIAL', '')}
+              {row.original.name.replace(`${row.original.currency}_TYPE_`, '')}
             </span>
           )
         }
@@ -63,13 +65,16 @@ const List = (props) => {
   }, {
     Header: 'Format',
     accessor: 'format'
+  }, {
+    Header: 'Balance',
+    accessor: 'balance'
   }]
 
   return (
     <Table
       loading={loading}
       columns={columns}
-      data={data.Accounts || []}
+      data={(data && data.accounts) || []}
     />
   )
 }
