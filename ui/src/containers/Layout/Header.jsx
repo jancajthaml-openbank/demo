@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useTenant } from 'containers/Tenant'
 import { Select } from 'components/Select'
+import { Logo } from 'components/Logo'
 import { HeaderWrapper, HeaderLogo, HeaderNavigation } from './styles'
 import SafeLink from './SafeLink'
 
@@ -29,14 +30,14 @@ const Header = (props) => {
           </li>
         </ul>
       </HeaderNavigation>
-      <HeaderLogo />
-      {
+      <HeaderLogo>
+        <Logo />
+      </HeaderLogo>
       <Select
         disabled={!tenants}
         options={tenants}
         valueChanged={setTenant}
       />
-      }
     </HeaderWrapper>
   )
 }

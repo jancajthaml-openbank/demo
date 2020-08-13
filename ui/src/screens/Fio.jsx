@@ -3,7 +3,7 @@ import { List, New } from 'components/Fio'
 import { Card } from 'components/Card'
 import { ErrorBoundary } from 'components/ErrorBoundary'
 
-function Fio(props) {
+function Fio() {
   return (
     <React.Fragment>
       <header>
@@ -12,11 +12,11 @@ function Fio(props) {
       <main>
         <Card>
           <h6>New Token</h6>
-          <New tenant={props.tenant} />
+          <New />
         </Card>
         <Card>
           <h6>Tokens</h6>
-          <List tenant={props.tenant} />
+          <List />
         </Card>
       </main>
     </React.Fragment>

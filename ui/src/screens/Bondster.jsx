@@ -4,7 +4,7 @@ import { Card } from 'components/Card'
 import { AccountOverview } from 'components/AccountOverview'
 import { ErrorBoundary } from 'components/ErrorBoundary'
 
-function Bondster(props) {
+function Bondster() {
   return (
     <React.Fragment>
       <header>

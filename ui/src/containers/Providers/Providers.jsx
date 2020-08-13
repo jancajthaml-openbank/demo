@@ -1,12 +1,11 @@
 import React from 'react'
-//import TenantService from 'containers/Tenant/service'
 import { TenantContextProvider } from 'containers/Tenant'
-import { ApolloClient } from 'apollo-client';
+import { ApolloClient } from 'apollo-client'
 import { BrowserRouter as Router } from "react-router-dom"
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { HttpLink } from 'apollo-link-http';
-import { ApolloProvider } from '@apollo/react-hooks';
-import { resolvers, typeDefs } from '../../resolvers';
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import { HttpLink } from 'apollo-link-http'
+import { ApolloProvider } from '@apollo/react-hooks'
+import { resolvers, typeDefs } from '../../resolvers'
 
 const Providers = (props) => {
 

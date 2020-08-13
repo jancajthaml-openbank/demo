@@ -2,13 +2,13 @@ import React from 'react'
 import { Switch, Redirect, Route } from 'react-router-dom'
 import routes from '../../routes'
 import Header from './Header'
-
+import { Wrapper } from './styles'
 
 class Layout extends React.Component {
 
   render() {
     return (
-      <div>
+      <Wrapper>
         <Header />
         <div>
           <Switch>
@@ -23,7 +23,8 @@ class Layout extends React.Component {
             <Redirect to='/' />
           </Switch>
         </div>
-      </div>
+        <div />
+      </Wrapper>
     )
   }
 }

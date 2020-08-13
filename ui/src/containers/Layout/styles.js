@@ -8,6 +8,13 @@ import {
   $callout3,
 } from '../../stylesheets/variables'
 
+
+export const Wrapper = styled.div`
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+`
+
 export const HeaderNavigation = styled.div`
   display: flex;
   flex-basis: auto;
@@ -79,16 +86,13 @@ export const HeaderWrapper = styled.nav`
   box-sizing: border-box;
 `;
 
-export const HeaderLogo = styled.a`
+export const HeaderLogo = styled.span`
   display: inline-block;
-  padding-top: 0;
-  padding-bottom: 0;
   margin-right: .5rem;
-  line-height: inherit;
-  white-space: nowrap;
-  width: 2rem;
-  height: 2rem;
-  background-position: center;
-  background-size: contain;
-  background-image: url('https://avatars3.githubusercontent.com/u/33759883');
+  height: 1.5rem;
+
+  > svg {
+    width: auto;
+    height: 100%;
+  }
 `;
