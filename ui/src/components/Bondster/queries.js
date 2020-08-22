@@ -11,6 +11,7 @@ export default {
 
   bondsterTokens : async (_, request, ctx) => {
     const result = await BondsterService.getTokens(request.tenant);
+
     ctx.cache.writeQuery({
       query: GET_TOKENS,
       variables: {

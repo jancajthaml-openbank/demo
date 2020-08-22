@@ -50,7 +50,7 @@ const New = () => {
         isSubmitting,
         handleSubmit,
       }) => (
-        <Form>
+        <Form autoComplete="off">
           <label htmlFor="username">Username</label>
           <Field
             autoComplete="off"

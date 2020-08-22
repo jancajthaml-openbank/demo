@@ -178,10 +178,8 @@ module.exports = function(application) {
         createdAt,
       })
 
-      res.status(200).json({
-        id,
-        createdAt: createdAt.toISOString(),
-      })
+      res.status(200)
+      res.write(id)
       res.end()
 
       return
@@ -284,10 +282,8 @@ module.exports = function(application) {
         createdAt,
       })
 
-      res.status(200).json({
-        id,
-        createdAt: createdAt.toISOString(),
-      })
+      res.status(200)
+      res.write(id)
       res.end()
 
       return
