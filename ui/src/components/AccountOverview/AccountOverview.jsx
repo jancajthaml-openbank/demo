@@ -12,7 +12,7 @@ const AccountOverview = (props) => {
       tenant: tenant,
       name: props.account,
     },
-    pollInterval: 5 * 1000,
+    pollInterval: 60 * 1000,
   });
 
   if (loading || error || data.account == null) {

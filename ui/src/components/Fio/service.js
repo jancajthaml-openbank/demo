@@ -7,7 +7,8 @@ class FioService {
       throw new Error('FETCH_TOKENS_FAILED')
     }
 
-    return res.json()
+    const data = await res.text()
+    return data.split('\n').map((line) => JSON.parse(line))
   }
 
   async deleteToken(tenant, id) {
@@ -17,8 +18,6 @@ class FioService {
     if (res.status !== 200) {
       throw new Error('DELETE_TOKEN_FAILED')
     }
-
-    return res.json()
   }
 
   async createToken(tenant, value) {

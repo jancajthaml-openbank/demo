@@ -95,41 +95,62 @@ module.exports = function(application) {
     const { tenant } = req.params
 
     if (!tenant) {
-      res.status(404).json({})
+      res.status(404)
+      res.end()
       return
     }
 
-    res.status(200).json(bondster.find({ tenant }).map((item) => ({
+    res.header('transfer-encoding', 'chunked')
+    res.set('content-type', 'text/plain')
+    res.status(200)
+
+    const tokens = bondster.find({ tenant }).map((item) => JSON.stringify({
       id: item.id,
       createdAt: item.createdAt.toISOString(),
-    })))
+    }))
+
+    tokens.forEach((chunk, idx) => {
+      if (idx === tokens.length - 1) {
+        res.write(chunk)
+      } else {
+        res.write(chunk + '\n')
+      }
+    })
+
+    res.end()
   })
 
   app.delete('/api/bondster/token/:tenant/:id', async (req, res) => {
     const { tenant, id } = req.params
 
     if (!tenant || !id) {
-      res.status(404).json({})
+      res.status(404)
+      res.end()
       return
     }
 
     if (!bondster.chain().find({ tenant, id }).remove()) {
-      return res.status(404).json({})
+      res.status(404)
+      res.end()
+      return
     }
 
-    res.status(200).json({})
+    res.status(200)
+    res.end()
   })
 
   app.post('/api/bondster/token/:tenant', express.json({ type: '*/*' }), async (req, res) => {
     const { tenant } = req.params
 
     if (!tenant) {
-      res.status(404).json({})
+      res.status(404)
+      res.end()
       return
     }
 
     if (!req.body) {
-      res.status(400).json({})
+      res.status(400)
+      res.end()
       return
     }
 
@@ -137,7 +158,8 @@ module.exports = function(application) {
       const { username, password } = req.body
 
       if (!username || !password) {
-        res.status(400).json({})
+        res.status(400)
+        res.end()
         return
       }
 
@@ -160,10 +182,13 @@ module.exports = function(application) {
         id,
         createdAt: createdAt.toISOString(),
       })
+      res.end()
+
       return
     } catch (err) {
       console.log(err)
-      res.status(400).json({})
+      res.status(400)
+      res.end()
       return
     }
   })
@@ -175,14 +200,30 @@ module.exports = function(application) {
     const { tenant } = req.params
 
     if (!tenant) {
-      res.status(404).json({})
+      res.status(404)
+      res.end()
       return
     }
 
-    res.status(200).json(fio.find({ tenant }).map((item) => ({
+    res.header('transfer-encoding', 'chunked')
+    res.set('content-type', 'text/plain')
+    res.status(200)
+
+    const tokens = fio.find({ tenant }).map((item) => JSON.stringify({
       id: item.id,
       createdAt: item.createdAt.toISOString(),
-    })))
+    }))
+
+    tokens.forEach((chunk, idx) => {
+      if (idx === tokens.length - 1) {
+        res.write(chunk)
+      } else {
+        res.write(chunk + '\n')
+      }
+    })
+
+    res.end()
+
     return
   })
 
@@ -190,27 +231,33 @@ module.exports = function(application) {
     const { tenant, id } = req.params
 
     if (!tenant || !id) {
-      res.status(404).json({})
+      res.status(404)
+      res.end()
       return
     }
 
     if (!fio.chain().find({ tenant, id }).remove()) {
-      return res.status(404).json({})
+      res.status(404)
+      res.end()
+      return
     }
 
-    res.status(200).json({})
+    res.status(200)
+    res.end()
   })
 
   app.post('/api/fio/token/:tenant', express.json({ type: '*/*' }), async (req, res) => {
     const { tenant } = req.params
 
     if (!tenant) {
-      res.status(404).json({})
+      res.status(404)
+      res.end()
       return
     }
 
     if (!req.body) {
-      res.status(400).json({})
+      res.status(400)
+      res.end()
       return
     }
 
@@ -218,7 +265,8 @@ module.exports = function(application) {
       const { value } = req.body
 
       if (!value) {
-        res.status(400).json({})
+        res.status(400)
+        res.end()
         return
       }
 
@@ -228,6 +276,7 @@ module.exports = function(application) {
       }
 
       const createdAt = new Date()
+
       fio.insert({
         id,
         tenant,
@@ -239,10 +288,12 @@ module.exports = function(application) {
         id,
         createdAt: createdAt.toISOString(),
       })
+      res.end()
+
       return
     } catch (err) {
-      console.log(err)
-      res.status(400).json({})
+      res.status(400)
+      res.end()
       return
     }
   })

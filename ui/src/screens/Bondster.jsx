@@ -29,6 +29,7 @@ function Bondster() {
           <AccountOverview account="CZK_TYPE_PRIMARY_MARKET_FINANCIAL" name="Primary Market" />
           <AccountOverview account="CZK_TYPE_PRIMARY_MARKET_PARTICIPATION_FINANCIAL" name="Primary Market Participation" />
           <AccountOverview account="CZK_TYPE_PRINCIPAL_PAYMENT_FINANCIAL" name="Principal Payment" />
+          <AccountOverview account="CZK_TYPE_PRINCIPAL_PAYMENT_PARTICIPATION_FINANCIAL" name="Principal Payment Participation" />
         </Card>
         <Card>
           <h6>Overview EUR</h6>
@@ -48,6 +49,7 @@ function Bondster() {
           <AccountOverview account="EUR_TYPE_PRIMARY_MARKET_FINANCIAL" name="Primary Market" />
           <AccountOverview account="EUR_TYPE_PRIMARY_MARKET_PARTICIPATION_FINANCIAL" name="Primary Market Participation" />
           <AccountOverview account="EUR_TYPE_PRINCIPAL_PAYMENT_FINANCIAL" name="Principal Payment" />
+          <AccountOverview account="EUR_TYPE_PRINCIPAL_PAYMENT_PARTICIPATION_FINANCIAL" name="Principal Payment Participation" />
         </Card>
         <Card>
           <h6>New Token</h6>
