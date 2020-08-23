@@ -43,8 +43,12 @@ async function AccountsResolve(_, params, context) {
     query.currency = params.currency
   }
 
-  const actualSkip = params.skip || 0
-  const actualTake = params.take ? (params.take + actualSkip) : undefined
+  if (params.format !== undefined) {
+    query.format = params.format
+  }
+
+  const actualSkip = params.offset || 0
+  const actualTake = params.limit ? (params.limit + actualSkip) : undefined
 
   return context.db.accounts
     .find(query)

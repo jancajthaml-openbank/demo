@@ -25,8 +25,8 @@ function generateBondsterAccounts(tenant, collection) {
 
   const currencies = ['CZK', 'EUR']
   const types = [
-    'TYPE_INVESTOR_BONUS',
     'TYPE_INTEREST_PAYMENT',
+    'TYPE_INVESTOR_BONUS',
     'TYPE_INTEREST_PAYMENT_PARTICIPATION',
     'TYPE_BUYBACK_FINANCIAL',
     'TYPE_BUYBACK_PARTICIPATION_FINANCIAL',
@@ -43,16 +43,33 @@ function generateBondsterAccounts(tenant, collection) {
     'TYPE_INVESTOR_WITHDRAWAL',
   ]
 
+  const balances = {
+    'TYPE_INVESTOR_DEPOSIT': -10000,
+    'TYPE_INVESTOR_WITHDRAWAL': 1000,
+    'TYPE_INVESTOR_BONUS': -10,
+    'TYPE_INVESTOR_INVESTMENT_FEE': 100,
+    'TYPE_INTEREST_PAYMENT': 20,
+    'TYPE_INTEREST_PAYMENT_PARTICIPATION': 2,
+    'TYPE_SANCTION_PAYMENT': 30,
+    'TYPE_SANCTION_PAYMENT_PARTICIPATION': 3,
+  }
+
   currencies.forEach((currency) => {
     types.forEach((type) => {
       const name = `${currency}_${type}`
+
+      let balance = balances[type]
+      if (balance === undefined) {
+        balance = randomAmount()
+      }
+
       const item = {
         id: `${tenant}/${name}`,
         tenant: tenant,
         name,
         format: "BONDSTER_TECHNICAL",
         currency,
-        balance: randomAmount(),
+        balance,
       }
       collection.insert(item)
       result.push(item)

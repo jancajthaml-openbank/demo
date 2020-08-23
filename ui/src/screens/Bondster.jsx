@@ -1,7 +1,8 @@
 import React from 'react'
 import { List, New } from 'components/Bondster'
 import { Card } from 'components/Card'
-import { AccountOverview } from 'components/AccountOverview'
+//import { AccountOverview } from 'components/AccountOverview'
+import { BondsterOverview } from 'components/BondsterOverview'
 import { ErrorBoundary } from 'components/ErrorBoundary'
 
 function Bondster() {
@@ -13,43 +14,11 @@ function Bondster() {
       <main>
         <Card>
           <h6>Overview CZK</h6>
-          <AccountOverview account="CZK_TYPE_NOSTRO" name="Nostro" />
-          <hr />
-          <AccountOverview account="CZK_TYPE_INVESTOR_DEPOSIT" name="Deposit" />
-          <AccountOverview account="CZK_TYPE_INVESTOR_WITHDRAWAL" name="Withdrawal" />
-          <AccountOverview account="CZK_TYPE_INVESTOR_BONUS" name="Bonus" />
-          <AccountOverview account="CZK_TYPE_INTEREST_PAYMENT" name="Interest Direct" />
-          <AccountOverview account="CZK_TYPE_INTEREST_PAYMENT_PARTICIPATION" name="Interest Participation" />
-          <AccountOverview account="CZK_TYPE_SANCTION_PAYMENT" name="Sanction Direct" />
-          <AccountOverview account="CZK_TYPE_SANCTION_PAYMENT_PARTICIPATION" name="Sanction Participation" />
-          <AccountOverview account="CZK_TYPE_INVESTOR_INVESTMENT_FEE" name="Fee" />
-          <hr />
-          <AccountOverview account="CZK_TYPE_BUYBACK_FINANCIAL" name="Buyback" />
-          <AccountOverview account="CZK_TYPE_BUYBACK_PARTICIPATION_FINANCIAL" name="Buyback Participation" />
-          <AccountOverview account="CZK_TYPE_PRIMARY_MARKET_FINANCIAL" name="Primary Market" />
-          <AccountOverview account="CZK_TYPE_PRIMARY_MARKET_PARTICIPATION_FINANCIAL" name="Primary Market Participation" />
-          <AccountOverview account="CZK_TYPE_PRINCIPAL_PAYMENT_FINANCIAL" name="Principal Payment" />
-          <AccountOverview account="CZK_TYPE_PRINCIPAL_PAYMENT_PARTICIPATION_FINANCIAL" name="Principal Payment Participation" />
+          <BondsterOverview currency="CZK" />
         </Card>
         <Card>
           <h6>Overview EUR</h6>
-          <AccountOverview account="EUR_TYPE_NOSTRO" name="Nostro" />
-          <hr />
-          <AccountOverview account="EUR_TYPE_INVESTOR_DEPOSIT" name="Deposit" />
-          <AccountOverview account="EUR_TYPE_INVESTOR_WITHDRAWAL" name="Withdrawal" />
-          <AccountOverview account="EUR_TYPE_INVESTOR_BONUS" name="Bonus" />
-          <AccountOverview account="EUR_TYPE_INTEREST_PAYMENT" name="Interest Direct" />
-          <AccountOverview account="EUR_TYPE_INTEREST_PAYMENT_PARTICIPATION" name="Interest Participation" />
-          <AccountOverview account="EUR_TYPE_SANCTION_PAYMENT" name="Sanction Direct" />
-          <AccountOverview account="EUR_TYPE_SANCTION_PAYMENT_PARTICIPATION" name="Sanction Participation" />
-          <AccountOverview account="EUR_TYPE_INVESTOR_INVESTMENT_FEE" name="Fee" />
-          <hr />
-          <AccountOverview account="EUR_TYPE_BUYBACK_FINANCIAL" name="Buyback" />
-          <AccountOverview account="EUR_TYPE_BUYBACK_PARTICIPATION_FINANCIAL" name="Buyback Participation" />
-          <AccountOverview account="EUR_TYPE_PRIMARY_MARKET_FINANCIAL" name="Primary Market" />
-          <AccountOverview account="EUR_TYPE_PRIMARY_MARKET_PARTICIPATION_FINANCIAL" name="Primary Market Participation" />
-          <AccountOverview account="EUR_TYPE_PRINCIPAL_PAYMENT_FINANCIAL" name="Principal Payment" />
-          <AccountOverview account="EUR_TYPE_PRINCIPAL_PAYMENT_PARTICIPATION_FINANCIAL" name="Principal Payment Participation" />
+          <BondsterOverview currency="EUR" />
         </Card>
         <Card>
           <h6>New Token</h6>
