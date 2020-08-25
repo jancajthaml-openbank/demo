@@ -172,6 +172,8 @@ RUN \
     fio-bco-import@demo \
   ;
 
+COPY ./ui/build /var/www
+
 STOPSIGNAL SIGTERM
 
 VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]

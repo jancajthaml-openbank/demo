@@ -9,42 +9,54 @@ services:
   node: &node
     image: node:10.9.0
     volumes: &node_volumes
-      - ./ui:/opt/project
-      - dependency-cache:/opt/project/node_modules
+      - ui-node-modules:/opt/project
+      - ./ui/src:/opt/project/src:ro
+      - ./ui/build:/opt/project/build:rw
+      - ./ui/public:/opt/project/public:ro
+      - ./ui/package.json:/opt/project/package.json:ro
+      - ./ui/webpack.config.js:/opt/project/webpack.config.js:ro
+      - ./ui/package-lock.json:/opt/project/package-lock.json:rw
+      - ./ui/.babelrc.js:/opt/project/.babelrc.js:ro
+      - ./ui/mock:/opt/project/mock:ro
     working_dir: /opt/project
-    entrypoint: ["npm"]
+    entrypoint:
+      - npm
 
   # -------------------------------------------------------------------------- #
 
   ui-test:
     <<: *node
-    command: ["test"]
+    command:
+      - test
 
   # -------------------------------------------------------------------------- #
 
   ui-sync:
     <<: *node
-    command: ["ci"]
+    command:
+      - ci
 
   # -------------------------------------------------------------------------- #
 
   ui-build:
     <<: *node
-    command: ["run", "build"]
+    command:
+      - run
+      - build
 
   # -------------------------------------------------------------------------- #
 
   server-mock:
-    image: node:10.9.0
-    volumes:
-      - ./ui/mock:/opt/project/mock
-      - dependency-cache:/opt/project/node_modules
+    <<: *node
     hostname: server-mock
     working_dir: /opt/project/mock
     ports:
       - "4000:4000"
-    entrypoint: node
-    command: ["/opt/project/node_modules/nodemon/bin/nodemon.js", "/opt/project/mock/index.js"]
+    entrypoint:
+      - node
+    command:
+      - /opt/project/node_modules/nodemon/bin/nodemon.js
+      - /opt/project/mock/index.js
 
   # -------------------------------------------------------------------------- #
 
@@ -54,7 +66,9 @@ services:
       - "3000:3000"
     depends_on:
       - server-mock
-    command: ["run", "devserver"]
+    command:
+      - run
+      - devserver
 
   # -------------------------------------------------------------------------- #
 
@@ -91,11 +105,10 @@ services:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - openbank-primary:/data
-      - ./ui/build:/var/www
 
 # ---------------------------------------------------------------------------- #
 
 volumes:
   openbank-primary:
   openbank-secondary:
-  dependency-cache:
+  ui-node-modules:

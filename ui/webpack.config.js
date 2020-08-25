@@ -1,9 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const TerserPlugin = require('terser-webpack-plugin')
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const SafePostCssParser = require('postcss-safe-parser')
-//const PnpWebpackPlugin = require('pnp-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default
@@ -58,16 +56,7 @@ function getPlugins(production) {
     new HTMLInlineCSSWebpackPlugin(),
   ]
 
-  if (production) {
-    plugins.push(...[
-      new OptimizeCSSAssetsPlugin({
-        cssProcessorOptions: {
-          parser: SafePostCssParser,
-          map: false,
-        },
-      })
-    ])
-  } else {
+  if (!production) {
     plugins.push(...[
       new webpack.NamedModulesPlugin(),
       //new webpack.HotModuleReplacementPlugin(),
@@ -106,8 +95,6 @@ module.exports = function(env = {}, args = {}) {
       extensions: [
         '.js',
         '.jsx',
-        '.sass',
-        '.scss',
         '.css',
         '.json',
         '.react.js',
@@ -115,24 +102,13 @@ module.exports = function(env = {}, args = {}) {
         '.web.jsx',
       ],
       alias: {
-        'react-dom': 'react-dom', // : '@hot-loader/react-dom',
+        'react-dom': 'react-dom',
       },
       mainFields: [
         'browser',
         'main',
       ],
-      /*
-      plugins: [
-        //PnpWebpackPlugin
-      ],
-      */
     },
-    /*
-    resolveLoader: {
-      plugins: [
-        PnpWebpackPlugin.moduleLoader(module),
-      ],
-    },*/
     target: 'web',
     node: {
       dgram: 'empty',
@@ -170,18 +146,6 @@ module.exports = function(env = {}, args = {}) {
             loader: 'handlebars-loader',
           }
         ]
-      }, {
-        test: /\.(sass|scss)/,
-        use: [{
-          loader: production ? MiniCssExtractPlugin.loader : 'style-loader',
-        }, {
-          loader: 'css-loader',
-        }, {
-          loader: 'fast-sass-loader',
-          options: {
-            includePaths: ['./node_modules']
-          }
-        }],
       }, {
         test: /\.css$/,
         exclude: /node_modules/,
@@ -291,7 +255,7 @@ module.exports = function(env = {}, args = {}) {
       publicPath: '/',
       host: '0.0.0.0',
       port: 3000,
-      hot: true,
+      hot: false,
       inline: true,
       watchContentBase: true,
       https: false,

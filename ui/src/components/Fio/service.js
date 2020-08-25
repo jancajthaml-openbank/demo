@@ -7,7 +7,22 @@ class FioService {
       throw new Error('FETCH_TOKENS_FAILED')
     }
 
-    return res.json()
+    const tokens = []
+
+    try {
+      const reader = res.body.getReader();
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          break;
+        }
+        const buffer = new TextDecoder("utf-8").decode(value).split('\n')
+        tokens.push(...buffer.map(JSON.parse))
+      }
+    } catch(err) {
+      console.log(err)
+    }
+    return tokens
   }
 
   async deleteToken(tenant, id) {
@@ -17,8 +32,6 @@ class FioService {
     if (res.status !== 200) {
       throw new Error('DELETE_TOKEN_FAILED')
     }
-
-    return res.json()
   }
 
   async createToken(tenant, value) {
@@ -39,7 +52,12 @@ class FioService {
       throw new Error('CREATE_TOKEN_FAILED')
     }
 
-    return res.json()
+    const id = await res.text()
+
+    return {
+      id,
+      createdAt: new Date().toISOString(),
+    }
   }
 }
 

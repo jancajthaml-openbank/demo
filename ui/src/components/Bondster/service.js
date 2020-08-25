@@ -7,19 +7,31 @@ class BondsterService {
       throw new Error('FETCH_TOKENS_FAILED')
     }
 
-    return res.json()
+    const tokens = []
+
+    try {
+      const reader = res.body.getReader();
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          break;
+        }
+        const buffer = new TextDecoder("utf-8").decode(value).split('\n')
+        tokens.push(...buffer.map(JSON.parse))
+      }
+    } catch(err) {
+      console.log(err)
+    }
+    return tokens
   }
 
   async deleteToken(tenant, id) {
     const res = await fetch(`/api/bondster/token/${tenant}/${id}`, {
       method: 'DELETE',
     })
-
     if (res.status !== 200) {
       throw new Error('DELETE_TOKEN_FAILED')
     }
-
-    return res.json()
   }
 
   async createToken(tenant, username, password) {
@@ -40,8 +52,12 @@ class BondsterService {
     if (res.status !== 200) {
       throw new Error('CREATE_TOKEN_FAILED')
     }
+    const id = await res.text()
 
-    return res.json()
+    return {
+      id,
+      createdAt: new Date().toISOString(),
+    }
   }
 }
 
