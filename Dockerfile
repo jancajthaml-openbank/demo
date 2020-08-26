@@ -132,6 +132,7 @@ RUN \
     sed -i '/imklog/{s/^/#/}' /etc/rsyslog.conf && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+
 RUN rm -rf \
       /opt/vault/secrets \
       /opt/ledger/secrets \
@@ -139,29 +140,37 @@ RUN rm -rf \
       /opt/bondster-bco/secrets && \
     \
     sed -ri /etc/fio-bco/conf.d/init.conf -e \
-      's!^FIO_BCO_SECRETS=.*!FIO_BCO_SECRETS=/openbank/secrets!' && \
-    sed -ri /etc/fio-bco/conf.d/init.conf -e \
       's!^FIO_BCO_LOG_LEVEL=.*!FIO_BCO_LOG_LEVEL=DEBUG!' && \
     sed -ri /etc/fio-bco/conf.d/init.conf -e \
-      's!^FIO_BCO_ENCRYPTION_KEY=.*!FIO_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
-    sed -ri /etc/bondster-bco/conf.d/init.conf -e \
-      's!^BONDSTER_BCO_SECRETS=.*!BONDSTER_BCO_SECRETS=/openbank/secrets!' && \
+      's!^FIO_BCO_SERVER_KEY=.*!FIO_BCO_SERVER_KEY=/openbank/secrets/server.key!' && \
+    sed -ri /etc/fio-bco/conf.d/init.conf -e \
+      's!^FIO_BCO_SERVER_CERT=.*!FIO_BCO_SERVER_CERT=/openbank/secrets/server.crt!' && \
+    sed -ri /etc/fio-bco/conf.d/init.conf -e \
+      's!^FIO_BCO_ENCRYPTION_KEY=.*!FIO_BCO_ENCRYPTION_KEY=/openbank/secrets/encryption.key!' && \
     sed -ri /etc/bondster-bco/conf.d/init.conf -e \
       's!^BONDSTER_BCO_LOG_LEVEL=.*!BONDSTER_BCO_LOG_LEVEL=DEBUG!' && \
     sed -ri /etc/bondster-bco/conf.d/init.conf -e \
-      's!^BONDSTER_BCO_ENCRYPTION_KEY=.*!BONDSTER_BCO_ENCRYPTION_KEY=/openbank/secrets/fs_encryption.key!' && \
-    sed -ri /etc/vault/conf.d/init.conf -e \
-      's!^VAULT_SECRETS=.*!VAULT_SECRETS=/openbank/secrets!' && \
+      's!^BONDSTER_BCO_SERVER_KEY=.*!BONDSTER_BCO_SERVER_KEY=/openbank/secrets/server.key!' && \
+    sed -ri /etc/bondster-bco/conf.d/init.conf -e \
+      's!^BONDSTER_BCO_SERVER_CERT=.*!BONDSTER_BCO_SERVER_CERT=/openbank/secrets/server.crt!' && \
+    sed -ri /etc/bondster-bco/conf.d/init.conf -e \
+      's!^BONDSTER_BCO_ENCRYPTION_KEY=.*!BONDSTER_BCO_ENCRYPTION_KEY=/openbank/secrets/encryption.key!' && \
     sed -ri /etc/vault/conf.d/init.conf -e \
       's!^VAULT_LOG_LEVEL=.*!VAULT_LOG_LEVEL=DEBUG!' && \
-    sed -ri /etc/ledger/conf.d/init.conf -e \
-      's!^LEDGER_SECRETS=.*!LEDGER_SECRETS=/openbank/secrets!' && \
+    sed -ri /etc/vault/conf.d/init.conf -e \
+      's!^VAULT_SERVER_KEY=.*!VAULT_SERVER_KEY=/openbank/secrets/server.key!' && \
+    sed -ri /etc/vault/conf.d/init.conf -e \
+      's!^VAULT_SERVER_CERT=.*!VAULT_SERVER_CERT=/openbank/secrets/server.crt!' && \
     sed -ri /etc/ledger/conf.d/init.conf -e \
       's!^LEDGER_LOG_LEVEL=.*!LEDGER_LOG_LEVEL=DEBUG!' && \
-    sed -ri /etc/data-warehouse/conf.d/init.conf -e \
-      's!^DATA_WAREHOUSE_POSTGRES_URL=.*!DATA_WAREHOUSE_POSTGRES_URL=jdbc:postgresql://postgres:5432/openbank!' && \
+    sed -ri /etc/ledger/conf.d/init.conf -e \
+      's!^LEDGER_SERVER_KEY=.*!LEDGER_SERVER_KEY=/openbank/secrets/server.key!' && \
+    sed -ri /etc/ledger/conf.d/init.conf -e \
+      's!^LEDGER_SERVER_CERT=.*!LEDGER_SERVER_CERT=/openbank/secrets/server.crt!' && \
     sed -ri /etc/data-warehouse/conf.d/init.conf -e \
       's!^DATA_WAREHOUSE_LOG_LEVEL=.*!DATA_WAREHOUSE_LOG_LEVEL=DEBUG!' && \
+    sed -ri /etc/data-warehouse/conf.d/init.conf -e \
+      's!^DATA_WAREHOUSE_POSTGRES_URL=.*!DATA_WAREHOUSE_POSTGRES_URL=jdbc:postgresql://postgres:5432/openbank!' && \
     :
 
 RUN \
