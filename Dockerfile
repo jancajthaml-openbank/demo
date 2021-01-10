@@ -19,12 +19,12 @@ ARG FIO_BCO_VERSION
 ARG BONDSTER_BCO_VERSION
 ARG DWH_VERSION
 
-FROM openbank/lake:v${LAKE_VERSION}-master as lake-artifacts
-FROM openbank/vault:v${VAULT_VERSION}-master as vault-artifacts
-FROM openbank/ledger:v${LEDGER_VERSION}-master as ledger-artifacts
-FROM openbank/fio-bco:v${FIO_BCO_VERSION}-master as fio-bco-artifacts
-FROM openbank/bondster-bco:v${BONDSTER_BCO_VERSION}-master as bondster-bco-artifacts
-FROM openbank/data-warehouse:v${DWH_VERSION}-master as data-warehouse-artifacts
+FROM openbank/lake:v${LAKE_VERSION}-main as lake-artifacts
+FROM openbank/vault:v${VAULT_VERSION}-main as vault-artifacts
+FROM openbank/ledger:v${LEDGER_VERSION}-main as ledger-artifacts
+FROM openbank/fio-bco:v${FIO_BCO_VERSION}-main as fio-bco-artifacts
+FROM openbank/bondster-bco:v${BONDSTER_BCO_VERSION}-main as bondster-bco-artifacts
+FROM openbank/data-warehouse:v${DWH_VERSION}-main as data-warehouse-artifacts
 
 FROM debian:buster
 
