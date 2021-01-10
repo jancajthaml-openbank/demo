@@ -73,11 +73,24 @@ services:
   # -------------------------------------------------------------------------- #
 
   postgres:
-    image: openbak/postgres
+    image: openbank/postgres:v0.0.0-main
     hostname: postgres
-    build: postgres
     volumes:
       - openbank-secondary:/var/lib/postgresql/data
+
+  # -------------------------------------------------------------------------- #
+
+  metrics:
+    image: openbank/metrics:v0.0.0-main
+    hostname: metrics
+    volumes:
+      - openbank-metrics:/opt/metrics/data/statsd
+
+  # -------------------------------------------------------------------------- #
+
+  lake:
+    image: openbank/lake:v1.2.5-main
+    hostname: lake
 
   # -------------------------------------------------------------------------- #
 
@@ -111,4 +124,5 @@ services:
 volumes:
   openbank-primary:
   openbank-secondary:
+  openbank-metrics:
   ui-node-modules:

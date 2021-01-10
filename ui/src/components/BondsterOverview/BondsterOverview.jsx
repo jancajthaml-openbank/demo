@@ -41,7 +41,7 @@ const BondsterOverview = (props) => {
   const profit = bonus-fee+interest+sanction
   const balance = deposit-withdrawal+profit
 
-  const percentage = ((profit/(deposit-withdrawal)) * 100).toFixed(1);
+  const percentage = (((profit/(deposit-withdrawal)) * 100) || 0).toFixed(1);
 
   return (
     <div
