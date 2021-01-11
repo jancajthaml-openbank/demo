@@ -25,9 +25,9 @@ const BondsterOverview = (props) => {
     return null
   }
 
-  const deposit = -findAccount(`${props.currency}_TYPE_INVESTOR_DEPOSIT`, data.accounts).balance
+  const deposit = findAccount(`${props.currency}_TYPE_INVESTOR_DEPOSIT`, data.accounts).balance
   const withdrawal = findAccount(`${props.currency}_TYPE_INVESTOR_WITHDRAWAL`, data.accounts).balance
-  const bonus = -findAccount(`${props.currency}_TYPE_INVESTOR_BONUS`, data.accounts).balance
+  const bonus = findAccount(`${props.currency}_TYPE_INVESTOR_BONUS`, data.accounts).balance
   const fee = findAccount(`${props.currency}_TYPE_INVESTOR_INVESTMENT_FEE`, data.accounts).balance
 
   const interestFull = findAccount(`${props.currency}_TYPE_INTEREST_PAYMENT`, data.accounts).balance
