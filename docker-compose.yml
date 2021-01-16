@@ -75,6 +75,7 @@ services:
   postgres:
     image: openbank/postgres:v0.0.0-main
     hostname: postgres
+    restart: on-failure
     volumes:
       - openbank-secondary:/var/lib/postgresql/data
 
@@ -83,6 +84,7 @@ services:
   metrics:
     image: openbank/metrics:v0.0.0-main
     hostname: metrics
+    restart: on-failure
     volumes:
       - openbank-metrics:/opt/metrics/data/statsd
 

@@ -20,18 +20,16 @@ ARG BONDSTER_BCO_VERSION
 ARG DWH_VERSION
 
 FROM openbank/lake:v${LAKE_VERSION}-main as lake-artifacts
+
 FROM openbank/vault:v${VAULT_VERSION}-main as vault-artifacts
 
-FROM openbank/ledger:v1.1.2-transaction-timeouts-under-load as ledger-artifacts
-#FROM openbank/ledger:v${LEDGER_VERSION}-main as ledger-artifacts
+FROM openbank/ledger:v${LEDGER_VERSION}-main as ledger-artifacts
 
 FROM openbank/fio-bco:v${FIO_BCO_VERSION}-main as fio-bco-artifacts
 
-#FROM openbank/bondster-bco:v${BONDSTER_BCO_VERSION}-main as bondster-bco-artifacts
-FROM openbank/bondster-bco:v1.3.0-better-direction-import as bondster-bco-artifacts
+FROM openbank/bondster-bco:v${BONDSTER_BCO_VERSION}-main as bondster-bco-artifacts
 
-FROM openbank/data-warehouse:v1.0.0-transfer-status-expectation-mismatch as data-warehouse-artifacts
-#FROM openbank/data-warehouse:v${DWH_VERSION}-main as data-warehouse-artifacts
+FROM openbank/data-warehouse:v${DWH_VERSION}-main as data-warehouse-artifacts
 
 FROM debian:buster
 
@@ -55,7 +53,7 @@ RUN \
     apt-utils \
     dpkg-dev \
     rsyslog \
-    libzmq5>=4.2.1~ \
+    libzmq5>=4.3.1~ \
     openjdk-11-jre \
     systemd \
     systemd-sysv \
@@ -146,6 +144,8 @@ RUN rm -rf \
       /opt/fio-bco/secrets \
       /opt/bondster-bco/secrets && \
     \
+    sed -ri /etc/lake/conf.d/init.conf -e \
+      's!^LAKE_LOG_LEVEL=.*!LAKE_LOG_LEVEL=DEBUG!' && \
     sed -ri /etc/fio-bco/conf.d/init.conf -e \
       's!^FIO_BCO_LOG_LEVEL=.*!FIO_BCO_LOG_LEVEL=DEBUG!' && \
     sed -ri /etc/fio-bco/conf.d/init.conf -e \
