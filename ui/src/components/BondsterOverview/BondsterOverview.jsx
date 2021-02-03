@@ -25,17 +25,18 @@ const BondsterOverview = (props) => {
     return null
   }
 
-  const deposit = findAccount(`${props.currency}_TYPE_INVESTOR_DEPOSIT`, data.accounts).balance
+  const nostro = findAccount(`${props.currency}_TYPE_NOSTRO`, data.accounts).balance
+  const deposit = -findAccount(`${props.currency}_TYPE_INVESTOR_DEPOSIT`, data.accounts).balance
   const withdrawal = findAccount(`${props.currency}_TYPE_INVESTOR_WITHDRAWAL`, data.accounts).balance
-  const bonus = findAccount(`${props.currency}_TYPE_INVESTOR_BONUS`, data.accounts).balance
+  const bonus = -findAccount(`${props.currency}_TYPE_INVESTOR_BONUS`, data.accounts).balance
   const fee = findAccount(`${props.currency}_TYPE_INVESTOR_INVESTMENT_FEE`, data.accounts).balance
 
-  const interestFull = findAccount(`${props.currency}_TYPE_INTEREST_PAYMENT`, data.accounts).balance
-  const interestParticipation = findAccount(`${props.currency}_TYPE_INTEREST_PARTICIPATION`, data.accounts).balance
+  const interestFull = -findAccount(`${props.currency}_TYPE_INTEREST_PAYMENT`, data.accounts).balance
+  const interestParticipation = -findAccount(`${props.currency}_TYPE_INTEREST_PARTICIPATION`, data.accounts).balance
   const interest = interestFull + interestParticipation
 
-  const sanctionFull = findAccount(`${props.currency}_TYPE_SANCTION_PAYMENT`, data.accounts).balance
-  const sanctionParticipation = findAccount(`${props.currency}_TYPE_SANCTION_PAYMENT_PARTICIPATION`, data.accounts).balance
+  const sanctionFull = -findAccount(`${props.currency}_TYPE_SANCTION_PAYMENT`, data.accounts).balance
+  const sanctionParticipation = -findAccount(`${props.currency}_TYPE_SANCTION_PAYMENT_PARTICIPATION`, data.accounts).balance
   const sanction = sanctionFull + sanctionParticipation
 
   const profit = bonus-fee+interest+sanction
@@ -52,6 +53,9 @@ const BondsterOverview = (props) => {
     >
       <table>
         <tbody>
+          <tr>
+            <td>Nostro</td><td>{nostro}</td>
+          </tr>
           <tr>
             <td>Deposit</td><td>{deposit}</td>
           </tr>

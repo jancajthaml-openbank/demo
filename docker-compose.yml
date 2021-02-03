@@ -86,7 +86,7 @@ services:
     hostname: metrics
     restart: on-failure
     volumes:
-      - openbank-metrics:/opt/metrics/data/statsd
+      - openbank-metrics:/opt/metrics/data
 
   # -------------------------------------------------------------------------- #
 
@@ -117,6 +117,7 @@ services:
       - "4002:4002"
     links:
       - postgres
+      - metrics
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - openbank-primary:/data
@@ -127,4 +128,9 @@ volumes:
   openbank-primary:
   openbank-secondary:
   openbank-metrics:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${PWD}/report/metrics
   ui-node-modules:

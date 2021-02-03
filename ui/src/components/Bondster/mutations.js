@@ -2,6 +2,14 @@ import gql from 'graphql-tag'
 import BondsterService from './service'
 import { GET_TOKENS } from './queries'
 
+
+
+export const SYNCHRONIZE_TOKEN = gql`
+  mutation synchronizeBondsterToken($tenant: String!, $id: String!) {
+    synchronizeBondsterToken(tenant: $tenant, id: $id) @client
+  }
+`;
+
 export const DELETE_TOKEN = gql`
   mutation removeBondsterToken($tenant: String!, $id: String!) {
     removeBondsterToken(tenant: $tenant, id: $id) @client
@@ -66,6 +74,11 @@ export default {
       });
       return data.bondsterTokens;
     }
+    return [];
+  },
+
+  synchronizeBondsterToken: async (_, request, ctx) => {
+    await BondsterService.synchronizeToken(request.tenant, request.id)
     return [];
   },
 

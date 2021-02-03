@@ -139,6 +139,19 @@ module.exports = function(application) {
     res.end()
   })
 
+  app.get('/api/bondster/token/:tenant/:id/sync', async (req, res) => {
+    const { tenant, id } = req.params
+
+    if (!tenant || !id) {
+      res.status(404)
+      res.end()
+      return
+    }
+
+    res.status(200)
+    res.end()
+  })
+
   app.post('/api/bondster/token/:tenant', express.json({ type: '*/*' }), async (req, res) => {
     const { tenant } = req.params
 
