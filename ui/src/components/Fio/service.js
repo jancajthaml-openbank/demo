@@ -34,6 +34,15 @@ class FioService {
     }
   }
 
+  async synchronizeToken(tenant, id) {
+    const res = await fetch(`/api/fio/token/${tenant}/${id}/sync`, {
+      method: 'GET',
+    })
+    if (res.status !== 200) {
+      throw new Error('SYNCHRONIZE_TOKEN_FAILED')
+    }
+  }
+
   async createToken(tenant, value) {
     const req = {
       value,

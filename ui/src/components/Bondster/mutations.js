@@ -3,7 +3,6 @@ import BondsterService from './service'
 import { GET_TOKENS } from './queries'
 
 
-
 export const SYNCHRONIZE_TOKEN = gql`
   mutation synchronizeBondsterToken($tenant: String!, $id: String!) {
     synchronizeBondsterToken(tenant: $tenant, id: $id) @client
