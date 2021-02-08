@@ -23,7 +23,7 @@ const List = (props) => {
     variables: {
       tenant: tenant,
       offset: 0,
-      limit: 10000,
+      limit: 100000,
     },
     pollInterval: 60 * 1000,
   });

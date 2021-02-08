@@ -1,5 +1,6 @@
 
 class BondsterService {
+
   async getTokens(tenant) {
     const res = await fetch(`/api/bondster/token/${tenant}`)
 
@@ -31,6 +32,15 @@ class BondsterService {
     })
     if (res.status !== 200) {
       throw new Error('DELETE_TOKEN_FAILED')
+    }
+  }
+
+  async synchronizeToken(tenant, id) {
+    const res = await fetch(`/api/bondster/token/${tenant}/${id}/sync`, {
+      method: 'GET',
+    })
+    if (res.status !== 200) {
+      throw new Error('SYNCHRONIZE_TOKEN_FAILED')
     }
   }
 

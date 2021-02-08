@@ -22,6 +22,7 @@ function getPlugins(production) {
       dangerouslyAllowCleanPatternsOutsideProject: false,
       cleanStaleWebpackAssets: true,
     }),
+    /*
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -33,6 +34,7 @@ function getPlugins(production) {
         concurrency: 1,
       },
     }),
+    */
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public', 'index.html'),
       minify: {

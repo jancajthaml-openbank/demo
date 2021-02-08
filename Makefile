@@ -18,6 +18,7 @@ build:
 	@docker-compose run --rm ui-build
 	@docker-compose build --pull demo
 	@docker-compose build --pull postgres
+	@docker-compose build --pull metrics
 
 .PHONY: dev
 dev:

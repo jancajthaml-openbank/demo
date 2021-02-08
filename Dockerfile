@@ -19,12 +19,17 @@ ARG FIO_BCO_VERSION
 ARG BONDSTER_BCO_VERSION
 ARG DWH_VERSION
 
-FROM openbank/lake:v${LAKE_VERSION}-master as lake-artifacts
-FROM openbank/vault:v${VAULT_VERSION}-master as vault-artifacts
-FROM openbank/ledger:v${LEDGER_VERSION}-master as ledger-artifacts
-FROM openbank/fio-bco:v${FIO_BCO_VERSION}-master as fio-bco-artifacts
-FROM openbank/bondster-bco:v${BONDSTER_BCO_VERSION}-master as bondster-bco-artifacts
-FROM openbank/data-warehouse:v${DWH_VERSION}-master as data-warehouse-artifacts
+FROM openbank/lake:v${LAKE_VERSION}-main as lake-artifacts
+
+FROM openbank/vault:v${VAULT_VERSION}-main as vault-artifacts
+
+FROM openbank/ledger:v${LEDGER_VERSION}-main as ledger-artifacts
+
+FROM openbank/fio-bco:v${FIO_BCO_VERSION}-main as fio-bco-artifacts
+
+FROM openbank/bondster-bco:v${BONDSTER_BCO_VERSION}-main as bondster-bco-artifacts
+
+FROM openbank/data-warehouse:v${DWH_VERSION}-main as data-warehouse-artifacts
 
 FROM debian:buster
 
@@ -48,7 +53,7 @@ RUN \
     apt-utils \
     dpkg-dev \
     rsyslog \
-    libzmq5>=4.2.1~ \
+    libzmq5>=4.3.1~ \
     openjdk-11-jre \
     systemd \
     systemd-sysv \
@@ -139,6 +144,10 @@ RUN rm -rf \
       /opt/fio-bco/secrets \
       /opt/bondster-bco/secrets && \
     \
+    sed -ri /etc/lake/conf.d/init.conf -e \
+      's!^LAKE_LOG_LEVEL=.*!LAKE_LOG_LEVEL=DEBUG!' && \
+    sed -ri /etc/lake/conf.d/init.conf -e \
+      's!^LAKE_STATSD_ENDPOINT=.*!LAKE_STATSD_ENDPOINT=metrics:8125!' && \
     sed -ri /etc/fio-bco/conf.d/init.conf -e \
       's!^FIO_BCO_LOG_LEVEL=.*!FIO_BCO_LOG_LEVEL=DEBUG!' && \
     sed -ri /etc/fio-bco/conf.d/init.conf -e \
@@ -147,6 +156,8 @@ RUN rm -rf \
       's!^FIO_BCO_SERVER_CERT=.*!FIO_BCO_SERVER_CERT=/openbank/secrets/server.crt!' && \
     sed -ri /etc/fio-bco/conf.d/init.conf -e \
       's!^FIO_BCO_ENCRYPTION_KEY=.*!FIO_BCO_ENCRYPTION_KEY=/openbank/secrets/encryption.key!' && \
+    sed -ri /etc/fio-bco/conf.d/init.conf -e \
+      's!^FIO_BCO_STATSD_ENDPOINT=.*!FIO_BCO_STATSD_ENDPOINT=metrics:8125!' && \
     sed -ri /etc/bondster-bco/conf.d/init.conf -e \
       's!^BONDSTER_BCO_LOG_LEVEL=.*!BONDSTER_BCO_LOG_LEVEL=DEBUG!' && \
     sed -ri /etc/bondster-bco/conf.d/init.conf -e \
@@ -155,22 +166,30 @@ RUN rm -rf \
       's!^BONDSTER_BCO_SERVER_CERT=.*!BONDSTER_BCO_SERVER_CERT=/openbank/secrets/server.crt!' && \
     sed -ri /etc/bondster-bco/conf.d/init.conf -e \
       's!^BONDSTER_BCO_ENCRYPTION_KEY=.*!BONDSTER_BCO_ENCRYPTION_KEY=/openbank/secrets/encryption.key!' && \
+    sed -ri /etc/bondster-bco/conf.d/init.conf -e \
+      's!^BONDSTER_BCO_STATSD_ENDPOINT=.*!BONDSTER_BCO_STATSD_ENDPOINT=metrics:8125!' && \
     sed -ri /etc/vault/conf.d/init.conf -e \
       's!^VAULT_LOG_LEVEL=.*!VAULT_LOG_LEVEL=DEBUG!' && \
     sed -ri /etc/vault/conf.d/init.conf -e \
       's!^VAULT_SERVER_KEY=.*!VAULT_SERVER_KEY=/openbank/secrets/server.key!' && \
     sed -ri /etc/vault/conf.d/init.conf -e \
       's!^VAULT_SERVER_CERT=.*!VAULT_SERVER_CERT=/openbank/secrets/server.crt!' && \
+    sed -ri /etc/vault/conf.d/init.conf -e \
+      's!^VAULT_STATSD_ENDPOINT=.*!VAULT_STATSD_ENDPOINT=metrics:8125!' && \
     sed -ri /etc/ledger/conf.d/init.conf -e \
       's!^LEDGER_LOG_LEVEL=.*!LEDGER_LOG_LEVEL=DEBUG!' && \
     sed -ri /etc/ledger/conf.d/init.conf -e \
       's!^LEDGER_SERVER_KEY=.*!LEDGER_SERVER_KEY=/openbank/secrets/server.key!' && \
     sed -ri /etc/ledger/conf.d/init.conf -e \
       's!^LEDGER_SERVER_CERT=.*!LEDGER_SERVER_CERT=/openbank/secrets/server.crt!' && \
+    sed -ri /etc/ledger/conf.d/init.conf -e \
+      's!^LEDGER_STATSD_ENDPOINT=.*!LEDGER_STATSD_ENDPOINT=metrics:8125!' && \
     sed -ri /etc/data-warehouse/conf.d/init.conf -e \
       's!^DATA_WAREHOUSE_LOG_LEVEL=.*!DATA_WAREHOUSE_LOG_LEVEL=DEBUG!' && \
     sed -ri /etc/data-warehouse/conf.d/init.conf -e \
       's!^DATA_WAREHOUSE_POSTGRES_URL=.*!DATA_WAREHOUSE_POSTGRES_URL=jdbc:postgresql://postgres:5432/openbank!' && \
+    sed -ri /etc/data-warehouse/conf.d/init.conf -e \
+      's!^DATA_WAREHOUSE_STATSD_ENDPOINT=.*!DATA_WAREHOUSE_STATSD_ENDPOINT=metrics:8125!' && \
     :
 
 RUN \

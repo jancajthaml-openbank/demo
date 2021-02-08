@@ -73,11 +73,26 @@ services:
   # -------------------------------------------------------------------------- #
 
   postgres:
-    image: openbak/postgres
+    image: openbank/postgres:v0.0.0-main
     hostname: postgres
-    build: postgres
+    restart: on-failure
     volumes:
       - openbank-secondary:/var/lib/postgresql/data
+
+  # -------------------------------------------------------------------------- #
+
+  metrics:
+    image: openbank/metrics:v0.0.0-main
+    hostname: metrics
+    restart: on-failure
+    volumes:
+      - openbank-metrics:/opt/metrics/data
+
+  # -------------------------------------------------------------------------- #
+
+  lake:
+    image: openbank/lake:v1.2.5-main
+    hostname: lake
 
   # -------------------------------------------------------------------------- #
 
@@ -102,6 +117,7 @@ services:
       - "4002:4002"
     links:
       - postgres
+      - metrics
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - openbank-primary:/data
@@ -111,4 +127,10 @@ services:
 volumes:
   openbank-primary:
   openbank-secondary:
+  openbank-metrics:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${PWD}/report/metrics
   ui-node-modules:

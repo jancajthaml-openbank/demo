@@ -2,6 +2,13 @@ import gql from 'graphql-tag'
 import FioService from './service'
 import { GET_TOKENS } from './queries'
 
+
+export const SYNCHRONIZE_TOKEN = gql`
+  mutation synchronizeFioToken($tenant: String!, $id: String!) {
+    synchronizeFioToken(tenant: $tenant, id: $id) @client
+  }
+`;
+
 export const DELETE_TOKEN = gql`
   mutation removeFioToken($tenant: String!, $id: String!) {
     removeFioToken(tenant: $tenant, id: $id) @client
@@ -66,6 +73,11 @@ export default {
       });
       return data.fioTokens;
     }
+    return [];
+  },
+
+  synchronizeFioToken: async (_, request, ctx) => {
+    await FioService.synchronizeToken(request.tenant, request.id)
     return [];
   },
 
