@@ -1,5 +1,4 @@
 import React from 'react'
-import moment from 'moment'
 import bigDecimal from 'js-big-decimal'
 import { useTenant } from 'containers/Tenant'
 import { useQuery } from '@apollo/react-hooks'
@@ -63,7 +62,12 @@ const List = (props) => {
     }, {
       Header: 'Value Date',
       id: 'valueDate',
-      accessor: (row) => moment(row.credit.valueDate).utc().format('DD.MM.YYYY HH:mm'),
+      accessor: (row) => {
+        const parts = row.credit.valueDate.split('T')
+        const dp = parts[0].split('-')
+        const tp = parts[1].split(':')
+        return `${dp[2]}.${dp[1]}.${dp[0]} ${tp[0]}:${tp[1]}`
+      },
       maxWidth: 130,
     }, {
       Header: 'Credit',

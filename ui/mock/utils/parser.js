@@ -1,8 +1,8 @@
-const moment = require("moment")
 
 /* -------------------------------------------------------------------------- */
 
 const decimalRegex = new RegExp("^[+-]?\\d{1,35}(\\.\\d{1,35})?$", "i")
+const dateTimeRegex = new RegExp("(^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+([+-][0-2]\\d:[0-5]\\d|Z)$)|(^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$)|(^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$)")
 
 /**
  * Converts 8601 string value to Date
@@ -12,11 +12,10 @@ const decimalRegex = new RegExp("^[+-]?\\d{1,35}(\\.\\d{1,35})?$", "i")
  * @returns {Date}
  */
 function dateFromString(value) {
-  const expected = moment(value, moment.ISO_8601)
-  if (!expected.isValid()) {
+  if (!dateTimeRegex.test(value)) {
     return null
   }
-  return expected.toDate()
+  return new Date(value)
 }
 
 /**
