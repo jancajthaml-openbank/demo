@@ -15,7 +15,6 @@ function dateToString(value) {
   if (!value) {
     return null
   }
-  // FIXME check instance here
   return value.toISOString()
 }
 
@@ -27,7 +26,7 @@ function dateToString(value) {
  * @returns {string}
  */
 function decimalToString(value) {
-  if (!value) { // FIXME use isDefined
+  if (!value) {
     return null
   }
 

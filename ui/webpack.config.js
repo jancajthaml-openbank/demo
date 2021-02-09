@@ -2,7 +2,6 @@ const path = require('path')
 const webpack = require('webpack')
 const TerserPlugin = require('terser-webpack-plugin')
 const SafePostCssParser = require('postcss-safe-parser')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -16,25 +15,11 @@ function getPlugins(production) {
         'NODE_ENV': production ? `"production"` : `"development"`,
       },
     }),
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment\/src\/lib\/locale/),
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: ['**/*'],
       dangerouslyAllowCleanPatternsOutsideProject: false,
       cleanStaleWebpackAssets: true,
     }),
-    /*
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.resolve(__dirname, 'public'),
-          to: path.resolve(__dirname, 'build'),
-        },
-      ],
-      options: {
-        concurrency: 1,
-      },
-    }),
-    */
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public', 'index.html'),
       minify: {
@@ -52,20 +37,11 @@ function getPlugins(production) {
       inject: 'body',
     }),
     new MiniCssExtractPlugin({
-      filename: "static/media/css/[name].[hash:8].css",
-      chunkFilename: "static/media/css/[id].[hash:8].css"
+      filename: production ? 'static/media/css/[name].[contenthash:8].css' : 'static/media/css/[name].css',
+      chunkFilename: production ? 'static/media/css/[id].[contenthash:8].css' : 'static/media/css/[id].css',
     }),
     new HTMLInlineCSSWebpackPlugin(),
   ]
-
-  if (!production) {
-    plugins.push(...[
-      new webpack.NamedModulesPlugin(),
-      //new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoEmitOnErrorsPlugin(),
-    ])
-  }
-
   return plugins
 }
 
@@ -75,24 +51,21 @@ module.exports = function(env = {}, args = {}) {
   return {
     entry: path.resolve(__dirname, 'src', 'index.js'),
     mode: production ? 'production' : 'development',
-    stats: production ? 'normal' : 'minimal',
+    stats: production ? 'normal' : 'errors-only',
     output: {
       path: path.resolve(__dirname, 'build'),
       publicPath: '/',
-      filename: 'static/js/[name].[hash:5].js',
-      chunkFilename: 'static/js/[name].[hash:5].chunk.js',
+      filename: production ? 'static/js/[name].[contenthash:8].js' : 'static/js/[name].js',
       pathinfo: !production,
     },
     module: {
       strictExportPresence: true,
-      noParse: [
-      ],
     },
     resolve: {
       unsafeCache: false,
       modules: [
-        path.resolve(__dirname, 'node_modules'),
-        path.resolve(__dirname, 'src'),
+        'node_modules',
+        'src',
       ],
       extensions: [
         '.js',
@@ -103,22 +76,12 @@ module.exports = function(env = {}, args = {}) {
         '.web.js',
         '.web.jsx',
       ],
-      alias: {
-        'react-dom': 'react-dom',
-      },
       mainFields: [
         'browser',
         'main',
       ],
     },
     target: 'web',
-    node: {
-      dgram: 'empty',
-      fs: 'empty',
-      net: 'empty',
-      tls: 'empty',
-      child_process: 'empty',
-    },
     cache: !production,
     module: {
       rules: [{
@@ -193,13 +156,12 @@ module.exports = function(env = {}, args = {}) {
       removeEmptyChunks: true,
       mergeDuplicateChunks: true,
       providedExports: true,
-      namedModules: true,
-      namedChunks: true,
       flagIncludedChunks: true,
-      occurrenceOrder: true,
+      chunkIds: 'named',
+      moduleIds: 'named',
       usedExports: true,
       sideEffects: true,
-      noEmitOnErrors: true,
+      emitOnErrors: true,
       concatenateModules: !production,
       minimizer: production ? [
         new TerserPlugin({
@@ -223,22 +185,17 @@ module.exports = function(env = {}, args = {}) {
             },
           },
           parallel: true,
-          cache: true,
-          sourceMap: false,
         }),
       ] : [],
       splitChunks: {
         chunks: 'async',
-        minSize: 1000,
-        maxSize: 0,
         minChunks: 1,
         maxAsyncRequests: 5,
         maxInitialRequests: 3,
         automaticNameDelimiter: '~',
-        name: true,
         cacheGroups: {
           default: false,
-          vendors: false,
+          defaultVendors: false,
           vendor: {
             name: 'vendor',
             chunks: 'all',
@@ -250,7 +207,6 @@ module.exports = function(env = {}, args = {}) {
       runtimeChunk: true
     },
     devServer: production ? undefined : {
-      stats: 'errors-only',
       compress: false,
       disableHostCheck: true,
       clientLogLevel: 'debug',

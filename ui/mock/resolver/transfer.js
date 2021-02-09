@@ -45,6 +45,7 @@ async function TransfersResolve(_, params, context) {
       valueDate: transfer.valueDate,
       amount: transfer.amount,
       currency: transfer.currency,
+      status: 'committed',
     }))
 }
 

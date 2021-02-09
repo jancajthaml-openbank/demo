@@ -48,10 +48,10 @@ function generateBondsterAccounts(tenant, collection) {
     'TYPE_INVESTOR_WITHDRAWAL': 1000,
     'TYPE_INVESTOR_BONUS': -10,
     'TYPE_INVESTOR_INVESTMENT_FEE': 100,
-    'TYPE_INTEREST_PAYMENT': 20,
-    'TYPE_INTEREST_PAYMENT_PARTICIPATION': 2,
-    'TYPE_SANCTION_PAYMENT': 30,
-    'TYPE_SANCTION_PAYMENT_PARTICIPATION': 3,
+    'TYPE_INTEREST_PAYMENT': -200,
+    'TYPE_INTEREST_PAYMENT_PARTICIPATION': 20,
+    'TYPE_SANCTION_PAYMENT': -300,
+    'TYPE_SANCTION_PAYMENT_PARTICIPATION': -30,
   }
 
   currencies.forEach((currency) => {
@@ -65,7 +65,7 @@ function generateBondsterAccounts(tenant, collection) {
 
       const item = {
         id: `${tenant}/${name}`,
-        tenant: tenant,
+        tenant,
         name,
         format: "BONDSTER_TECHNICAL",
         currency,
@@ -91,7 +91,7 @@ function generateRandomAccounts(tenant, collection, howMany) {
 
     const item = {
       id: `${tenant}/${name}`,
-      tenant: tenant,
+      tenant,
       name,
       format: "IBAN",
       currency: "EUR",
@@ -144,9 +144,9 @@ function generateRandomTransactions(tenant, collection, accounts, howMany) {
 
       const item = {
         id: `${tenant}/${transaction}/${transaction}_${i+1}`,
-        tenant: tenant,
+        tenant,
         transfer: `${transaction}_${i+1}`,
-        transaction: transaction,
+        transaction,
         amount: randomAmount(),
         currency: account_to.currency,
         credit: account_to.id,

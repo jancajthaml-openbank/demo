@@ -10,6 +10,7 @@ type Transfer {
   tenant: Tenant!
   transaction: String!
   transfer: String!
+  status: String!
   credit: Account!
   debit: Account!
   valueDate: DateTime!
