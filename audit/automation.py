@@ -27,6 +27,7 @@ def main():
   for tenant in get_all_tenants():
     for transaction_id in get_all_transaction_ids(tenant):
       transaction = get_transaction(tenant, transaction_id)
+      assert "status" in transaction, "missing attribute 'status' in {}".format(transaction)
       assert transaction["status"] == "committed", "non committed transaction {}".format(transaction)
       for transfer in transaction["transfers"]:
         credit = transfer["credit"]["name"]
