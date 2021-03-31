@@ -197,7 +197,15 @@ RUN \
     fio-bco-import@demo \
   ;
 
-COPY ./ui/build /var/www
+COPY ./ui/runtime/* /var/www/runtime/
+
+COPY ./ui/manifest.json /var/www/context
+
+COPY ./ui/favicon.ico /var/www/favicon.ico
+
+COPY ./ui/modules/layout/build/* /var/www/modules/layout/
+
+RUN ls -la /var/www
 
 STOPSIGNAL SIGTERM
 

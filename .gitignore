@@ -1,5 +1,5 @@
 data
-node_modules
-build
+ui/**/*/node_modules
+ui/**/*/dev
 report/metrics/*
 !report/metrics/.gitkeep
