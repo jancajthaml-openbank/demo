@@ -1,6 +1,7 @@
+
 data/
 secrets/
-node_modules/
+appliance/ui/**/*/node_modules
+appliance/ui/**/*/dev
 build/
 metrics/
-!appliance/report/metrics/.gitkeep

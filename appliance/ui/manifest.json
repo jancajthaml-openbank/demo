@@ -1,0 +1,9 @@
+{
+	"available": [
+		{
+			"name": "layout",
+			"url": "/modules/layout/main.min.js"
+		}
+	],
+	"entrypoint": "layout"
+}
