@@ -1,20 +1,14 @@
-/*! @lastui/rocker/runtime */
-
 /*! dll-reference dependencies_dll */
 
 /*! dll-reference runtime_dll */
 
-/*! react */
-
-/*! react-dom */
-
-/*!**********************!*\
-  !*** ./src/index.js ***!
-  \**********************/
-
 /*!******************************!*\
   !*** external "runtime_dll" ***!
   \******************************/
+
+/*!**********************************!*\
+  !*** ./src/index.js + 1 modules ***!
+  \**********************************/
 
 /*!***********************************!*\
   !*** external "dependencies_dll" ***!
