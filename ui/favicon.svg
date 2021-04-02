@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  preserveAspectRatio="none"
+  height="173.20508075688772"
+  width="200"
+  viewBox="-50 -50 300 300"
+>
+  <polygon
+    points="0,200 200,200 131,60 118,90 160,175 40,175 113,25 100,0"
+    fill="#F4115F"
+  />
+</svg>
