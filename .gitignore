@@ -1,5 +1,6 @@
 data
 ui/**/*/node_modules
+ui/**/*/package-lock.json
 ui/**/*/dev
 report/metrics/*
 !report/metrics/.gitkeep
