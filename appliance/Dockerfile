@@ -193,15 +193,14 @@ RUN rm -rf \
 #    fio-bco-import@demo \
 #  ;
 
-COPY ./ui/runtime/* /var/www/runtime/
-
 COPY ./ui/manifest.json /var/www/context
-
 COPY ./ui/favicon.ico /var/www/favicon.ico
+COPY ./ui/index.html /var/www/index.html
 
+COPY ./ui/spa/build/* /var/www/runtime/
 COPY ./ui/modules/layout/build/* /var/www/modules/layout/
 
-RUN ls -la /var/www
+RUN rm -f /var/www/runtime/index.html
 
 STOPSIGNAL SIGTERM
 
