@@ -189,13 +189,13 @@ RUN rm -rf \
       's!^DATA_WAREHOUSE_STATSD_ENDPOINT=.*!DATA_WAREHOUSE_STATSD_ENDPOINT=metrics:8125!' && \
     :
 
-RUN \
-  systemctl enable \
-    vault-unit@demo \
-    ledger-unit@demo \
-    bondster-bco-import@demo \
-    fio-bco-import@demo \
-  ;
+#RUN \
+#  systemctl enable \
+#    vault-unit@demo \
+#    ledger-unit@demo \
+#    bondster-bco-import@demo \
+#    fio-bco-import@demo \
+#  ;
 
 COPY ./ui/runtime/* /var/www/runtime/
 
