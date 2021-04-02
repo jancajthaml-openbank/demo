@@ -198,7 +198,7 @@ RUN rm -rf \
 #  ;
 
 COPY ./ui/manifest.json /var/www/context
-COPY ./ui/favicon.ico /var/www/favicon.ico
+COPY ./ui/favicon.svg /var/www/favicon.svg
 COPY ./ui/index.html /var/www/index.html
 
 COPY ./ui/spa/build/* /var/www/runtime/
