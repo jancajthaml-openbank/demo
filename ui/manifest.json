@@ -3,6 +3,14 @@
 		{
 			"name": "layout",
 			"url": "/modules/layout/main.min.js"
+		},
+		{
+			"name": "content",
+			"url": "/modules/content/main.min.js"
+		},
+		{
+			"name": "header",
+			"url": "/modules/header/main.min.js"
 		}
 	],
 	"entrypoint": "layout"
