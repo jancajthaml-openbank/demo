@@ -197,11 +197,11 @@ RUN rm -rf \
 #    fio-bco-import@demo \
 #  ;
 
+COPY ./ui/spa/build/* /var/www/
+
 COPY ./ui/manifest.json /var/www/context
 COPY ./ui/favicon.svg /var/www/favicon.svg
 COPY ./ui/index.html /var/www/index.html
-
-COPY ./ui/spa/build/* /var/www/runtime/
 
 COPY ./ui/modules/layout/build/* /var/www/modules/layout/
 COPY ./ui/modules/content/build/* /var/www/modules/content/
