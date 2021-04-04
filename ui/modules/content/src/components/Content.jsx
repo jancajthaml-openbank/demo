@@ -6,89 +6,89 @@ import { Module } from '@lastui/rocker/platform';
 
 const Content = () => {
 	return (
-    	<div class="columns">
-	        <aside class="column is-2 aside hero is-fullheight">
+    	<div className="columns">
+	        <aside className="column is-2 aside hero is-fullheight">
 	            <div>
-	                <div class="compose has-text-centered">
-	                    <a class="button is-danger is-block is-bold">
-	            			<span class="compose">Compose</span>
+	                <div className="compose has-text-centered">
+	                    <a className="button is-danger is-block is-bold">
+	            			<span className="compose">Compose</span>
 	          			</a>
 	                </div>
-	                <div class="main">
-	                    <a href="#" class="item active"><span class="icon"><i class="fa fa-inbox"></i></span><span class="name">Inbox</span></a>
-	                    <a href="#" class="item"><span class="icon"><i class="fa fa-star"></i></span><span class="name">Starred</span></a>
-	                    <a href="#" class="item"><span class="icon"><i class="fa fa-envelope-o"></i></span><span class="name">Sent Mail</span></a>
-	                    <a href="#" class="item"><span class="icon"><i class="fa fa-folder-o"></i></span><span class="name">Folders</span></a>
+	                <div className="main">
+	                    <a href="#" className="item active"><span className="icon"><i className="fa fa-inbox"></i></span><span className="name">Inbox</span></a>
+	                    <a href="#" className="item"><span className="icon"><i className="fa fa-star"></i></span><span className="name">Starred</span></a>
+	                    <a href="#" className="item"><span className="icon"><i className="fa fa-envelope-o"></i></span><span className="name">Sent Mail</span></a>
+	                    <a href="#" className="item"><span className="icon"><i className="fa fa-folder-o"></i></span><span className="name">Folders</span></a>
 	                </div>
 	            </div>
 	        </aside>
-	        <div class="column is-4 messages hero is-fullheight" id="message-feed">
-	            <div class="action-buttons">
-	                <div class="control is-grouped">
-	                    <a class="button is-small"><i class="fa fa-chevron-down"></i></a>
-	                    <a class="button is-small"><i class="fa fa-refresh"></i></a>
+	        <div className="column is-4 messages hero is-fullheight" id="message-feed">
+	            <div className="action-buttons">
+	                <div className="control is-grouped">
+	                    <a className="button is-small"><i className="fa fa-chevron-down"></i></a>
+	                    <a className="button is-small"><i className="fa fa-refresh"></i></a>
 	                </div>
-	                <div class="control is-grouped">
-	                    <a class="button is-small"><i class="fa fa-inbox"></i></a>
-	                    <a class="button is-small"><i class="fa fa-exclamation-circle"></i></a>
-	                    <a class="button is-small"><i class="fa fa-trash-o"></i></a>
+	                <div className="control is-grouped">
+	                    <a className="button is-small"><i className="fa fa-inbox"></i></a>
+	                    <a className="button is-small"><i className="fa fa-exclamation-circle"></i></a>
+	                    <a className="button is-small"><i className="fa fa-trash-o"></i></a>
 	                </div>
-	                <div class="control is-grouped">
-	                    <a class="button is-small"><i class="fa fa-folder"></i></a>
-	                    <a class="button is-small"><i class="fa fa-tag"></i></a>
+	                <div className="control is-grouped">
+	                    <a className="button is-small"><i className="fa fa-folder"></i></a>
+	                    <a className="button is-small"><i className="fa fa-tag"></i></a>
 	                </div>
-	                <div class="control is-grouped pg">
-	                    <div class="title">1-2 of 3</div>
-	                    <a class="button is-link"><i class="fa fa-chevron-left"></i></a>
-	                    <a class="button is-link"><i class="fa fa-chevron-right"></i></a>
+	                <div className="control is-grouped pg">
+	                    <div className="title">1-2 of 3</div>
+	                    <a className="button is-link"><i className="fa fa-chevron-left"></i></a>
+	                    <a className="button is-link"><i className="fa fa-chevron-right"></i></a>
 	                </div>
 	            </div>
 
-	            <div class="inbox-messages" id="inbox-messages">
-	                <div v-for="(msg, index) in messages" class="card">
-	                    <div class="card-content">
-	                        <div class="msg-header">
-	                            <span class="msg-from"><small>From: Doe</small></span>
-	                            <span class="msg-timestamp"></span>
-	                            <span class="msg-attachment"><i class="fa fa-paperclip"></i></span>
+	            <div className="inbox-messages" id="inbox-messages">
+	                <div className="card">
+	                    <div className="card-content">
+	                        <div className="msg-header">
+	                            <span className="msg-from"><small>From: Doe</small></span>
+	                            <span className="msg-timestamp"></span>
+	                            <span className="msg-attachment"><i className="fa fa-paperclip"></i></span>
 	                        </div>
-	                        <div class="msg-subject">
-	                            <span class="msg-subject"><strong id="fake-subject-1">subject</strong></span>
+	                        <div className="msg-subject">
+	                            <span className="msg-subject"><strong id="fake-subject-1">subject</strong></span>
 	                        </div>
-	                        <div class="msg-snippet">
+	                        <div className="msg-snippet">
 	                            <p id="fake-snippet-1">snippet</p>
 	                        </div>
 	                    </div>
 	                </div>
 	            </div>
 	        </div>
-	        <div class="column is-6 message hero is-fullheight is-hidden" id="message-pane">
-	            <div class="action-buttons">
-	                <div class="control is-grouped">
-	                    <a class="button is-small"><i class="fa fa-inbox"></i></a>
-	                    <a class="button is-small"><i class="fa fa-exclamation-circle"></i></a>
-	                    <a class="button is-small"><i class="fa fa-trash-o"></i></a>
+	        <div className="column is-6 message hero is-fullheight is-hidden" id="message-pane">
+	            <div className="action-buttons">
+	                <div className="control is-grouped">
+	                    <a className="button is-small"><i className="fa fa-inbox"></i></a>
+	                    <a className="button is-small"><i className="fa fa-exclamation-circle"></i></a>
+	                    <a className="button is-small"><i className="fa fa-trash-o"></i></a>
 	                </div>
-	                <div class="control is-grouped">
-	                    <a class="button is-small"><i class="fa fa-exclamation-circle"></i></a>
-	                    <a class="button is-small"><i class="fa fa-trash-o"></i></a>
+	                <div className="control is-grouped">
+	                    <a className="button is-small"><i className="fa fa-exclamation-circle"></i></a>
+	                    <a className="button is-small"><i className="fa fa-trash-o"></i></a>
 	                </div>
-	                <div class="control is-grouped">
-	                    <a class="button is-small"><i class="fa fa-folder"></i></a>
-	                    <a class="button is-small"><i class="fa fa-tag"></i></a>
+	                <div className="control is-grouped">
+	                    <a className="button is-small"><i className="fa fa-folder"></i></a>
+	                    <a className="button is-small"><i className="fa fa-tag"></i></a>
 	                </div>
 	            </div>
-	            <div class="box message-preview">
-	                <div class="top">
-	                    <div class="avatar">
+	            <div className="box message-preview">
+	                <div className="top">
+	                    <div className="avatar">
 	                        <img src="https://placehold.it/128x128" />
 	                    </div>
-	                    <div class="address">
-	                        <div class="name">John Smith</div>
-	                        <div class="email">someone@gmail.com</div>
+	                    <div className="address">
+	                        <div className="name">John Smith</div>
+	                        <div className="email">someone@gmail.com</div>
 	                    </div>
 	                    <hr />
-	                    <div class="content">
+	                    <div className="content">
 	                    </div>
 	                </div>
 	            </div>
