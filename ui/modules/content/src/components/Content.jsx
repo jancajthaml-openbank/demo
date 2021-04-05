@@ -2,8 +2,6 @@ import React from 'react';
 
 import { Module } from '@lastui/rocker/platform';
 
-// https://bulmatemplates.github.io/bulma-templates/templates/inbox.html
-
 const Content = () => {
 	return (
     	<div className="columns">
@@ -56,39 +54,8 @@ const Content = () => {
 	                            <span className="msg-subject"><strong id="fake-subject-1">subject</strong></span>
 	                        </div>
 	                        <div className="msg-snippet">
-	                            <p id="fake-snippet-1">snippet</p>
+	                            <p id="fake-snippet-1">snippet3</p>
 	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	        </div>
-	        <div className="column is-6 message hero is-fullheight is-hidden" id="message-pane">
-	            <div className="action-buttons">
-	                <div className="control is-grouped">
-	                    <a className="button is-small"><i className="fa fa-inbox"></i></a>
-	                    <a className="button is-small"><i className="fa fa-exclamation-circle"></i></a>
-	                    <a className="button is-small"><i className="fa fa-trash-o"></i></a>
-	                </div>
-	                <div className="control is-grouped">
-	                    <a className="button is-small"><i className="fa fa-exclamation-circle"></i></a>
-	                    <a className="button is-small"><i className="fa fa-trash-o"></i></a>
-	                </div>
-	                <div className="control is-grouped">
-	                    <a className="button is-small"><i className="fa fa-folder"></i></a>
-	                    <a className="button is-small"><i className="fa fa-tag"></i></a>
-	                </div>
-	            </div>
-	            <div className="box message-preview">
-	                <div className="top">
-	                    <div className="avatar">
-	                        <img src="https://placehold.it/128x128" />
-	                    </div>
-	                    <div className="address">
-	                        <div className="name">John Smith</div>
-	                        <div className="email">someone@gmail.com</div>
-	                    </div>
-	                    <hr />
-	                    <div className="content">
 	                    </div>
 	                </div>
 	            </div>
