@@ -1,4 +1,4 @@
-import Header from './components/Header';
+import Navigation from './components/Navigation';
 
 import { registerModule } from '@lastui/rocker/platform';
 
@@ -7,6 +7,5 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 registerModule.call(__SANDBOX_SCOPE__, {
-	MainView: Header,
-	styles: require('./styles/index.css').default,
+	MainView: Navigation,
 });
