@@ -11,6 +11,10 @@
 		{
 			"name": "header",
 			"url": "/modules/header/main.min.js"
+		},
+		{
+			"name": "navigation",
+			"url": "/modules/navigation/main.min.js"
 		}
 	],
 	"entrypoint": "layout"
