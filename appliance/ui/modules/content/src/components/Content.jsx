@@ -2,59 +2,177 @@ import React from 'react';
 
 import { Module } from '@lastui/rocker/platform';
 
+// https://github.com/BulmaTemplates/bulma-templates/blob/master/templates/admin.html
+
 const Content = () => {
 	return (
-    	<div className="columns">
-	        <aside className="column is-2 aside hero is-fullheight">
-	            <div>
-	                <div className="compose has-text-centered">
-	                    <a className="button is-danger is-block is-bold">
-	            			<span className="compose">Compose</span>
-	          			</a>
-	                </div>
-	                <div className="main">
-	                    <a href="#" className="item active"><span className="icon"><i className="fa fa-inbox"></i></span><span className="name">Inbox</span></a>
-	                    <a href="#" className="item"><span className="icon"><i className="fa fa-star"></i></span><span className="name">Starred</span></a>
-	                    <a href="#" className="item"><span className="icon"><i className="fa fa-envelope-o"></i></span><span className="name">Sent Mail</span></a>
-	                    <a href="#" className="item"><span className="icon"><i className="fa fa-folder-o"></i></span><span className="name">Folders</span></a>
-	                </div>
+	    <div className="container">
+	        <div className="columns">
+	            <div className="column is-3 ">
+	                <Module name="navigation" />
 	            </div>
-	        </aside>
-	        <div className="column is-4 messages hero is-fullheight" id="message-feed">
-	            <div className="action-buttons">
-	                <div className="control is-grouped">
-	                    <a className="button is-small"><i className="fa fa-chevron-down"></i></a>
-	                    <a className="button is-small"><i className="fa fa-refresh"></i></a>
-	                </div>
-	                <div className="control is-grouped">
-	                    <a className="button is-small"><i className="fa fa-inbox"></i></a>
-	                    <a className="button is-small"><i className="fa fa-exclamation-circle"></i></a>
-	                    <a className="button is-small"><i className="fa fa-trash-o"></i></a>
-	                </div>
-	                <div className="control is-grouped">
-	                    <a className="button is-small"><i className="fa fa-folder"></i></a>
-	                    <a className="button is-small"><i className="fa fa-tag"></i></a>
-	                </div>
-	                <div className="control is-grouped pg">
-	                    <div className="title">1-2 of 3</div>
-	                    <a className="button is-link"><i className="fa fa-chevron-left"></i></a>
-	                    <a className="button is-link"><i className="fa fa-chevron-right"></i></a>
-	                </div>
-	            </div>
-
-	            <div className="inbox-messages" id="inbox-messages">
-	                <div className="card">
-	                    <div className="card-content">
-	                        <div className="msg-header">
-	                            <span className="msg-from"><small>From: Doe</small></span>
-	                            <span className="msg-timestamp"></span>
-	                            <span className="msg-attachment"><i className="fa fa-paperclip"></i></span>
+	            <div className="column is-9">
+	                <section class="hero is-info welcome is-small">
+	                    <div class="hero-body">
+	                        <div class="container">
+	                            <h1 class="title">
+	                                Hello, Admin.
+	                            </h1>
+	                            <h2 class="subtitle">
+	                                I hope you are having a great day!
+	                            </h2>
 	                        </div>
-	                        <div className="msg-subject">
-	                            <span className="msg-subject"><strong id="fake-subject-1">subject</strong></span>
+	                    </div>
+	                </section>
+	                <section class="info-tiles">
+	                    <div class="tile is-ancestor has-text-centered">
+	                        <div class="tile is-parent">
+	                            <article class="tile is-child box">
+	                                <p class="title">439k</p>
+	                                <p class="subtitle">Users</p>
+	                            </article>
 	                        </div>
-	                        <div className="msg-snippet">
-	                            <p id="fake-snippet-1">snippet3</p>
+	                        <div class="tile is-parent">
+	                            <article class="tile is-child box">
+	                                <p class="title">59k</p>
+	                                <p class="subtitle">Products</p>
+	                            </article>
+	                        </div>
+	                        <div class="tile is-parent">
+	                            <article class="tile is-child box">
+	                                <p class="title">3.4k</p>
+	                                <p class="subtitle">Open Orders</p>
+	                            </article>
+	                        </div>
+	                        <div class="tile is-parent">
+	                            <article class="tile is-child box">
+	                                <p class="title">19</p>
+	                                <p class="subtitle">Exceptions</p>
+	                            </article>
+	                        </div>
+	                    </div>
+	                </section>
+	                <div class="columns">
+	                    <div class="column is-6">
+	                        <div class="card events-card">
+	                            <header class="card-header">
+	                                <p class="card-header-title">
+	                                    Events
+	                                </p>
+	                                <a href="#" class="card-header-icon" aria-label="more options">
+	                  <span class="icon">
+	                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+	                  </span>
+	                </a>
+	                            </header>
+	                            <div class="card-table">
+	                                <div class="content">
+	                                    <table class="table is-fullwidth is-striped">
+	                                        <tbody>
+	                                            <tr>
+	                                                <td width="5%"><i class="fa fa-bell-o"></i></td>
+	                                                <td>Lorum ipsum dolem aire</td>
+	                                                <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
+	                                            </tr>
+	                                            <tr>
+	                                                <td width="5%"><i class="fa fa-bell-o"></i></td>
+	                                                <td>Lorum ipsum dolem aire</td>
+	                                                <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
+	                                            </tr>
+	                                            <tr>
+	                                                <td width="5%"><i class="fa fa-bell-o"></i></td>
+	                                                <td>Lorum ipsum dolem aire</td>
+	                                                <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
+	                                            </tr>
+	                                            <tr>
+	                                                <td width="5%"><i class="fa fa-bell-o"></i></td>
+	                                                <td>Lorum ipsum dolem aire</td>
+	                                                <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
+	                                            </tr>
+	                                            <tr>
+	                                                <td width="5%"><i class="fa fa-bell-o"></i></td>
+	                                                <td>Lorum ipsum dolem aire</td>
+	                                                <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
+	                                            </tr>
+	                                            <tr>
+	                                                <td width="5%"><i class="fa fa-bell-o"></i></td>
+	                                                <td>Lorum ipsum dolem aire</td>
+	                                                <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
+	                                            </tr>
+	                                            <tr>
+	                                                <td width="5%"><i class="fa fa-bell-o"></i></td>
+	                                                <td>Lorum ipsum dolem aire</td>
+	                                                <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
+	                                            </tr>
+	                                            <tr>
+	                                                <td width="5%"><i class="fa fa-bell-o"></i></td>
+	                                                <td>Lorum ipsum dolem aire</td>
+	                                                <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
+	                                            </tr>
+	                                            <tr>
+	                                                <td width="5%"><i class="fa fa-bell-o"></i></td>
+	                                                <td>Lorum ipsum dolem aire</td>
+	                                                <td class="level-right"><a class="button is-small is-primary" href="#">Action</a></td>
+	                                            </tr>
+	                                        </tbody>
+	                                    </table>
+	                                </div>
+	                            </div>
+	                            <footer class="card-footer">
+	                                <a href="#" class="card-footer-item">View All</a>
+	                            </footer>
+	                        </div>
+	                    </div>
+	                    <div class="column is-6">
+	                        <div class="card">
+	                            <header class="card-header">
+	                                <p class="card-header-title">
+	                                    Inventory Search
+	                                </p>
+	                                <a href="#" class="card-header-icon" aria-label="more options">
+	                  <span class="icon">
+	                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+	                  </span>
+	                </a>
+	                            </header>
+	                            <div class="card-content">
+	                                <div class="content">
+	                                    <div class="control has-icons-left has-icons-right">
+	                                        <input class="input is-large" type="text" placeholder=""/>
+	                                        <span class="icon is-medium is-left">
+	                      <i class="fa fa-search"></i>
+	                    </span>
+	                                        <span class="icon is-medium is-right">
+	                      <i class="fa fa-check"></i>
+	                    </span>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <div class="card">
+	                            <header class="card-header">
+	                                <p class="card-header-title">
+	                                    User Search
+	                                </p>
+	                                <a href="#" class="card-header-icon" aria-label="more options">
+	                  <span class="icon">
+	                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+	                  </span>
+	                </a>
+	                            </header>
+	                            <div class="card-content">
+	                                <div class="content">
+	                                    <div class="control has-icons-left has-icons-right">
+	                                        <input class="input is-large" type="text" placeholder="" />
+	                                        <span class="icon is-medium is-left">
+	                     <i class="fa fa-search"></i>
+	                    </span>
+						<span class="icon is-medium is-right">
+	                      <i class="fa fa-check"></i>
+	                    </span>
+	                                    </div>
+	                                </div>
+	                            </div>
 	                        </div>
 	                    </div>
 	                </div>
