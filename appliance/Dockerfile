@@ -193,7 +193,7 @@ RUN rm -rf \
 #    fio-bco-import@demo \
 #  ;
 
-COPY ./ui/manifest.json /var/www/context
+COPY ./ui/manifest.json /var/www/manifest.json
 COPY ./ui/favicon.svg /var/www/favicon.svg
 COPY ./ui/index.html /var/www/index.html
 
