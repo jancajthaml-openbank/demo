@@ -1,4 +1,4 @@
-import Content from './components/Content';
+import Routing from './components/Routing';
 
 import { registerModule } from '@lastui/rocker/platform';
 
@@ -9,5 +9,5 @@ if (process.env.NODE_ENV === 'development') {
 import './styles/index.css'
 
 registerModule.call(__SANDBOX_SCOPE__, {
-	Main: Content,
+	Main: Routing,
 });
