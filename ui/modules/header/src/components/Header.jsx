@@ -1,6 +1,5 @@
 import React from 'react';
-import { Module } from '@lastui/rocker/platform';
-import { Link } from 'react-router-dom';
+import { Module, Link } from '@lastui/rocker/platform';
 
 const Header = () => {
 	return (
