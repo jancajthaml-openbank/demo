@@ -1,10 +1,7 @@
 import React from "react";
 
-import { Module } from "@lastui/rocker/platform";
-import { Route, Redirect } from 'react-router';
-
+import { Module, Route } from "@lastui/rocker/platform";
 import { useSelector } from 'react-redux';
-
 import Dashboard from './Dashboard';
 import Accounts from './Accounts';
 import Transactions from './Transactions';
@@ -27,7 +24,6 @@ const Routing = () => {
       <Route path="/payment/transactions" component={Transactions} />
       <Route path="/payment/accounts" component={Accounts} />
       <Route exact path="/" component={Dashboard} />
-      <Redirect to='/' />
     </React.Fragment>
   );
 };

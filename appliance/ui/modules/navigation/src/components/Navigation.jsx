@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { useSelector } from 'react-redux';
+import { Link } from '@lastui/rocker/platform';
 
 const Navigation = () => {
   const location = useLocation();
