@@ -1,8 +1,23 @@
 import React from "react";
 
+import * as S from './account/service'
+
 // https://github.com/BulmaTemplates/bulma-templates/blob/master/templates/admin.html
 
 const Dashboard = () => {
+
+  const [accounts, setAccounts] = React.useState([])
+
+  React.useEffect(() => {
+    S.getAccounts('demo').then((data) => {
+      setAccounts(data)
+    }).catch((err) => {
+      console.error('unable to get accounts', err)
+    })
+  }, [setAccounts])
+
+  console.log('all accounts', accounts)
+
   return (
     <React.Fragment>
       <section className="hero is-info welcome is-small">
