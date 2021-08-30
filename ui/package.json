@@ -1,0 +1,13 @@
+{
+	"scripts": {
+		"upgrade": "npm run upgrade:spa && npm run upgrade:modules && npm run postinstall && npm run build",
+		"upgrade:spa": "cd spa && ncu -u",
+		"upgrade:modules": "ls -1 modules | xargs -r -I {} bash -c 'cd modules/{} && ncu -u'",
+		"postinstall": "npm run install:spa && npm run install:modules",
+		"install:spa": "cd spa && npm i",
+		"install:modules": "ls -1 modules | xargs -r -I {} bash -c 'cd modules/{} && npm i'",
+		"build": "npm run build:spa && npm run build:modules",
+		"build:spa": "cd spa && npm run build",
+		"build:modules": "ls -1 modules | xargs -r -I {} bash -c 'cd modules/{} && npm run build'"
+	}
+}
