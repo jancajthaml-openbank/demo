@@ -10,9 +10,18 @@ export COMPOSE_PROJECT_NAME = demo
 all: build run
 
 .PHONY: build
-build:
-	@cd ui/spa && npm run build
-	@ls -1 ui/modules | xargs -r -I {} bash -c 'cd ui/modules/{} && npm run build'
+build: compile package
+
+.PHONY: upgrade
+upgrade:
+	@cd ui && npm run upgrade
+
+.PHONY: compile
+compile:
+	@cd ui && npm run build
+
+.PHONY: package
+package:
 	@ARCH=$(ARCH) docker-compose build --pull demo
 	@ARCH=$(ARCH) docker-compose build --pull postgres
 	@ARCH=$(ARCH) docker-compose build --pull metrics
