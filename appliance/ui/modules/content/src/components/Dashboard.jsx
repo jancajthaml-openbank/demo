@@ -21,8 +21,6 @@ const Dashboard = () => {
     })
   }, [tenant, setAccounts])
 
-  console.log('all accounts', accounts)
-
   return (
     <React.Fragment>
       <section className="hero is-info welcome is-small">
@@ -36,7 +34,7 @@ const Dashboard = () => {
         <div className="tile is-ancestor has-text-centered">
           <div className="tile is-parent">
             <article className="tile is-child box">
-              <p className="title">1</p>
+              <p className="title">{accounts.length}</p>
               <p className="subtitle">Accounts</p>
             </article>
           </div>
