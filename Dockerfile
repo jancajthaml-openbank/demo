@@ -204,6 +204,7 @@ COPY ./ui/index.html /var/www/index.html
 COPY ./ui/spa/build/* /var/www/runtime/
 RUN rm -f /var/www/runtime/index.html
 
+COPY ./ui/modules/tenant/build/* /var/www/modules/tenant/
 COPY ./ui/modules/layout/build/* /var/www/modules/layout/
 COPY ./ui/modules/content/build/* /var/www/modules/content/
 COPY ./ui/modules/header/build/* /var/www/modules/header/

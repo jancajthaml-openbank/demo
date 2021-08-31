@@ -1,20 +1,25 @@
 import React from "react";
 
 import * as S from './account/service'
+import { useTenant } from './Tenant'
 
 // https://github.com/BulmaTemplates/bulma-templates/blob/master/templates/admin.html
 
 const Dashboard = () => {
+  const { tenant } = useTenant()
 
   const [accounts, setAccounts] = React.useState([])
 
   React.useEffect(() => {
-    S.getAccounts('demo').then((data) => {
+    if (!tenant) {
+      return
+    }
+    S.getAccounts(tenant).then((data) => {
       setAccounts(data)
     }).catch((err) => {
       console.error('unable to get accounts', err)
     })
-  }, [setAccounts])
+  }, [tenant, setAccounts])
 
   console.log('all accounts', accounts)
 
