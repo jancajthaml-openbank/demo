@@ -23,6 +23,12 @@
 			"program": {
 				"url": "/modules/navigation/main.min.js"
 			}
+		},
+		{
+			"id": "tenant",
+			"program": {
+				"url": "/modules/tenant/main.min.js"
+			}
 		}
 	],
 	"entrypoint": "layout"

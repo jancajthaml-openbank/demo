@@ -1,5 +1,4 @@
-
-async function getAccountsPage(tenant, offset, limit) {
+async function getTenantsPage(offset, limit) {
 	const res = await fetch("/api/data-warehouse/graphql", {
 		method: "post",
 		headers: {
@@ -8,40 +7,36 @@ async function getAccountsPage(tenant, offset, limit) {
 		},
 		body: JSON.stringify({
 			query: `
-		  		query GetAccounts($tenant: String!, $limit: Int!, $offset: Int!) {
-				    accounts(tenant: $tenant, limit: $limit, offset: $offset) {
-				      name
-				      format
-				      currency
-				      balance
-				    }
+	  			query GetTenants($limit: Int!, $offset: Int!) {
+				  tenants(limit: $limit, offset: $offset) {
+				    name
+				  }
 				}
 	  		`,
 			variables: {
 				limit,
 				offset,
-				tenant: "demo",
 			},
 		}),
 	});
 	const data = await res.json();
-	return data.data.accounts;
+	return data.data.tenants;
 }
 
-async function getAccounts(tenant) {
+async function getTenants() {
 	const result = [];
 	const limit = 1000;
 	let offset = 0;
 	let page = [];
 	do {
-		page = await getAccountsPage(tenant, offset, limit);
+		page = await getTenantsPage(offset, limit);
 		offset += limit;
 		result.push(...page);
 		if (page.length < limit) {
 			break
 		}
 	} while (page.length > 0);
-	return result;
+	return result.map((item) => item.name);
 }
 
-export { getAccounts };
+export { getTenants };
