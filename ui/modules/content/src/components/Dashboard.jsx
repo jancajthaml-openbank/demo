@@ -21,6 +21,8 @@ const Dashboard = () => {
     })
   }, [tenant, setAccounts])
 
+  console.log('tenant is', tenant)
+
   return (
     <React.Fragment>
       <section className="hero is-info welcome is-small">

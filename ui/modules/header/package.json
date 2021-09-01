@@ -5,7 +5,7 @@
 	},
 	"dependencies": {
 		"@lastui/dependencies": "1.1.40",
-		"@lastui/rocker": "0.4.59",
+		"@lastui/rocker": "0.4.64",
 		"bulma": "0.9.3"
 	}
 }
