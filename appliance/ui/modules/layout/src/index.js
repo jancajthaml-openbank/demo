@@ -6,6 +6,6 @@ if (process.env.NODE_ENV === 'development') {
 	require('bulma/bulma.sass');
 }
 
-registerModule.call(__SANDBOX_SCOPE__, {
+registerModule({
 	Main: Layout,
 });
