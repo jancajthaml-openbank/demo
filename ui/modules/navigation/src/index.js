@@ -7,6 +7,6 @@ if (process.env.NODE_ENV === 'development') {
 	require('font-awesome/css/font-awesome.css');
 }
 
-registerModule.call(__SANDBOX_SCOPE__, {
+registerModule({
 	Main: Navigation,
 });

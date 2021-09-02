@@ -8,6 +8,6 @@ if (process.env.NODE_ENV === 'development') {
 
 import './styles/index.css'
 
-registerModule.call(__SANDBOX_SCOPE__, {
+registerModule({
 	Main: Routing,
 });
