@@ -1,3 +1,4 @@
+ARCH := $(shell uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')
 
 export COMPOSE_DOCKER_CLI_BUILD = 1
 export DOCKER_BUILDKIT = 1
@@ -10,22 +11,22 @@ all: bootstrap build run
 
 .PHONY: bootstrap
 bootstrap:
-	@docker-compose build node
-	@docker-compose run --rm ui-sync
+	@ARCH=$(ARCH) docker-compose build node
+	@ARCH=$(ARCH) docker-compose run --rm ui-sync
 
 .PHONY: build
 build:
-	@docker-compose run --rm ui-build
-	@docker-compose build --pull demo
-	@docker-compose build --pull postgres
-	@docker-compose build --pull metrics
+	@ARCH=$(ARCH) docker-compose run --rm ui-build
+	@ARCH=$(ARCH) docker-compose build --pull demo
+	@ARCH=$(ARCH) docker-compose build --pull postgres
+	@ARCH=$(ARCH) docker-compose build --pull metrics
 
 .PHONY: dev
 dev:
-	@docker-compose down --remove-orphans
-	@docker-compose up --abort-on-container-exit ui-development
+	@ARCH=$(ARCH) docker-compose down --remove-orphans
+	@ARCH=$(ARCH) docker-compose up --abort-on-container-exit ui-development
 
 .PHONY: run
 run:
-	@docker-compose down --remove-orphans
-	@docker-compose up --abort-on-container-exit demo
+	@ARCH=$(ARCH) docker-compose down --remove-orphans
+	@ARCH=$(ARCH) docker-compose up --abort-on-container-exit demo

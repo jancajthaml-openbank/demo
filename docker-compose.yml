@@ -73,7 +73,7 @@ services:
   # -------------------------------------------------------------------------- #
 
   postgres:
-    image: openbank/postgres:v0.0.0-main
+    image: openbank/postgres:${ARCH}-0.0.0.main
     hostname: postgres
     restart: on-failure
     volumes:
@@ -96,12 +96,13 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        LAKE_VERSION: 1.2.5
-        VAULT_VERSION: 1.3.2
-        LEDGER_VERSION: 1.1.2
-        FIO_BCO_VERSION: 1.3.0
-        BONDSTER_BCO_VERSION: 1.3.0
-        DWH_VERSION: 1.0.0
+        ARCH: ${ARCH}
+        LAKE_VERSION: 1.3.0
+        VAULT_VERSION: 1.3.4
+        LEDGER_VERSION: 1.1.4
+        FIO_BCO_VERSION: 1.3.2
+        BONDSTER_BCO_VERSION: 1.3.2
+        DWH_VERSION: 1.1.1
     ports:
       - "443:443"
       - "8443:8443"

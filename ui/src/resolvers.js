@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+
 import { ApolloCache } from 'apollo-cache'
 import { Resolvers } from 'apollo-client'
 import FioService from 'components/Fio/service'
@@ -21,6 +22,8 @@ export const typeDefs = gql`
   scalar DateTime
 
   scalar BigDecimal
+
+  scalar NaturalNumber
 
   type Token {
     id: String!
@@ -65,29 +68,32 @@ export const typeDefs = gql`
   type Query {
 
     tenants(
-      limit: Int!,
-      offset: Int!
+      limit: NaturalNumber!
+      offset: NaturalNumber!
     ): [Tenant!]!
 
     accounts(
-      tenant: String!,
-      format: String,
-      currency: String,
-      format: String,
-      limit: Int!,
-      offset: Int!
+      tenant: String!
+      currency: String
+      format: String
+      limit: NaturalNumber!
+      offset: NaturalNumber!
     ): [Account!]!
 
     transfers(
-      tenant: String!,
-      transaction: String,
-      currency: String,
-      valueDateLte: DateTime,
-      valueDateGte: DateTime,
-      amountLte: BigDecimal,
-      amountGte: BigDecimal,
-      limit: Int!,
-      offset: Int!
+      tenant: String!
+      currency: String
+      status: Status
+      amount_lt: BigDecimal
+      amount_lte: BigDecimal
+      amount_gt: BigDecimal
+      amount_gte: BigDecimal
+      valueDate_lt: DateTime
+      valueDate_lte: DateTime
+      valueDate_gt: DateTime
+      valueDate_gte: DateTime
+      limit: NaturalNumber!
+      offset: NaturalNumber!
     ): [Transfer!]!
 
   }
