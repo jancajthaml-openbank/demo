@@ -7,24 +7,28 @@ export COMPOSE_PROJECT_NAME = demo
 .ONESHELL:
 
 .PHONY: all
-all: bootstrap build run
+all: build run
+
+.PHONY: build
+build: compile package
 
 .PHONY: bootstrap
 bootstrap:
-	@ARCH=$(ARCH) docker-compose build node
-	@ARCH=$(ARCH) docker-compose run --rm ui-sync
+	@cd ui && npm i
 
-.PHONY: build
-build:
-	@ARCH=$(ARCH) docker-compose run --rm ui-build
+.PHONY: upgrade
+upgrade:
+	@cd ui && npm run upgrade
+
+.PHONY: compile
+compile:
+	@cd ui && npm run build
+
+.PHONY: package
+package:
 	@ARCH=$(ARCH) docker-compose build --pull demo
 	@ARCH=$(ARCH) docker-compose build --pull postgres
 	@ARCH=$(ARCH) docker-compose build --pull metrics
-
-.PHONY: dev
-dev:
-	@ARCH=$(ARCH) docker-compose down --remove-orphans
-	@ARCH=$(ARCH) docker-compose up --abort-on-container-exit ui-development
 
 .PHONY: run
 run:
