@@ -7,7 +7,7 @@ async function getTenantsPage(offset, limit) {
 		},
 		body: JSON.stringify({
 			query: `
-	  			query GetTenants($limit: Int!, $offset: Int!) {
+	  			query GetTenants($limit: NaturalNumber!, $offset: NaturalNumber!) {
 				  tenants(limit: $limit, offset: $offset) {
 				    name
 				  }
