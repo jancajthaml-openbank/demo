@@ -8,7 +8,7 @@ async function getAccountsPage(tenant, offset, limit) {
 		},
 		body: JSON.stringify({
 			query: `
-		  		query GetAccounts($tenant: String!, $limit: Int!, $offset: Int!) {
+		  		query GetAccounts($tenant: String!, $limit: NaturalNumber!, $offset: NaturalNumber!) {
 				    accounts(tenant: $tenant, limit: $limit, offset: $offset) {
 				      name
 				      format

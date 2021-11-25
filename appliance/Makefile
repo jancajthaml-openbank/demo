@@ -12,6 +12,10 @@ all: build run
 .PHONY: build
 build: compile package
 
+.PHONY: bootstrap
+bootstrap:
+	@cd ui && npm i
+
 .PHONY: upgrade
 upgrade:
 	@cd ui && npm run upgrade
