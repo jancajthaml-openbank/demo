@@ -50,11 +50,12 @@ RUN \
     apt-utils \
     dpkg-dev \
     rsyslog \
-    libzmq5>=4.3.1~ \
-    openjdk-11-jre \
+    libzmq5>=4.3~ \
+    openjdk-17-jre \
     systemd \
     systemd-sysv \
     dbus \
+    htop \
     dbus-user-session \
   && \
   apt-get clean -y \
@@ -80,11 +81,6 @@ RUN systemctl mask -- \
       systemd-resolved.service \
       systemd-ask-password-wall.path \
       systemd-logind.service && \
-    :
-
-RUN rm -f \
-      /etc/machine-id \
-      /var/lib/dbus/machine-id && \
     :
 
 RUN mkdir -p /openbank/secrets
