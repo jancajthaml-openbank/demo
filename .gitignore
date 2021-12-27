@@ -1,5 +1,5 @@
-data
-node_modules
-build
-report/metrics/*
-!report/metrics/.gitkeep
+data/
+node_modules/
+build/
+metrics/
+!appliance/report/metrics/.gitkeep
