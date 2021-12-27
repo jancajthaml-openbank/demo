@@ -1,4 +1,5 @@
 data/
+secrets/
 node_modules/
 build/
 metrics/
