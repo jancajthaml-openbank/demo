@@ -3,6 +3,6 @@ secrets/
 appliance/ui/**/*/node_modules
 appliance/ui/**/*/package-lock.json
 appliance/ui/**/*/dev
-build/
+appliance/ui/**/*/build
 metrics/
 !appliance/report/metrics/.gitkeep

@@ -32,10 +32,10 @@ services:
       args:
         ARCH: ${ARCH}
         LAKE_VERSION: 1.3.0
-        VAULT_VERSION: 1.3.4
+        VAULT_VERSION: 1.3.5
         LEDGER_VERSION: 1.1.4
-        FIO_BCO_VERSION: 1.3.2
-        BONDSTER_BCO_VERSION: 1.3.2
+        FIO_BCO_VERSION: 1.3.3
+        BONDSTER_BCO_VERSION: 1.3.3
         DWH_VERSION: 1.1.1
     ports:
       - "443:443"
