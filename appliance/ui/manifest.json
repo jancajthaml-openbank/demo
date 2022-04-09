@@ -1,4 +1,5 @@
 {
+	"entrypoint": "layout",
 	"available": [
 		{
 			"id": "layout",
@@ -7,15 +8,15 @@
 			}
 		},
 		{
-			"id": "content",
-			"program": {
-				"url": "/modules/content/main.min.js"
-			}
-		},
-		{
 			"id": "header",
 			"program": {
 				"url": "/modules/header/main.min.js"
+			}
+		},
+		{
+			"id": "content",
+			"program": {
+				"url": "/modules/content/main.min.js"
 			}
 		},
 		{
@@ -30,6 +31,5 @@
 				"url": "/modules/tenant/main.min.js"
 			}
 		}
-	],
-	"entrypoint": "layout"
+	]
 }

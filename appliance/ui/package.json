@@ -1,13 +1,24 @@
 {
 	"scripts": {
-		"upgrade": "npm run upgrade:spa && npm run upgrade:modules && npm run postinstall && npm run build",
-		"upgrade:spa": "cd spa && ncu -u",
-		"upgrade:modules": "ls -1 modules | xargs -r -I {} bash -c 'cd modules/{} && ncu -u'",
-		"postinstall": "npm run install:spa && npm run install:modules",
+		"upgrade": "npm run update && npm run postinstall && npm run build",
+		"update": "npm run update:spa && npm run update:modules",
+		"update:spa": "cd spa && ncu -u",
+		"update:modules": "ls -1 modules | xargs -r -I {} bash -c 'cd modules/{} && ncu -u'",
+		"postinstall": "npm run install:spa && npm run install:modules && npm run install:server",
 		"install:spa": "cd spa && npm i",
 		"install:modules": "ls -1 modules | xargs -r -I {} bash -c 'cd modules/{} && npm i'",
 		"build": "npm run build:spa && npm run build:modules",
 		"build:spa": "cd spa && npm run build",
 		"build:modules": "ls -1 modules | xargs -r -I {} bash -c 'cd modules/{} && npm run build'"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/lastui/examples.git"
+	},
+	"author": "jan.cajthaml@gmail.com",
+	"license": "Apache-2.0",
+	"bugs": {
+		"url": "https://github.com/lastui/examples/issues"
+	},
+	"homepage": "https://github.com/lastui/examples#readme"
 }

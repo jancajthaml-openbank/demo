@@ -16,7 +16,7 @@ services:
   # -------------------------------------------------------------------------- #
 
   metrics:
-    image: openbank/metrics:v0.0.0-main
+    image: openbank/metrics:${ARCH}-1.0.0.main
     hostname: metrics
     restart: on-failure
     volumes:
@@ -48,7 +48,7 @@ services:
       - postgres
       - metrics
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
       - openbank-primary:/data
 
 # ---------------------------------------------------------------------------- #

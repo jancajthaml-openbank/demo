@@ -185,20 +185,13 @@ RUN rm -rf \
       's!^DATA_WAREHOUSE_STATSD_ENDPOINT=.*!DATA_WAREHOUSE_STATSD_ENDPOINT=metrics:8125!' && \
     :
 
-#RUN \
-#  systemctl enable \
-#    vault-unit@demo \
-#    ledger-unit@demo \
-#    bondster-bco-import@demo \
-#    fio-bco-import@demo \
-#  ;
-
 COPY ./ui/manifest.json /var/www/manifest.json
-COPY ./ui/favicon.svg /var/www/favicon.svg
-COPY ./ui/index.html /var/www/index.html
 
-COPY ./ui/spa/build/* /var/www/runtime/
-RUN rm -f /var/www/runtime/index.html
+COPY ./ui/spa/build/* /var/www/spa/
+
+COPY ./ui/spa/node_modules/@lastui/rocker/bootstrap/dll/bootstrap.dll.js /var/www/spa/bootstrap.dll.min.js
+COPY ./ui/spa/node_modules/@lastui/rocker/dependencies/dll/dependencies.dll.js /var/www/spa/dependencies.dll.min.js
+COPY ./ui/spa/node_modules/@lastui/rocker/platform/dll/platform.dll.js /var/www/spa/platform.dll.min.js
 
 COPY ./ui/modules/tenant/build/* /var/www/modules/tenant/
 COPY ./ui/modules/layout/build/* /var/www/modules/layout/

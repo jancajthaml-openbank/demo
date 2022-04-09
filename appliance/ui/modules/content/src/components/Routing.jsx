@@ -10,15 +10,15 @@ import { TenantContextProvider } from './Tenant'
 // https://github.com/BulmaTemplates/bulma-templates/blob/master/templates/admin.html
 
 const Routing = () => {
-  const sharedState = useSelector((state) => state.shared);
+  const meta = useSelector((state) => state.shared.meta);
 
   return (
     <TenantContextProvider>
-      {sharedState.available.indexOf('bondster') !== -1
+      {meta['bondster']
         ? <Route path="/integration/token/bonster" component={() => <Module name="bondster" />} />
         : null
       }
-      {sharedState.available.indexOf('fio') !== -1 
+      {meta['fio']
         ? <Route path="/integration/token/fio" component={() => <Module name="fio" />} />
         : null
       }

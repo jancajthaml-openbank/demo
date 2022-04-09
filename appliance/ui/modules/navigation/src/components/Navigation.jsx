@@ -1,11 +1,10 @@
 import React from 'react';
-import { useLocation } from "react-router";
 import { useSelector } from 'react-redux';
-import { Link } from '@lastui/rocker/platform';
+import { Link, useLocation } from '@lastui/rocker/platform';
 
 const Navigation = () => {
   const location = useLocation();
-  const sharedState = useSelector((state) => state.shared);
+  const meta = useSelector((state) => state.shared.meta);
 
 	return (
 		<aside className="menu is-hidden-mobile">
@@ -23,7 +22,7 @@ const Navigation = () => {
         Integration
       </p>
       <ul className="menu-list">
-        {sharedState.available.indexOf('bondster') !== -1
+        {meta['bondster']
           ? (
             <li>
               <Link className={location.pathname === '/integration/token/bonster' ? 'is-active' : undefined} to="/integration/token/bonster">
@@ -33,7 +32,7 @@ const Navigation = () => {
           )
           : null
         }
-        {sharedState.available.indexOf('fio') !== -1
+        {meta['fio']
           ? (
             <li>
               <Link className={location.pathname === '/integration/token/fio' ? 'is-active' : undefined} to="/integration/token/fio">
