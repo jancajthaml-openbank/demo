@@ -1,4 +1,8 @@
 {
+	"environment": {
+		"integration.fio": true,
+		"integration.bondster": true
+	},
 	"entrypoint": "layout",
 	"available": [
 		{

@@ -4,7 +4,7 @@ import { Link, useLocation } from '@lastui/rocker/platform';
 
 const Navigation = () => {
   const location = useLocation();
-  const meta = useSelector((state) => state.shared.meta);
+  const shared = useSelector((state) => state.shared.global);
 
 	return (
 		<aside className="menu is-hidden-mobile">
@@ -22,7 +22,7 @@ const Navigation = () => {
         Integration
       </p>
       <ul className="menu-list">
-        {meta['bondster']
+        {shared['integration.bondster']
           ? (
             <li>
               <Link className={location.pathname === '/integration/token/bonster' ? 'is-active' : undefined} to="/integration/token/bonster">
@@ -32,7 +32,7 @@ const Navigation = () => {
           )
           : null
         }
-        {meta['fio']
+        {shared['integration.fio']
           ? (
             <li>
               <Link className={location.pathname === '/integration/token/fio' ? 'is-active' : undefined} to="/integration/token/fio">

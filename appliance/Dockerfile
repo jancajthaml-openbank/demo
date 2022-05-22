@@ -187,17 +187,17 @@ RUN rm -rf \
 
 COPY ./ui/manifest.json /var/www/manifest.json
 
-COPY ./ui/spa/build/* /var/www/spa/
+COPY ./ui/modules/tenant/build/module/* /var/www/modules/tenant/
+COPY ./ui/modules/layout/build/module/* /var/www/modules/layout/
+COPY ./ui/modules/content/build/module/* /var/www/modules/content/
+COPY ./ui/modules/header/build/module/* /var/www/modules/header/
+COPY ./ui/modules/navigation/build/module/* /var/www/modules/navigation/
 
+COPY ./ui/spa/build/spa/* /var/www/spa/
+
+COPY ./ui/spa/node_modules/@lastui/dependencies/dll/dependencies.dll.js /var/www/spa/dependencies.dll.min.js
 COPY ./ui/spa/node_modules/@lastui/rocker/bootstrap/dll/bootstrap.dll.js /var/www/spa/bootstrap.dll.min.js
-COPY ./ui/spa/node_modules/@lastui/rocker/dependencies/dll/dependencies.dll.js /var/www/spa/dependencies.dll.min.js
 COPY ./ui/spa/node_modules/@lastui/rocker/platform/dll/platform.dll.js /var/www/spa/platform.dll.min.js
-
-COPY ./ui/modules/tenant/build/* /var/www/modules/tenant/
-COPY ./ui/modules/layout/build/* /var/www/modules/layout/
-COPY ./ui/modules/content/build/* /var/www/modules/content/
-COPY ./ui/modules/header/build/* /var/www/modules/header/
-COPY ./ui/modules/navigation/build/* /var/www/modules/navigation/
 
 STOPSIGNAL SIGTERM
 
